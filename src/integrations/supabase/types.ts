@@ -434,6 +434,48 @@ export type Database = {
           },
         ]
       }
+      razorpay_plans: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          environment: string
+          id: string
+          interval: number
+          lookup_key: string
+          name: string
+          period: string
+          razorpay_plan_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          environment?: string
+          id?: string
+          interval?: number
+          lookup_key: string
+          name: string
+          period: string
+          razorpay_plan_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          environment?: string
+          id?: string
+          interval?: number
+          lookup_key?: string
+          name?: string
+          period?: string
+          razorpay_plan_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subjects: {
         Row: {
           created_at: string
@@ -474,6 +516,11 @@ export type Database = {
           id: string
           price_id: string
           product_id: string
+          provider: string
+          razorpay_customer_id: string | null
+          razorpay_plan_id: string | null
+          razorpay_subscription_id: string | null
+          short_url: string | null
           status: string
           stripe_customer_id: string
           stripe_subscription_id: string
@@ -489,6 +536,11 @@ export type Database = {
           id?: string
           price_id: string
           product_id: string
+          provider?: string
+          razorpay_customer_id?: string | null
+          razorpay_plan_id?: string | null
+          razorpay_subscription_id?: string | null
+          short_url?: string | null
           status?: string
           stripe_customer_id: string
           stripe_subscription_id: string
@@ -504,6 +556,11 @@ export type Database = {
           id?: string
           price_id?: string
           product_id?: string
+          provider?: string
+          razorpay_customer_id?: string | null
+          razorpay_plan_id?: string | null
+          razorpay_subscription_id?: string | null
+          short_url?: string | null
           status?: string
           stripe_customer_id?: string
           stripe_subscription_id?: string
