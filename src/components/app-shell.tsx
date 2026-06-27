@@ -4,6 +4,7 @@ import {
   Brain,
   CreditCard,
   FileText,
+  Info,
   LayoutDashboard,
   LogOut,
   Shield,
@@ -49,6 +50,7 @@ export function useProfile() {
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/about", label: "About", icon: Info },
   { to: "/tests", label: "Tests", icon: FileText },
   { to: "/ai-teacher", label: "AI Teacher", icon: Brain },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
@@ -187,6 +189,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/about" className="cursor-pointer">
+                    <Info className="mr-2 h-4 w-4" /> About us
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/profile" className="cursor-pointer">
                     <UserIcon className="mr-2 h-4 w-4" /> Profile
