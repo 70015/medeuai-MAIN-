@@ -93,3 +93,83 @@ export const getAdminStats = createServerFn({ method: "GET" })
       attempts: attempts.count ?? 0,
     };
   });
+
+const RoleInput = z.object({
+  userId: z.string().uuid(),
+  role: z.enum(["admin", "moderator", "user"]),
+  action: z.enum(["grant", "revoke"]),
+});
+
+export const setUserRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => RoleInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Admin role required");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    if (data.action === "grant") {
+      const { error } = await supabaseAdmin
+        .from("user_roles")
+        .upsert(
+          { user_id: data.userId, role: data.role },
+          { onConflict: "user_id,role", ignoreDuplicates: true },
+        );
+      if (error) throw new Error(error.message);
+    } else {
+      if (data.userId === userId && data.role === "admin") {
+        const { count } = await supabaseAdmin
+          .from("user_roles")
+          .select("user_id", { count: "exact", head: true })
+          .eq("role", "admin");
+        if ((count ?? 0) <= 1) throw new Error("Cannot revoke the last admin");
+      }
+      const { error } = await supabaseAdmin
+        .from("user_roles")
+        .delete()
+        .eq("user_id", data.userId)
+        .eq("role", data.role);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
+export const listUsers = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Admin role required");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: profiles, error } = await supabaseAdmin
+      .from("profiles")
+      .select("id, email, full_name, plan, target_exam, created_at")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw new Error(error.message);
+
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id, role");
+
+    const byUser = new Map<string, string[]>();
+    (roles ?? []).forEach((r) => {
+      const arr = byUser.get(r.user_id) ?? [];
+      arr.push(r.role);
+      byUser.set(r.user_id, arr);
+    });
+
+    return (profiles ?? []).map((p) => ({
+      ...p,
+      roles: byUser.get(p.id) ?? [],
+    }));
+  });
+

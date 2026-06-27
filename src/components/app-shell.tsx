@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  Brain,
   CreditCard,
   FileText,
   LayoutDashboard,
@@ -10,6 +11,7 @@ import {
   Trophy,
   User as UserIcon,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -46,10 +48,12 @@ export function useProfile() {
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/tests", label: "Tests", icon: FileText },
+  { to: "/ai-teacher", label: "AI Teacher", icon: Brain },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/billing", label: "Billing", icon: CreditCard },
   { to: "/profile", label: "Profile", icon: UserIcon },
 ] as const;
+
 
 export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();

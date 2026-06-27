@@ -49,10 +49,13 @@ function DashboardPage() {
               Start mock test
             </Button>
           </Link>
-          <Button variant="outline" disabled>
-            <Brain className="mr-1.5 h-4 w-4" />
-            Ask AI Teacher
-          </Button>
+          <Link to="/ai-teacher">
+            <Button variant="outline">
+              <Brain className="mr-1.5 h-4 w-4" />
+              Ask AI Teacher
+            </Button>
+          </Link>
+
         </div>
       </section>
 

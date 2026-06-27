@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Shield, Sparkles, ListChecks, LayoutDashboard } from "lucide-react";
+import { Loader2, Shield, Sparkles, ListChecks, LayoutDashboard, BookText, Users } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -32,9 +32,12 @@ function useIsAdmin() {
 
 const tabs = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/syllabi", label: "Syllabi", icon: BookText, exact: false },
   { to: "/admin/generate", label: "AI Generate", icon: Sparkles, exact: false },
   { to: "/admin/review", label: "Review Queue", icon: ListChecks, exact: false },
+  { to: "/admin/users", label: "Users", icon: Users, exact: false },
 ] as const;
+
 
 function AdminLayout() {
   const { data: isAdmin, isLoading, refetch } = useIsAdmin();
