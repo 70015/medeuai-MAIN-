@@ -1,0 +1,1 @@
+UPDATE public.about_content SET founder_image_url = 'https://ogrfckvypncotvymghkt.supabase.co/storage/v1/object/public/about-media/founder.png' WHERE singleton = true AND founder_image_url IS NULL;
