@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   BookOpen,
   Brain,
@@ -23,8 +25,25 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
 });
 
+function useIsAdmin() {
+  return useQuery({
+    queryKey: ["is-admin"],
+    queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return false;
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: u.user.id,
+        _role: "admin",
+      });
+      if (error) return false;
+      return !!data;
+    },
+  });
+}
+
 function DashboardPage() {
   const { data: profile, isLoading } = useProfile();
+  const { data: isAdmin } = useIsAdmin();
   const name = profile?.full_name?.split(" ")[0] ?? "there";
   const goal = profile?.daily_goal_minutes ?? 30;
   const minutesToday = 0;
@@ -56,12 +75,14 @@ function DashboardPage() {
               Ask AI Teacher
             </Button>
           </Link>
-          <Link to="/admin">
-            <Button variant="outline">
-              <Shield className="mr-1.5 h-4 w-4" />
-              Admin Panel
-            </Button>
-          </Link>
+          {isAdmin && (
+            <Link to="/admin">
+              <Button variant="outline">
+                <Shield className="mr-1.5 h-4 w-4" />
+                Admin Panel
+              </Button>
+            </Link>
+          )}
         </div>
       </section>
 
