@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel } from "@/lib/exam";
-import { generatePaperForAttempt } from "@/lib/paper-generation.functions";
+import { generateDynamicPaperForAttempt } from "@/lib/dynamic-paper.functions";
 import { getPlanStatus } from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
@@ -27,7 +27,7 @@ type TestConfig = {
 function TestDetailsPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
-  const genPaper = useServerFn(generatePaperForAttempt);
+  const genPaper = useServerFn(generateDynamicPaperForAttempt);
   const planStatusFn = useServerFn(getPlanStatus);
 
   const { data: plan } = useQuery({
