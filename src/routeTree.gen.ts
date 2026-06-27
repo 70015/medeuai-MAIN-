@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminSyllabiRouteImport } from './routes/_authenticated/admin.syllabi'
 import { Route as AuthenticatedAdminReviewRouteImport } from './routes/_authenticated/admin.review'
 import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
+import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 import { Route as ApiPublicPaymentsRazorpayWebhookRouteImport } from './routes/api/public/payments/razorpay-webhook'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -142,6 +143,11 @@ const AuthenticatedAdminGenerateRoute =
     path: '/generate',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const ApiPublicPaymentsRazorpayWebhookRoute =
   ApiPublicPaymentsRazorpayWebhookRouteImport.update({
     id: '/api/public/payments/razorpay-webhook',
@@ -161,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
@@ -183,6 +190,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/_authenticated/admin/review': typeof AuthenticatedAdminReviewRoute
   '/_authenticated/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/admin/about'
     | '/admin/generate'
     | '/admin/review'
     | '/admin/syllabi'
@@ -255,6 +265,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/admin/about'
     | '/admin/generate'
     | '/admin/review'
     | '/admin/syllabi'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/leaderboard'
     | '/_authenticated/profile'
+    | '/_authenticated/admin/about'
     | '/_authenticated/admin/generate'
     | '/_authenticated/admin/review'
     | '/_authenticated/admin/syllabi'
@@ -450,6 +462,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminGenerateRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/about': {
+      id: '/_authenticated/admin/about'
+      path: '/about'
+      fullPath: '/admin/about'
+      preLoaderRoute: typeof AuthenticatedAdminAboutRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/api/public/payments/razorpay-webhook': {
       id: '/api/public/payments/razorpay-webhook'
       path: '/api/public/payments/razorpay-webhook'
@@ -461,6 +480,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
   AuthenticatedAdminGenerateRoute: typeof AuthenticatedAdminGenerateRoute
   AuthenticatedAdminReviewRoute: typeof AuthenticatedAdminReviewRoute
   AuthenticatedAdminSyllabiRoute: typeof AuthenticatedAdminSyllabiRoute
@@ -469,6 +489,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
   AuthenticatedAdminGenerateRoute: AuthenticatedAdminGenerateRoute,
   AuthenticatedAdminReviewRoute: AuthenticatedAdminReviewRoute,
   AuthenticatedAdminSyllabiRoute: AuthenticatedAdminSyllabiRoute,

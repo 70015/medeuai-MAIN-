@@ -108,8 +108,14 @@ function AdminAboutEditor() {
         .filter(Boolean);
 
       const payload = {
-        ...form,
+        hero_title: form.hero_title ?? undefined,
+        hero_subtitle: form.hero_subtitle ?? undefined,
+        story_title: form.story_title ?? undefined,
         story_paragraphs: paragraphs,
+        founder_name: form.founder_name ?? undefined,
+        founder_position: form.founder_position ?? undefined,
+        founder_quote: form.founder_quote ?? undefined,
+        founder_image_url: form.founder_image_url ?? undefined,
         singleton: true,
       };
 
