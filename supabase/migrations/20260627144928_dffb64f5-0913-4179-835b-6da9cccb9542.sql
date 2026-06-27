@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.downgrade_expired_plans() FROM PUBLIC, anon, authenticated;
