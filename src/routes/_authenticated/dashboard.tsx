@@ -6,6 +6,7 @@ import {
   Coins,
   Flame,
   PlayCircle,
+  Shield,
   Target,
   Trophy,
   Zap,
