@@ -1,38 +1,21 @@
-## Goal
+## Problem
 
-Make the admin panel feel like a separate site on its own subdomain (e.g. `admin.yourdomain.com`), while keeping it inside the same Lovable project and database.
+You can sign in fine, but there's no visible way to reach the admin panel from the UI. Right now it's URL-only — you have to type `/admin` manually. The "Admin" link in the header only appears AFTER you already have the admin role, which is a chicken-and-egg problem for the very first admin.
 
-## How it will work
+Also, the session replay shows a Vite error overlay on the home page — I'll check and fix that as part of this so the app loads cleanly.
 
-Single deployment, host-aware routing:
+## Fix
 
-- When the app loads from a host starting with `admin.` (or equals `admin.localhost` in dev), it switches into **Admin Mode**:
-  - The marketing site, `/dashboard`, `/tests`, `/ai-teacher`, `/billing`, etc. are hidden/redirected to `/admin`.
-  - The header/shell is replaced with an Admin-only shell (Admin logo, admin tabs, sign out).
-  - Visiting `/` on the admin subdomain auto-redirects to `/admin`.
-- When the app loads from the main host (no `admin.` prefix), behavior is unchanged. `/admin` still works there too (useful as a fallback before DNS is set up).
-- Same Supabase auth, same `has_role('admin')` check — non-admins hitting the admin subdomain see the "Claim admin / access denied" screen we already have.
+1. **Make admin access obvious on the dashboard.** Add a prominent "Admin Panel" card on `/dashboard` for users who already have the admin role, and a smaller "Claim admin access" link for the very first user (only shown when no admin exists yet). This way you don't have to remember the URL.
 
-## Changes
+2. **Direct link right now (no code change needed):** Open this URL in your browser while signed in →
+   `https://id-preview--919a0eec-4904-4552-a317-8eb48c9a8544.lovable.app/admin`
+   Then click **"Claim admin (first user only)"**. After that the "Admin" link appears in the top header automatically.
 
-1. **`src/lib/host.ts`** (new) — `isAdminHost()` helper reading `window.location.hostname`, SSR-safe (returns false on server).
-2. **`src/routes/__root.tsx`** — on admin host, force-redirect any non-`/admin*` and non-`/auth*` path to `/admin`.
-3. **`src/components/app-shell.tsx`** — when `isAdminHost()`, render a slimmer `AdminShell` (no student nav, no "Take a test" CTA, admin-branded title).
-4. **`src/routes/index.tsx`** — on admin host, redirect to `/admin` instead of rendering the marketing landing.
-5. **`src/routes/_authenticated/admin.tsx`** — minor: show "Admin Console" branding more prominently when on the admin subdomain.
-6. **Sidebar link in the main app** — add a visible "Admin" entry in `app-shell` that only renders for users with the admin role (so admins on the main domain can still get in easily).
+3. **Investigate the Vite error overlay** seen in the session replay on `/` and fix whatever is breaking the home page render — that may also be why no nav options are showing for you.
 
-No database, no auth, no billing changes.
+## Scope
 
-## What you need to do (one-time, outside code)
-
-1. In **Project Settings → Domains**, connect your custom domain (e.g. `yourdomain.com`) — or buy one from Lovable.
-2. Add a second entry for `admin.yourdomain.com` in the same Domains screen. Lovable will give you a DNS record to add at your registrar (CNAME or A record).
-3. Publish the project. Once DNS propagates, `admin.yourdomain.com` will serve the admin-only experience and `yourdomain.com` will serve the student app — both from this same project.
-
-Until DNS is set up, you can keep using `/admin` on the preview URL exactly as you do today.
-
-## Out of scope
-
-- A truly separate codebase / second Lovable project (would duplicate code, auth, and DB connections — not recommended).
-- Different database for admin (we keep RLS + `has_role` as the security boundary).
+- `src/routes/_authenticated/dashboard.tsx` — add admin entry card / claim button.
+- Diagnose and fix the Vite error currently shown on the home page.
+- No DB changes, no auth changes, no changes to the existing `/admin` route logic.
