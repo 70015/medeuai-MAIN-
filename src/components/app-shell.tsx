@@ -1,9 +1,11 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  FileText,
   LayoutDashboard,
   LogOut,
   Sparkles,
+  Trophy,
   User as UserIcon,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -41,6 +43,8 @@ export function useProfile() {
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/tests", label: "Tests", icon: FileText },
+  { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/profile", label: "Profile", icon: UserIcon },
 ] as const;
 
