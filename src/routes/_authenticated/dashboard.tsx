@@ -56,7 +56,12 @@ function DashboardPage() {
               Ask AI Teacher
             </Button>
           </Link>
-
+          <Link to="/admin">
+            <Button variant="outline">
+              <Shield className="mr-1.5 h-4 w-4" />
+              Admin Panel
+            </Button>
+          </Link>
         </div>
       </section>
 
