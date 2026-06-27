@@ -121,6 +121,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={
+                  "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors " +
+                  (pathname.startsWith("/admin")
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:text-foreground")
+                }
+              >
+                <Shield className="h-4 w-4" />
+                <span className="hidden sm:inline">Admin</span>
+              </Link>
+            )}
           </nav>
 
           <div className="flex items-center gap-2">
