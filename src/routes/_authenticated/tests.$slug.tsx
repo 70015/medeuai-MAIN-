@@ -132,6 +132,7 @@ function TestDetailsPage() {
           <h2 className="text-sm font-semibold">Instructions</h2>
           <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-muted-foreground">
             <li>The test will run for {t.duration_minutes} minutes from the moment you start.</li>
+            <li>Every attempt generates a fresh, AI-powered paper unique to you — first start may take 20–60 seconds.</li>
             <li>You can navigate freely between questions and mark them for review.</li>
             <li>Negative marking: -{Number(t.negative_marks)} for each incorrect answer.</li>
             <li>Your progress is saved automatically.</li>
@@ -160,11 +161,11 @@ function TestDetailsPage() {
           <Button
             size="lg"
             onClick={() => start.mutate()}
-            disabled={start.isPending || data.questionCount === 0 || (plan ? !plan.canStartTest : false)}
+            disabled={start.isPending || (plan ? !plan.canStartTest : false)}
           >
             <PlayCircle className="mr-1.5 h-4 w-4" />
             {start.isPending
-              ? "Starting…"
+              ? "Generating your paper…"
               : plan && !plan.canStartTest
                 ? "Free limit reached"
                 : "Start test"}
