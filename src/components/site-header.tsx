@@ -32,28 +32,28 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="flex items-center gap-1">
           <a
             href="#features"
-            className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="hidden rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground md:inline"
           >
             Features
           </a>
           <a
             href="#exams"
-            className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="hidden rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground md:inline"
           >
             Exams
           </a>
           <a
             href="#pricing"
-            className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="hidden rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground md:inline"
           >
             Pricing
           </a>
           <Link
             to="/about"
-            className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="rounded-md px-2 py-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary sm:px-3"
           >
             About
           </Link>
