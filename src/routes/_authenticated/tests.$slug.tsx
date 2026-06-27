@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Clock, FileText, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,15 +9,24 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel } from "@/lib/exam";
+import { generatePaperForAttempt } from "@/lib/paper-generation.functions";
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
   head: () => ({ meta: [{ title: "Mock Test — ParikshaSathi" }] }),
   component: TestDetailsPage,
 });
 
+type SectionCfg = { subject_slug: string; count: number; label?: string };
+type TestConfig = {
+  total_questions: number;
+  difficulty_distribution: { easy: number; medium: number; hard: number };
+  sections: SectionCfg[];
+};
+
 function TestDetailsPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
+  const genPaper = useServerFn(generatePaperForAttempt);
 
   const { data, isLoading } = useQuery({
     queryKey: ["mock-test", slug],
@@ -28,11 +38,9 @@ function TestDetailsPage() {
         .maybeSingle();
       if (error) throw error;
       if (!test) return null;
-      const { count } = await supabase
-        .from("mock_test_questions")
-        .select("id", { count: "exact", head: true })
-        .eq("test_id", test.id);
-      return { test, questionCount: count ?? 0 };
+      const cfg = test.section_config as TestConfig | null;
+      const questionCount = cfg?.total_questions ?? 0;
+      return { test, questionCount, cfg };
     },
   });
 
@@ -41,7 +49,6 @@ function TestDetailsPage() {
       if (!data?.test) throw new Error("Test not loaded");
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("Not signed in");
-      // resume in-progress attempt if exists
       const { data: existing } = await supabase
         .from("test_attempts")
         .select("id")
@@ -49,18 +56,23 @@ function TestDetailsPage() {
         .eq("test_id", data.test.id)
         .eq("status", "in_progress")
         .maybeSingle();
-      if (existing) return existing.id;
-      const { data: ins, error } = await supabase
-        .from("test_attempts")
-        .insert({
-          user_id: u.user.id,
-          test_id: data.test.id,
-          total_marks: Number(data.test.total_marks),
-        })
-        .select("id")
-        .single();
-      if (error) throw error;
-      return ins.id;
+      let attemptId = existing?.id;
+      if (!attemptId) {
+        const { data: ins, error } = await supabase
+          .from("test_attempts")
+          .insert({
+            user_id: u.user.id,
+            test_id: data.test.id,
+            total_marks: Number(data.test.total_marks),
+          })
+          .select("id")
+          .single();
+        if (error) throw error;
+        attemptId = ins.id;
+      }
+      // Generate paper (no-op if already generated)
+      await genPaper({ data: { attemptId } });
+      return attemptId;
     },
     onSuccess: (attemptId) => {
       navigate({ to: "/attempt/$attemptId", params: { attemptId } });

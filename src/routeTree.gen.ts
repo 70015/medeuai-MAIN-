@@ -17,10 +17,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedTestsIndexRouteImport } from './routes/_authenticated/tests.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedTestsSlugRouteImport } from './routes/_authenticated/tests.$slug'
 import { Route as AuthenticatedResultsAttemptIdRouteImport } from './routes/_authenticated/results.$attemptId'
 import { Route as AuthenticatedAttemptAttemptIdRouteImport } from './routes/_authenticated/attempt.$attemptId'
+import { Route as AuthenticatedAdminReviewRouteImport } from './routes/_authenticated/admin.review'
+import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -62,10 +66,20 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTestsIndexRoute = AuthenticatedTestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const AuthenticatedTestsSlugRoute = AuthenticatedTestsSlugRouteImport.update({
   id: '/tests/$slug',
@@ -84,18 +98,34 @@ const AuthenticatedAttemptAttemptIdRoute =
     path: '/attempt/$attemptId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminReviewRoute =
+  AuthenticatedAdminReviewRouteImport.update({
+    id: '/review',
+    path: '/review',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminGenerateRoute =
+  AuthenticatedAdminGenerateRouteImport.update({
+    id: '/generate',
+    path: '/generate',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/tests/': typeof AuthenticatedTestsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -106,9 +136,12 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/tests': typeof AuthenticatedTestsIndexRoute
 }
 export interface FileRoutesById {
@@ -118,12 +151,16 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/_authenticated/admin/review': typeof AuthenticatedAdminReviewRoute
   '/_authenticated/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
   '/_authenticated/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/_authenticated/tests/$slug': typeof AuthenticatedTestsSlugRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/tests/': typeof AuthenticatedTestsIndexRoute
 }
 export interface FileRouteTypes {
@@ -133,12 +170,16 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/admin'
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/admin/generate'
+    | '/admin/review'
     | '/attempt/$attemptId'
     | '/results/$attemptId'
     | '/tests/$slug'
+    | '/admin/'
     | '/tests/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -149,9 +190,12 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/admin/generate'
+    | '/admin/review'
     | '/attempt/$attemptId'
     | '/results/$attemptId'
     | '/tests/$slug'
+    | '/admin'
     | '/tests'
   id:
     | '__root__'
@@ -160,12 +204,16 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/leaderboard'
     | '/_authenticated/profile'
+    | '/_authenticated/admin/generate'
+    | '/_authenticated/admin/review'
     | '/_authenticated/attempt/$attemptId'
     | '/_authenticated/results/$attemptId'
     | '/_authenticated/tests/$slug'
+    | '/_authenticated/admin/'
     | '/_authenticated/tests/'
   fileRoutesById: FileRoutesById
 }
@@ -235,12 +283,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tests/': {
       id: '/_authenticated/tests/'
       path: '/tests'
       fullPath: '/tests/'
       preLoaderRoute: typeof AuthenticatedTestsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/tests/$slug': {
       id: '/_authenticated/tests/$slug'
@@ -263,10 +325,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAttemptAttemptIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/review': {
+      id: '/_authenticated/admin/review'
+      path: '/review'
+      fullPath: '/admin/review'
+      preLoaderRoute: typeof AuthenticatedAdminReviewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/generate': {
+      id: '/_authenticated/admin/generate'
+      path: '/generate'
+      fullPath: '/admin/generate'
+      preLoaderRoute: typeof AuthenticatedAdminGenerateRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminGenerateRoute: typeof AuthenticatedAdminGenerateRoute
+  AuthenticatedAdminReviewRoute: typeof AuthenticatedAdminReviewRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminGenerateRoute: AuthenticatedAdminGenerateRoute,
+  AuthenticatedAdminReviewRoute: AuthenticatedAdminReviewRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -277,6 +369,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,

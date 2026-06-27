@@ -36,7 +36,9 @@ type LoadedAttempt = {
     marks: number;
     negative_marks: number;
     question: unknown;
-    options: unknown;
+    options: unknown[];
+    options_order: number[];
+    section_label: string | null;
   }>;
   answers: Record<string, { selected_index: number | null; is_marked: boolean }>;
 };
@@ -69,22 +71,26 @@ function AttemptPage() {
         .single();
       if (tErr) throw tErr;
 
-      const { data: mtq, error: qErr } = await supabase
-        .from("mock_test_questions")
-        .select("position, marks, negative_marks, questions:question_id (id, question, options)")
-        .eq("test_id", attempt.test_id)
+      const { data: aq, error: qErr } = await supabase
+        .from("attempt_questions")
+        .select(
+          "position, marks, negative_marks, options_order, section_label, questions:question_id (id, question, options)",
+        )
+        .eq("attempt_id", attempt.id)
         .order("position");
       if (qErr) throw qErr;
 
-      const questions = (mtq ?? []).map((r) => {
-        const q = r.questions as { id: string; question: unknown; options: unknown };
+      const questions = (aq ?? []).map((r) => {
+        const q = r.questions as { id: string; question: unknown; options: unknown[] };
         return {
           id: q.id,
           position: r.position,
           marks: Number(r.marks),
           negative_marks: Number(r.negative_marks),
           question: q.question,
-          options: q.options,
+          options: q.options ?? [],
+          options_order: (r.options_order as number[]) ?? q.options.map((_, i) => i),
+          section_label: r.section_label,
         };
       });
 
@@ -246,6 +252,10 @@ function AttemptPage() {
   const current = data.questions[index];
   const currentAns = data.answers[current.id];
   const options = (current.options as Array<unknown>) ?? [];
+  const order = current.options_order;
+  // Find display position of the currently selected (original) index, if any
+  const selectedDisplayIdx =
+    currentAns?.selected_index == null ? -1 : order.indexOf(currentAns.selected_index);
 
   return (
     <div className="space-y-4">
@@ -256,6 +266,7 @@ function AttemptPage() {
             <h1 className="line-clamp-1 text-sm font-semibold sm:text-base">{data.test.title}</h1>
             <p className="text-xs text-muted-foreground">
               Question {index + 1} of {data.questions.length}
+              {current.section_label ? ` · ${current.section_label}` : ""}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -296,13 +307,20 @@ function AttemptPage() {
           <p className="whitespace-pre-wrap text-base leading-relaxed">{localize(current.question, lang)}</p>
 
           <div className="mt-5 space-y-2">
-            {options.map((opt, i) => {
-              const selected = currentAns?.selected_index === i;
+            {order.map((origIdx, displayIdx) => {
+              const opt = options[origIdx];
+              const selected = displayIdx === selectedDisplayIdx;
               return (
                 <button
-                  key={i}
+                  key={displayIdx}
                   type="button"
-                  onClick={() => persistAnswer(current.id, selected ? null : i, currentAns?.is_marked ?? false)}
+                  onClick={() =>
+                    persistAnswer(
+                      current.id,
+                      selected ? null : origIdx,
+                      currentAns?.is_marked ?? false,
+                    )
+                  }
                   className={cn(
                     "flex w-full items-start gap-3 rounded-lg border p-3 text-left text-sm transition-colors",
                     selected
@@ -316,13 +334,14 @@ function AttemptPage() {
                       selected ? "border-primary bg-primary text-primary-foreground" : "border-border",
                     )}
                   >
-                    {String.fromCharCode(65 + i)}
+                    {String.fromCharCode(65 + displayIdx)}
                   </span>
                   <span>{localize(opt, lang)}</span>
                 </button>
               );
             })}
           </div>
+
 
           <div className="mt-6 flex flex-wrap items-center gap-2">
             <Button variant="outline" size="sm" disabled={index === 0} onClick={() => setIndex((i) => i - 1)}>

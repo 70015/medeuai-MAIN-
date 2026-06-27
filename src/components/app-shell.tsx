@@ -4,6 +4,7 @@ import {
   FileText,
   LayoutDashboard,
   LogOut,
+  Shield,
   Sparkles,
   Trophy,
   User as UserIcon,
@@ -54,6 +55,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const { data: profile } = useProfile();
   const [email, setEmail] = useState<string | null>(null);
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin"],
+    queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return false;
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: u.user.id,
+        _role: "admin",
+      });
+      if (error) return false;
+      return !!data;
+    },
+  });
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
@@ -106,6 +121,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={
+                  "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors " +
+                  (pathname.startsWith("/admin")
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:text-foreground")
+                }
+              >
+                <Shield className="h-4 w-4" />
+                <span className="hidden sm:inline">Admin</span>
+              </Link>
+            )}
           </nav>
 
           <div className="flex items-center gap-2">
