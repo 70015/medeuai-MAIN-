@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_generation_jobs: {
+        Row: {
+          completed_at: string | null
+          count_created: number
+          count_requested: number
+          created_at: string
+          created_by: string | null
+          difficulty: string | null
+          error: string | null
+          id: string
+          model: string | null
+          status: string
+          subject_id: string | null
+          target_exam: string
+          topic_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          count_created?: number
+          count_requested: number
+          created_at?: string
+          created_by?: string | null
+          difficulty?: string | null
+          error?: string | null
+          id?: string
+          model?: string | null
+          status?: string
+          subject_id?: string | null
+          target_exam: string
+          topic_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          count_created?: number
+          count_requested?: number
+          created_at?: string
+          created_by?: string | null
+          difficulty?: string | null
+          error?: string | null
+          id?: string
+          model?: string | null
+          status?: string
+          subject_id?: string | null
+          target_exam?: string
+          topic_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_generation_jobs_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_generation_jobs_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attempt_answers: {
         Row: {
           attempt_id: string
@@ -61,6 +124,57 @@ export type Database = {
           },
           {
             foreignKeyName: "attempt_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attempt_questions: {
+        Row: {
+          attempt_id: string
+          created_at: string
+          id: string
+          marks: number
+          negative_marks: number
+          options_order: number[]
+          position: number
+          question_id: string
+          section_label: string | null
+        }
+        Insert: {
+          attempt_id: string
+          created_at?: string
+          id?: string
+          marks?: number
+          negative_marks?: number
+          options_order: number[]
+          position: number
+          question_id: string
+          section_label?: string | null
+        }
+        Update: {
+          attempt_id?: string
+          created_at?: string
+          id?: string
+          marks?: number
+          negative_marks?: number
+          options_order?: number[]
+          position?: number
+          question_id?: string
+          section_label?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attempt_questions_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "test_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attempt_questions_question_id_fkey"
             columns: ["question_id"]
             isOneToOne: false
             referencedRelation: "questions"
@@ -117,10 +231,12 @@ export type Database = {
           description: string | null
           duration_minutes: number
           id: string
+          is_dynamic: boolean
           is_free: boolean
           is_published: boolean
           negative_marks: number
           pass_marks: number | null
+          section_config: Json | null
           slug: string
           target_exam: Database["public"]["Enums"]["target_exam"]
           test_type: Database["public"]["Enums"]["test_type"]
@@ -134,10 +250,12 @@ export type Database = {
           description?: string | null
           duration_minutes?: number
           id?: string
+          is_dynamic?: boolean
           is_free?: boolean
           is_published?: boolean
           negative_marks?: number
           pass_marks?: number | null
+          section_config?: Json | null
           slug: string
           target_exam: Database["public"]["Enums"]["target_exam"]
           test_type?: Database["public"]["Enums"]["test_type"]
@@ -151,10 +269,12 @@ export type Database = {
           description?: string | null
           duration_minutes?: number
           id?: string
+          is_dynamic?: boolean
           is_free?: boolean
           is_published?: boolean
           negative_marks?: number
           pass_marks?: number | null
+          section_config?: Json | null
           slug?: string
           target_exam?: Database["public"]["Enums"]["target_exam"]
           test_type?: Database["public"]["Enums"]["test_type"]
@@ -235,6 +355,7 @@ export type Database = {
       }
       questions: {
         Row: {
+          ai_generated: boolean
           correct_index: number
           created_at: string
           created_by: string | null
@@ -244,13 +365,18 @@ export type Database = {
           is_published: boolean
           options: Json
           question: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
           source: string | null
+          status: Database["public"]["Enums"]["question_status"]
           subject_id: string | null
           target_exam: Database["public"]["Enums"]["target_exam"] | null
           topic_id: string | null
           updated_at: string
+          year: number | null
         }
         Insert: {
+          ai_generated?: boolean
           correct_index: number
           created_at?: string
           created_by?: string | null
@@ -260,13 +386,18 @@ export type Database = {
           is_published?: boolean
           options: Json
           question: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           source?: string | null
+          status?: Database["public"]["Enums"]["question_status"]
           subject_id?: string | null
           target_exam?: Database["public"]["Enums"]["target_exam"] | null
           topic_id?: string | null
           updated_at?: string
+          year?: number | null
         }
         Update: {
+          ai_generated?: boolean
           correct_index?: number
           created_at?: string
           created_by?: string | null
@@ -276,11 +407,15 @@ export type Database = {
           is_published?: boolean
           options?: Json
           question?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           source?: string | null
+          status?: Database["public"]["Enums"]["question_status"]
           subject_id?: string | null
           target_exam?: Database["public"]["Enums"]["target_exam"] | null
           topic_id?: string | null
           updated_at?: string
+          year?: number | null
         }
         Relationships: [
           {
@@ -429,6 +564,35 @@ export type Database = {
           },
         ]
       }
+      user_question_history: {
+        Row: {
+          last_seen_at: string
+          question_id: string
+          times_seen: number
+          user_id: string
+        }
+        Insert: {
+          last_seen_at?: string
+          question_id: string
+          times_seen?: number
+          user_id: string
+        }
+        Update: {
+          last_seen_at?: string
+          question_id?: string
+          times_seen?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_question_history_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -468,6 +632,7 @@ export type Database = {
       attempt_status: "in_progress" | "submitted" | "abandoned"
       preferred_language: "english" | "bengali" | "hindi"
       question_difficulty: "easy" | "medium" | "hard"
+      question_status: "approved" | "pending_review" | "rejected" | "archived"
       subscription_plan: "free" | "pro_monthly" | "pro_yearly"
       target_exam:
         | "ssc_cgl"
@@ -610,6 +775,7 @@ export const Constants = {
       attempt_status: ["in_progress", "submitted", "abandoned"],
       preferred_language: ["english", "bengali", "hindi"],
       question_difficulty: ["easy", "medium", "hard"],
+      question_status: ["approved", "pending_review", "rejected", "archived"],
       subscription_plan: ["free", "pro_monthly", "pro_yearly"],
       target_exam: [
         "ssc_cgl",
