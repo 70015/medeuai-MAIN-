@@ -182,6 +182,39 @@ export type Database = {
           },
         ]
       }
+      exam_syllabi: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          pattern: Json
+          syllabus: string
+          target_exam: Database["public"]["Enums"]["target_exam"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          pattern: Json
+          syllabus: string
+          target_exam: Database["public"]["Enums"]["target_exam"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          pattern?: Json
+          syllabus?: string
+          target_exam?: Database["public"]["Enums"]["target_exam"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mock_test_questions: {
         Row: {
           id: string
