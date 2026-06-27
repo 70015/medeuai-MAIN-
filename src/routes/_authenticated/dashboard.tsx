@@ -12,7 +12,19 @@ import {
   Target,
   Trophy,
   Zap,
+  Sparkles,
 } from "lucide-react";
+
+const EXAM_GRID = [
+  { code: "ssc_cgl", label: "SSC CGL", desc: "Combined Graduate Level" },
+  { code: "ssc_chsl", label: "SSC CHSL", desc: "Higher Secondary" },
+  { code: "wbcs", label: "WBCS", desc: "WB Civil Service" },
+  { code: "wbpsc", label: "WBPSC", desc: "Public Service Comm." },
+  { code: "railway", label: "Railway", desc: "RRB NTPC / Group D" },
+  { code: "banking", label: "Banking", desc: "IBPS, SBI PO/Clerk" },
+  { code: "police", label: "Police", desc: "WBP, Kolkata Police" },
+  { code: "other", label: "Other", desc: "More test series" },
+] as const;
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -83,6 +95,73 @@ function DashboardPage() {
               </Button>
             </Link>
           )}
+        </div>
+      </section>
+
+      {/* Onboarding: choose target exam if none set */}
+      {!isLoading && !profile?.target_exam && (
+        <section className="rounded-2xl border border-primary/40 bg-primary/5 p-6">
+          <div className="flex items-start gap-3">
+            <Target className="mt-0.5 h-5 w-5 text-primary" />
+            <div className="flex-1">
+              <h2 className="text-base font-semibold">Pick your target exam</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Choose which exam you're preparing for — we'll personalise mocks and analytics for it.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {EXAM_GRID.map((e) => (
+                  <Link
+                    key={e.code}
+                    to="/tests"
+                    search={{ exam: e.code }}
+                    className="rounded-full border border-border/60 bg-card/60 px-3 py-1.5 text-xs font-medium hover:border-primary/60 hover:text-primary"
+                  >
+                    {e.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-3">
+                <Link to="/profile" className="text-xs text-primary hover:underline">
+                  Or set it permanently in your profile →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Browse by exam */}
+      <section>
+        <div className="mb-4 flex items-end justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Browse by exam</h2>
+            <p className="text-xs text-muted-foreground">
+              Tap an exam to see all its question papers.
+            </p>
+          </div>
+          <Link to="/tests" search={{ exam: "all" }} className="text-xs text-primary hover:underline">
+            View all
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {EXAM_GRID.map((e) => (
+            <Link
+              key={e.code}
+              to="/tests"
+              search={{ exam: e.code }}
+              className="group rounded-xl border border-border/60 bg-card/40 p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[var(--shadow-elegant)]"
+            >
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/15 text-primary transition-transform group-hover:scale-105">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold">{e.label}</div>
+                  <div className="truncate text-xs text-muted-foreground">{e.desc}</div>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 

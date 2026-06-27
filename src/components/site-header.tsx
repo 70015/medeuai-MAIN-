@@ -51,6 +51,12 @@ export function SiteHeader() {
           >
             Pricing
           </a>
+          <Link
+            to="/about"
+            className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            About
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
