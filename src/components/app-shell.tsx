@@ -50,7 +50,6 @@ export function useProfile() {
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/about", label: "About", icon: Info },
   { to: "/tests", label: "Tests", icon: FileText },
   { to: "/ai-teacher", label: "AI Teacher", icon: Brain },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
