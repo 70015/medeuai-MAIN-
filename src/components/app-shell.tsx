@@ -54,7 +54,6 @@ const navItems = [
   { to: "/ai-teacher", label: "AI Teacher", icon: Brain },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/billing", label: "Billing", icon: CreditCard },
-  { to: "/profile", label: "Profile", icon: UserIcon },
 ] as const;
 
 
@@ -103,7 +102,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b border-border/60 glass">
+      <header className="sticky top-0 z-40 glass">
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <Link
             to={adminMode ? "/admin" : "/dashboard"}
