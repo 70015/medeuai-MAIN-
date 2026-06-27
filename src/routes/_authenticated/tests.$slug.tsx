@@ -46,7 +46,16 @@ function TestDetailsPage() {
       if (error) throw error;
       if (!test) return null;
       const cfg = test.section_config as TestConfig | null;
-      const questionCount = cfg?.total_questions ?? 0;
+      let questionCount = cfg?.total_questions ?? 0;
+      if (!questionCount) {
+        const { data: syl } = await supabase
+          .from("exam_syllabi")
+          .select("pattern")
+          .eq("target_exam", test.target_exam)
+          .maybeSingle();
+        const sylPattern = syl?.pattern as TestConfig | null;
+        questionCount = sylPattern?.total_questions ?? 0;
+      }
       return { test, questionCount, cfg };
     },
   });
