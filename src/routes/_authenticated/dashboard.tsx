@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BookOpen,
   Brain,
@@ -43,11 +43,13 @@ function DashboardPage() {
           "Discipline beats motivation. Show up today, your future rank will thank you."
         </p>
         <div className="mt-6 flex flex-wrap gap-2">
-          <Button>
-            <PlayCircle className="mr-1.5 h-4 w-4" />
-            Start mock test
-          </Button>
-          <Button variant="outline">
+          <Link to="/tests">
+            <Button>
+              <PlayCircle className="mr-1.5 h-4 w-4" />
+              Start mock test
+            </Button>
+          </Link>
+          <Button variant="outline" disabled>
             <Brain className="mr-1.5 h-4 w-4" />
             Ask AI Teacher
           </Button>
