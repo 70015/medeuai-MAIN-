@@ -12,6 +12,7 @@ import {
   Target,
   Trophy,
   Zap,
+  Sparkles,
 } from "lucide-react";
 
 const EXAM_GRID = [
