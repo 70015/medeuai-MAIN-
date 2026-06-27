@@ -252,6 +252,10 @@ function AttemptPage() {
   const current = data.questions[index];
   const currentAns = data.answers[current.id];
   const options = (current.options as Array<unknown>) ?? [];
+  const order = current.options_order;
+  // Find display position of the currently selected (original) index, if any
+  const selectedDisplayIdx =
+    currentAns?.selected_index == null ? -1 : order.indexOf(currentAns.selected_index);
 
   return (
     <div className="space-y-4">
@@ -262,6 +266,7 @@ function AttemptPage() {
             <h1 className="line-clamp-1 text-sm font-semibold sm:text-base">{data.test.title}</h1>
             <p className="text-xs text-muted-foreground">
               Question {index + 1} of {data.questions.length}
+              {current.section_label ? ` · ${current.section_label}` : ""}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -302,13 +307,20 @@ function AttemptPage() {
           <p className="whitespace-pre-wrap text-base leading-relaxed">{localize(current.question, lang)}</p>
 
           <div className="mt-5 space-y-2">
-            {options.map((opt, i) => {
-              const selected = currentAns?.selected_index === i;
+            {order.map((origIdx, displayIdx) => {
+              const opt = options[origIdx];
+              const selected = displayIdx === selectedDisplayIdx;
               return (
                 <button
-                  key={i}
+                  key={displayIdx}
                   type="button"
-                  onClick={() => persistAnswer(current.id, selected ? null : i, currentAns?.is_marked ?? false)}
+                  onClick={() =>
+                    persistAnswer(
+                      current.id,
+                      selected ? null : origIdx,
+                      currentAns?.is_marked ?? false,
+                    )
+                  }
                   className={cn(
                     "flex w-full items-start gap-3 rounded-lg border p-3 text-left text-sm transition-colors",
                     selected
@@ -322,13 +334,14 @@ function AttemptPage() {
                       selected ? "border-primary bg-primary text-primary-foreground" : "border-border",
                     )}
                   >
-                    {String.fromCharCode(65 + i)}
+                    {String.fromCharCode(65 + displayIdx)}
                   </span>
                   <span>{localize(opt, lang)}</span>
                 </button>
               );
             })}
           </div>
+
 
           <div className="mt-6 flex flex-wrap items-center gap-2">
             <Button variant="outline" size="sm" disabled={index === 0} onClick={() => setIndex((i) => i - 1)}>
