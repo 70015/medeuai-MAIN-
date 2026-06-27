@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel } from "@/lib/exam";
-import { generatePaperForAttempt } from "@/lib/paper-generation.functions";
+import { generateDynamicPaperForAttempt } from "@/lib/dynamic-paper.functions";
 import { getPlanStatus } from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
@@ -27,7 +27,7 @@ type TestConfig = {
 function TestDetailsPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
-  const genPaper = useServerFn(generatePaperForAttempt);
+  const genPaper = useServerFn(generateDynamicPaperForAttempt);
   const planStatusFn = useServerFn(getPlanStatus);
 
   const { data: plan } = useQuery({
@@ -46,7 +46,16 @@ function TestDetailsPage() {
       if (error) throw error;
       if (!test) return null;
       const cfg = test.section_config as TestConfig | null;
-      const questionCount = cfg?.total_questions ?? 0;
+      let questionCount = cfg?.total_questions ?? 0;
+      if (!questionCount) {
+        const { data: syl } = await supabase
+          .from("exam_syllabi")
+          .select("pattern")
+          .eq("target_exam", test.target_exam)
+          .maybeSingle();
+        const sylPattern = syl?.pattern as TestConfig | null;
+        questionCount = sylPattern?.total_questions ?? 0;
+      }
       return { test, questionCount, cfg };
     },
   });
@@ -132,6 +141,7 @@ function TestDetailsPage() {
           <h2 className="text-sm font-semibold">Instructions</h2>
           <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-muted-foreground">
             <li>The test will run for {t.duration_minutes} minutes from the moment you start.</li>
+            <li>Every attempt generates a fresh, AI-powered paper unique to you — first start may take 20–60 seconds.</li>
             <li>You can navigate freely between questions and mark them for review.</li>
             <li>Negative marking: -{Number(t.negative_marks)} for each incorrect answer.</li>
             <li>Your progress is saved automatically.</li>
@@ -160,11 +170,11 @@ function TestDetailsPage() {
           <Button
             size="lg"
             onClick={() => start.mutate()}
-            disabled={start.isPending || data.questionCount === 0 || (plan ? !plan.canStartTest : false)}
+            disabled={start.isPending || (plan ? !plan.canStartTest : false)}
           >
             <PlayCircle className="mr-1.5 h-4 w-4" />
             {start.isPending
-              ? "Starting…"
+              ? "Generating your paper…"
               : plan && !plan.canStartTest
                 ? "Free limit reached"
                 : "Start test"}
