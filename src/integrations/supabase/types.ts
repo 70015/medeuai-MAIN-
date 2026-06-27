@@ -14,16 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          coins: number
+          created_at: string
+          current_streak: number
+          daily_goal_minutes: number
+          email: string
+          full_name: string | null
+          id: string
+          last_active_at: string | null
+          longest_streak: number
+          plan: Database["public"]["Enums"]["subscription_plan"]
+          preferred_language:
+            | Database["public"]["Enums"]["preferred_language"]
+            | null
+          subscription_expires_at: string | null
+          subscription_status: string | null
+          target_exam: Database["public"]["Enums"]["target_exam"] | null
+          timezone: string | null
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          coins?: number
+          created_at?: string
+          current_streak?: number
+          daily_goal_minutes?: number
+          email: string
+          full_name?: string | null
+          id: string
+          last_active_at?: string | null
+          longest_streak?: number
+          plan?: Database["public"]["Enums"]["subscription_plan"]
+          preferred_language?:
+            | Database["public"]["Enums"]["preferred_language"]
+            | null
+          subscription_expires_at?: string | null
+          subscription_status?: string | null
+          target_exam?: Database["public"]["Enums"]["target_exam"] | null
+          timezone?: string | null
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          coins?: number
+          created_at?: string
+          current_streak?: number
+          daily_goal_minutes?: number
+          email?: string
+          full_name?: string | null
+          id?: string
+          last_active_at?: string | null
+          longest_streak?: number
+          plan?: Database["public"]["Enums"]["subscription_plan"]
+          preferred_language?:
+            | Database["public"]["Enums"]["preferred_language"]
+            | null
+          subscription_expires_at?: string | null
+          subscription_status?: string | null
+          target_exam?: Database["public"]["Enums"]["target_exam"] | null
+          timezone?: string | null
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      preferred_language: "english" | "bengali" | "hindi"
+      subscription_plan: "free" | "pro_monthly" | "pro_yearly"
+      target_exam:
+        | "ssc_cgl"
+        | "ssc_chsl"
+        | "wbcs"
+        | "wbpsc"
+        | "railway"
+        | "banking"
+        | "police"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +256,20 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      preferred_language: ["english", "bengali", "hindi"],
+      subscription_plan: ["free", "pro_monthly", "pro_yearly"],
+      target_exam: [
+        "ssc_cgl",
+        "ssc_chsl",
+        "wbcs",
+        "wbpsc",
+        "railway",
+        "banking",
+        "police",
+        "other",
+      ],
+    },
   },
 } as const
