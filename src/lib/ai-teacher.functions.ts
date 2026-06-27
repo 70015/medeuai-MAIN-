@@ -28,12 +28,49 @@ Style:
 - Be concise but thorough. Use markdown formatting.
 - If asked something outside competitive exam prep, politely steer back.`;
 
+const FREE_DAILY_LIMIT = 10;
+
 export const askAITeacher = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => Input.parse(d))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("AI is not configured. Contact admin.");
+
+    // Enforce daily quota for non-Pro users
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("plan")
+      .eq("id", context.userId)
+      .maybeSingle();
+    const isPro = profile?.plan === "pro_monthly" || profile?.plan === "pro_yearly";
+
+    if (!isPro) {
+      const today = new Date().toISOString().slice(0, 10);
+      const { data: usage } = await supabaseAdmin
+        .from("ai_teacher_usage")
+        .select("count")
+        .eq("user_id", context.userId)
+        .eq("day", today)
+        .maybeSingle();
+      const used = usage?.count ?? 0;
+      if (used >= FREE_DAILY_LIMIT) {
+        throw new Error(
+          `Free plan limit reached (${FREE_DAILY_LIMIT} questions/day). Upgrade to Pro for unlimited AI Teacher access.`,
+        );
+      }
+      await supabaseAdmin.from("ai_teacher_usage").upsert(
+        {
+          user_id: context.userId,
+          day: today,
+          count: used + 1,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,day" },
+      );
+    }
+
 
     const lang =
       data.language === "bengali"

@@ -183,6 +183,10 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
       plan_id?: string;
     }>(`/subscriptions/${data.razorpay_subscription_id}`);
 
+    const periodEndIso = sub.current_end
+      ? new Date(sub.current_end * 1000).toISOString()
+      : null;
+
     await supabaseAdmin
       .from("subscriptions")
       .update({
@@ -191,15 +195,35 @@ export const verifyRazorpayPayment = createServerFn({ method: "POST" })
         current_period_start: sub.current_start
           ? new Date(sub.current_start * 1000).toISOString()
           : null,
-        current_period_end: sub.current_end
-          ? new Date(sub.current_end * 1000).toISOString()
-          : null,
+        current_period_end: periodEndIso,
         updated_at: new Date().toISOString(),
       })
       .eq("razorpay_subscription_id", data.razorpay_subscription_id)
       .eq("user_id", context.userId);
 
+    // Flip the profile to the matching Pro plan so feature gating unlocks immediately.
+    const proStatuses = ["active", "authenticated", "trialing"];
+    if (proStatuses.includes(sub.status)) {
+      const { data: subRow } = await supabaseAdmin
+        .from("subscriptions")
+        .select("price_id")
+        .eq("razorpay_subscription_id", data.razorpay_subscription_id)
+        .maybeSingle();
+      const planValue =
+        subRow?.price_id === "pro_yearly" ? "pro_yearly" : "pro_monthly";
+      await supabaseAdmin
+        .from("profiles")
+        .update({
+          plan: planValue,
+          subscription_status: sub.status,
+          subscription_expires_at: periodEndIso,
+        })
+        .eq("id", context.userId);
+    }
+
+
     return { status: sub.status, currentPeriodEnd: sub.current_end ?? null };
+
   });
 
 // ---------- Cancel ----------

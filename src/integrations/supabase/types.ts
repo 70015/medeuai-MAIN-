@@ -77,6 +77,27 @@ export type Database = {
           },
         ]
       }
+      ai_teacher_usage: {
+        Row: {
+          count: number
+          day: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          count?: number
+          day?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          count?: number
+          day?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       attempt_answers: {
         Row: {
           attempt_id: string
@@ -757,6 +778,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      downgrade_expired_plans: { Args: never; Returns: undefined }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
         Returns: boolean
