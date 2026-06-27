@@ -4,6 +4,7 @@ import {
   FileText,
   LayoutDashboard,
   LogOut,
+  Shield,
   Sparkles,
   Trophy,
   User as UserIcon,
