@@ -1,36 +1,37 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
-import { Check, Crown, ExternalLink, Loader2, Sparkles } from "lucide-react";
+import { Check, Crown, Loader2, Sparkles, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PaymentTestModeBanner } from "@/components/payment-test-mode-banner";
-import { StripeEmbeddedCheckout } from "@/components/stripe-embedded-checkout";
-import { isPaymentsConfigured, getStripeEnvironment } from "@/lib/stripe";
-import { createPortalSession, getPlanStatus } from "@/lib/payments.functions";
+import { supabase } from "@/integrations/supabase/client";
+import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
+import {
+  cancelRazorpaySubscription,
+  createRazorpaySubscription,
+  getPlanStatus,
+  getRazorpayConfig,
+  verifyRazorpayPayment,
+} from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/billing")({
   head: () => ({ meta: [{ title: "Billing — ParikshaSathi" }] }),
-  validateSearch: (s: Record<string, unknown>) => ({
-    session_id: typeof s.session_id === "string" ? s.session_id : undefined,
-  }),
   component: BillingPage,
 });
 
 const PLANS = [
   {
-    priceId: "pro_monthly" as const,
+    lookup_key: "pro_monthly" as const,
     name: "Pro Monthly",
     price: "₹99",
     cadence: "per month",
     perks: ["Unlimited mock tests", "AI explanations & similar questions", "Full analytics"],
   },
   {
-    priceId: "pro_yearly" as const,
+    lookup_key: "pro_yearly" as const,
     name: "Pro Yearly",
     price: "₹799",
     cadence: "per year — save ₹389",
@@ -40,66 +41,77 @@ const PLANS = [
 ];
 
 function BillingPage() {
-  const navigate = useNavigate();
-  const search = Route.useSearch();
   const queryClient = useQueryClient();
-  const [checkoutPrice, setCheckoutPrice] = useState<string | null>(null);
-  const planStatusFn = useServerFn(getPlanStatus);
-  const portalFn = useServerFn(createPortalSession);
-
-  const configured = isPaymentsConfigured();
-  const env = configured ? getStripeEnvironment() : "sandbox";
+  const planFn = useServerFn(getPlanStatus);
+  const configFn = useServerFn(getRazorpayConfig);
+  const createSubFn = useServerFn(createRazorpaySubscription);
+  const verifyFn = useServerFn(verifyRazorpayPayment);
+  const cancelFn = useServerFn(cancelRazorpaySubscription);
 
   const { data: plan, isLoading } = useQuery({
-    queryKey: ["plan-status", env],
-    queryFn: () => planStatusFn({ data: { environment: env } }),
+    queryKey: ["plan-status"],
+    queryFn: () => planFn(),
   });
 
-  // Refresh after returning from checkout
-  useEffect(() => {
-    if (search.session_id) {
-      toast.success("Payment received. Activating your Pro plan…");
-      const t = setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["plan-status"] });
-        navigate({ to: "/billing", search: {} });
-      }, 1500);
-      return () => clearTimeout(t);
-    }
-  }, [search.session_id, navigate, queryClient]);
+  const { data: config } = useQuery({
+    queryKey: ["razorpay-config"],
+    queryFn: () => configFn(),
+  });
 
-  const portal = useMutation({
-    mutationFn: () =>
-      portalFn({
-        data: { environment: env, returnUrl: window.location.href },
-      }),
-    onSuccess: (r) => {
-      if ("error" in r) throw new Error(r.error);
-      window.open(r.url, "_blank");
+  const subscribe = useMutation({
+    mutationFn: async (lookup_key: "pro_monthly" | "pro_yearly") => {
+      if (!config?.keyId) throw new Error("Razorpay is not configured yet");
+      const { data: u } = await supabase.auth.getUser();
+      const { subscriptionId } = await createSubFn({ data: { lookup_key } });
+      await new Promise<void>((resolve, reject) => {
+        openRazorpayCheckout({
+          keyId: config.keyId!,
+          subscriptionId,
+          name: "ParikshaSathi",
+          description: lookup_key === "pro_yearly" ? "Pro Yearly Subscription" : "Pro Monthly Subscription",
+          prefill: { email: u?.user?.email ?? undefined },
+          onSuccess: async (r) => {
+            try {
+              await verifyFn({ data: r });
+              resolve();
+            } catch (e) {
+              reject(e);
+            }
+          },
+          onDismiss: () => reject(new Error("Checkout cancelled")),
+        });
+      });
+    },
+    onSuccess: () => {
+      toast.success("Subscription activated. Welcome to Pro!");
+      queryClient.invalidateQueries({ queryKey: ["plan-status"] });
+    },
+    onError: (e: Error) => {
+      if (e.message !== "Checkout cancelled") toast.error(e.message);
+    },
+  });
+
+  const cancel = useMutation({
+    mutationFn: () => cancelFn(),
+    onSuccess: () => {
+      toast.success("Subscription will end at the period close");
+      queryClient.invalidateQueries({ queryKey: ["plan-status"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
 
-  if (checkoutPrice) {
-    const returnUrl = `${window.location.origin}/billing?session_id={CHECKOUT_SESSION_ID}`;
-    return (
-      <div className="space-y-4">
-        <PaymentTestModeBanner />
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">Complete payment</h1>
-          <Button variant="ghost" size="sm" onClick={() => setCheckoutPrice(null)}>
-            Cancel
-          </Button>
-        </div>
-        <Card className="border-border/60 bg-card/40 p-4">
-          <StripeEmbeddedCheckout priceId={checkoutPrice} returnUrl={returnUrl} />
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
-      <PaymentTestModeBanner />
+      {config && !config.keyId && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-400">
+          Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.
+        </div>
+      )}
+      {config?.environment === "test" && (
+        <div className="rounded-lg border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-xs text-orange-300">
+          Test mode — use card 4111 1111 1111 1111, any future expiry, any CVV, OTP 1234.
+        </div>
+      )}
       <div className="flex items-center gap-2">
         <Crown className="h-5 w-5 text-primary" />
         <h1 className="text-xl font-bold tracking-tight">Billing & Plans</h1>
@@ -122,18 +134,22 @@ function BillingPage() {
                   : ""}
               </p>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => portal.mutate()}
-              disabled={portal.isPending}
-            >
-              {portal.isPending ? (
-                <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-              ) : (
-                <ExternalLink className="mr-1 h-4 w-4" />
-              )}
-              Manage subscription
-            </Button>
+            {!plan.cancelAtPeriodEnd && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (confirm("Cancel subscription at the end of the current period?")) cancel.mutate();
+                }}
+                disabled={cancel.isPending}
+              >
+                {cancel.isPending ? (
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                ) : (
+                  <XCircle className="mr-1 h-4 w-4" />
+                )}
+                Cancel subscription
+              </Button>
+            )}
           </div>
         </Card>
       ) : (
@@ -151,7 +167,7 @@ function BillingPage() {
         <div className="grid gap-4 md:grid-cols-2">
           {PLANS.map((p) => (
             <Card
-              key={p.priceId}
+              key={p.lookup_key}
               className={
                 "relative border-border/60 bg-card/40 p-6 " +
                 (p.highlight ? "border-primary/60 ring-1 ring-primary/30" : "")
@@ -177,10 +193,13 @@ function BillingPage() {
               </ul>
               <Button
                 className="mt-6 w-full"
-                disabled={!configured}
-                onClick={() => setCheckoutPrice(p.priceId)}
+                disabled={!config?.keyId || subscribe.isPending}
+                onClick={() => subscribe.mutate(p.lookup_key)}
               >
-                {configured ? "Subscribe" : "Payments not configured"}
+                {subscribe.isPending ? (
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                ) : null}
+                {config?.keyId ? "Subscribe" : "Payments not configured"}
               </Button>
             </Card>
           ))}
