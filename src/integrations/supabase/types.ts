@@ -515,15 +515,15 @@ export type Database = {
           environment: string
           id: string
           price_id: string
-          product_id: string
+          product_id: string | null
           provider: string
           razorpay_customer_id: string | null
           razorpay_plan_id: string | null
           razorpay_subscription_id: string | null
           short_url: string | null
           status: string
-          stripe_customer_id: string
-          stripe_subscription_id: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
           updated_at: string | null
           user_id: string
         }
@@ -535,15 +535,15 @@ export type Database = {
           environment?: string
           id?: string
           price_id: string
-          product_id: string
+          product_id?: string | null
           provider?: string
           razorpay_customer_id?: string | null
           razorpay_plan_id?: string | null
           razorpay_subscription_id?: string | null
           short_url?: string | null
           status?: string
-          stripe_customer_id: string
-          stripe_subscription_id: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
           updated_at?: string | null
           user_id: string
         }
@@ -555,15 +555,15 @@ export type Database = {
           environment?: string
           id?: string
           price_id?: string
-          product_id?: string
+          product_id?: string | null
           provider?: string
           razorpay_customer_id?: string | null
           razorpay_plan_id?: string | null
           razorpay_subscription_id?: string | null
           short_url?: string | null
           status?: string
-          stripe_customer_id?: string
-          stripe_subscription_id?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
           updated_at?: string | null
           user_id?: string
         }

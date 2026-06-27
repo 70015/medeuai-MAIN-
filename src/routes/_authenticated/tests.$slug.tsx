@@ -10,8 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel } from "@/lib/exam";
 import { generatePaperForAttempt } from "@/lib/paper-generation.functions";
-import { getPlanStatus } from "@/lib/payments.functions";
-import { getStripeEnvironment, isPaymentsConfigured } from "@/lib/stripe";
+import { getPlanStatus } from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
   head: () => ({ meta: [{ title: "Mock Test — ParikshaSathi" }] }),
@@ -30,11 +29,10 @@ function TestDetailsPage() {
   const navigate = useNavigate();
   const genPaper = useServerFn(generatePaperForAttempt);
   const planStatusFn = useServerFn(getPlanStatus);
-  const env = isPaymentsConfigured() ? getStripeEnvironment() : "sandbox";
 
   const { data: plan } = useQuery({
-    queryKey: ["plan-status", env],
-    queryFn: () => planStatusFn({ data: { environment: env } }),
+    queryKey: ["plan-status"],
+    queryFn: () => planStatusFn(),
   });
 
   const { data, isLoading } = useQuery({

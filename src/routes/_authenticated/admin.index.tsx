@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { FileQuestion, HelpCircle, Users, ClipboardCheck } from "lucide-react";
+import { FileQuestion, HelpCircle, Users, ClipboardCheck, CreditCard, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getAdminStats } from "@/lib/admin.functions";
+import { ensureRazorpayPlans } from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({ meta: [{ title: "Admin Dashboard — ParikshaSathi" }] }),
@@ -14,9 +16,23 @@ export const Route = createFileRoute("/_authenticated/admin/")({
 
 function AdminDashboard() {
   const fn = useServerFn(getAdminStats);
+  const ensurePlansFn = useServerFn(ensureRazorpayPlans);
   const { data, isLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: () => fn(),
+  });
+
+  const ensurePlans = useMutation({
+    mutationFn: () => ensurePlansFn(),
+    onSuccess: (r) => {
+      const created = r.plans.filter((p) => p.created).length;
+      toast.success(
+        created > 0
+          ? `Created ${created} plan(s) in Razorpay.`
+          : "Plans already initialized in Razorpay.",
+      );
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
   return (
@@ -59,6 +75,27 @@ function AdminDashboard() {
             <Button variant="outline">Review queue ({data?.pendingQuestions ?? 0})</Button>
           </Link>
         </div>
+      </Card>
+
+      <Card className="border-border/60 bg-card/40 p-6">
+        <h2 className="flex items-center gap-2 text-base font-semibold">
+          <CreditCard className="h-4 w-4" /> Razorpay setup
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Run this once to create the Pro Monthly (₹99) and Pro Yearly (₹799) plans in your
+          Razorpay account. Idempotent — safe to re-run.
+        </p>
+        <Button
+          className="mt-4"
+          variant="outline"
+          onClick={() => ensurePlans.mutate()}
+          disabled={ensurePlans.isPending}
+        >
+          {ensurePlans.isPending ? (
+            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+          ) : null}
+          Initialize Razorpay plans
+        </Button>
       </Card>
     </div>
   );
