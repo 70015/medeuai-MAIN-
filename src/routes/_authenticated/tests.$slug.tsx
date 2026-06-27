@@ -140,10 +140,36 @@ function TestDetailsPage() {
           </ul>
         </div>
 
+        {plan && !plan.isPro && (
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/30 bg-primary/5 p-4">
+            <div className="text-sm">
+              <div className="font-medium">
+                Free plan: {plan.attemptsInWindow} / {plan.freeAttemptsAllowed} attempts used
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Resets on a rolling {plan.windowDays}-day window. Pro gives you unlimited tests.
+              </div>
+            </div>
+            <Link to="/billing">
+              <Button size="sm" variant="outline">
+                <Crown className="mr-1 h-4 w-4" /> Upgrade
+              </Button>
+            </Link>
+          </div>
+        )}
+
         <div className="mt-6">
-          <Button size="lg" onClick={() => start.mutate()} disabled={start.isPending || data.questionCount === 0}>
+          <Button
+            size="lg"
+            onClick={() => start.mutate()}
+            disabled={start.isPending || data.questionCount === 0 || (plan ? !plan.canStartTest : false)}
+          >
             <PlayCircle className="mr-1.5 h-4 w-4" />
-            {start.isPending ? "Starting…" : "Start test"}
+            {start.isPending
+              ? "Starting…"
+              : plan && !plan.canStartTest
+                ? "Free limit reached"
+                : "Start test"}
           </Button>
         </div>
       </Card>
