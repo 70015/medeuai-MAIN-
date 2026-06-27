@@ -31,10 +31,12 @@ function ResultsPage() {
       if (error) throw error;
       if (!attempt) return null;
 
-      const { data: mtq } = await supabase
-        .from("mock_test_questions")
-        .select("position, marks, questions:question_id (id, question, options, correct_index, explanation)")
-        .eq("test_id", attempt.test_id)
+      const { data: aq } = await supabase
+        .from("attempt_questions")
+        .select(
+          "position, marks, options_order, section_label, questions:question_id (id, question, options, correct_index, explanation)",
+        )
+        .eq("attempt_id", attemptId)
         .order("position");
 
       const { data: answers } = await supabase
@@ -46,7 +48,7 @@ function ResultsPage() {
         (answers ?? []).map((a) => [a.question_id, a]),
       );
 
-      return { attempt, items: mtq ?? [], answerMap };
+      return { attempt, items: aq ?? [], answerMap };
     },
   });
 
