@@ -26,7 +26,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminHost } from "@/lib/host";
 import { ThemeToggle } from "./theme-toggle";
+
 
 export function useProfile() {
   return useQuery({
@@ -95,21 +97,41 @@ export function AppShell({ children }: { children: ReactNode }) {
     .join("")
     .toUpperCase();
 
+  const adminMode = isAdminHost();
+  const visibleNav = adminMode ? [] : navItems;
+
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border/60 glass">
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <Link to="/dashboard" className="flex items-center gap-2 font-semibold">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-              <Sparkles className="h-4 w-4" />
+          <Link
+            to={adminMode ? "/admin" : "/dashboard"}
+            className="flex items-center gap-2 font-semibold"
+          >
+            <span
+              className={
+                "grid h-8 w-8 place-items-center rounded-lg text-primary-foreground " +
+                (adminMode ? "bg-destructive" : "bg-primary")
+              }
+            >
+              {adminMode ? <Shield className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
             </span>
             <span className="hidden sm:inline">
-              Pariksha<span className="text-primary">Sathi</span>
+              {adminMode ? (
+                <>
+                  Pariksha<span className="text-destructive">Sathi</span>{" "}
+                  <span className="text-xs font-medium text-muted-foreground">Admin</span>
+                </>
+              ) : (
+                <>
+                  Pariksha<span className="text-primary">Sathi</span>
+                </>
+              )}
             </span>
           </Link>
 
           <nav className="flex items-center gap-1">
-            {navItems.map((n) => {
+            {visibleNav.map((n) => {
               const active = pathname === n.to;
               return (
                 <Link
@@ -127,7 +149,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
-            {isAdmin && (
+            {!adminMode && isAdmin && (
               <Link
                 to="/admin"
                 className={
@@ -142,6 +164,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             )}
           </nav>
+
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
