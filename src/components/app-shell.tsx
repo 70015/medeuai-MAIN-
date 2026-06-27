@@ -132,7 +132,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-1">
+          <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
             {visibleNav.map((n) => {
               const active = pathname === n.to;
               return (

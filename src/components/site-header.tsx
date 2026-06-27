@@ -64,7 +64,10 @@ export function SiteHeader() {
           <ThemeToggle />
           {hasSession ? (
             <Button asChild size="sm">
-              <Link to="/dashboard">Open dashboard</Link>
+              <Link to="/dashboard">
+                <span className="sm:hidden">Dashboard</span>
+                <span className="hidden sm:inline">Open dashboard</span>
+              </Link>
             </Button>
           ) : !isAuthRoute ? (
             <>
