@@ -117,6 +117,9 @@ function LandingPage() {
               <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
                 <a href="#features">Explore features</a>
               </Button>
+              <Button asChild size="lg" variant="secondary" className="w-full sm:w-auto">
+                <Link to="/about">About us</Link>
+              </Button>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
               Free plan includes 3 mock tests every month. No credit card required.
@@ -260,6 +263,9 @@ function LandingPage() {
           <div className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} ParikshaSathi. All rights reserved.
           </div>
+          <Button asChild variant="link" size="sm" className="h-auto p-0">
+            <Link to="/about">About us</Link>
+          </Button>
         </div>
       </footer>
     </div>
