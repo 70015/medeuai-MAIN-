@@ -36,7 +36,9 @@ type LoadedAttempt = {
     marks: number;
     negative_marks: number;
     question: unknown;
-    options: unknown;
+    options: unknown[];
+    options_order: number[];
+    section_label: string | null;
   }>;
   answers: Record<string, { selected_index: number | null; is_marked: boolean }>;
 };
@@ -69,22 +71,26 @@ function AttemptPage() {
         .single();
       if (tErr) throw tErr;
 
-      const { data: mtq, error: qErr } = await supabase
-        .from("mock_test_questions")
-        .select("position, marks, negative_marks, questions:question_id (id, question, options)")
-        .eq("test_id", attempt.test_id)
+      const { data: aq, error: qErr } = await supabase
+        .from("attempt_questions")
+        .select(
+          "position, marks, negative_marks, options_order, section_label, questions:question_id (id, question, options)",
+        )
+        .eq("attempt_id", attempt.id)
         .order("position");
       if (qErr) throw qErr;
 
-      const questions = (mtq ?? []).map((r) => {
-        const q = r.questions as { id: string; question: unknown; options: unknown };
+      const questions = (aq ?? []).map((r) => {
+        const q = r.questions as { id: string; question: unknown; options: unknown[] };
         return {
           id: q.id,
           position: r.position,
           marks: Number(r.marks),
           negative_marks: Number(r.negative_marks),
           question: q.question,
-          options: q.options,
+          options: q.options ?? [],
+          options_order: (r.options_order as number[]) ?? q.options.map((_, i) => i),
+          section_label: r.section_label,
         };
       });
 
