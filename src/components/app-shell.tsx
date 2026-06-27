@@ -48,10 +48,12 @@ export function useProfile() {
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/tests", label: "Tests", icon: FileText },
+  { to: "/ai-teacher", label: "AI Teacher", icon: Brain },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/billing", label: "Billing", icon: CreditCard },
   { to: "/profile", label: "Profile", icon: UserIcon },
 ] as const;
+
 
 export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
