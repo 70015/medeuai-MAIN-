@@ -14,6 +14,156 @@ export type Database = {
   }
   public: {
     Tables: {
+      attempt_answers: {
+        Row: {
+          attempt_id: string
+          awarded_marks: number
+          created_at: string
+          id: string
+          is_correct: boolean | null
+          is_marked: boolean
+          question_id: string
+          selected_index: number | null
+          time_spent_seconds: number
+          updated_at: string
+        }
+        Insert: {
+          attempt_id: string
+          awarded_marks?: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean | null
+          is_marked?: boolean
+          question_id: string
+          selected_index?: number | null
+          time_spent_seconds?: number
+          updated_at?: string
+        }
+        Update: {
+          attempt_id?: string
+          awarded_marks?: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean | null
+          is_marked?: boolean
+          question_id?: string
+          selected_index?: number | null
+          time_spent_seconds?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attempt_answers_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "test_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attempt_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_test_questions: {
+        Row: {
+          id: string
+          marks: number
+          negative_marks: number
+          position: number
+          question_id: string
+          test_id: string
+        }
+        Insert: {
+          id?: string
+          marks?: number
+          negative_marks?: number
+          position: number
+          question_id: string
+          test_id: string
+        }
+        Update: {
+          id?: string
+          marks?: number
+          negative_marks?: number
+          position?: number
+          question_id?: string
+          test_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_test_questions_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mock_test_questions_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "mock_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_tests: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_free: boolean
+          is_published: boolean
+          negative_marks: number
+          pass_marks: number | null
+          slug: string
+          target_exam: Database["public"]["Enums"]["target_exam"]
+          test_type: Database["public"]["Enums"]["test_type"]
+          title: string
+          total_marks: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_free?: boolean
+          is_published?: boolean
+          negative_marks?: number
+          pass_marks?: number | null
+          slug: string
+          target_exam: Database["public"]["Enums"]["target_exam"]
+          test_type?: Database["public"]["Enums"]["test_type"]
+          title: string
+          total_marks?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_free?: boolean
+          is_published?: boolean
+          negative_marks?: number
+          pass_marks?: number | null
+          slug?: string
+          target_exam?: Database["public"]["Enums"]["target_exam"]
+          test_type?: Database["public"]["Enums"]["test_type"]
+          title?: string
+          total_marks?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -83,6 +233,202 @@ export type Database = {
         }
         Relationships: []
       }
+      questions: {
+        Row: {
+          correct_index: number
+          created_at: string
+          created_by: string | null
+          difficulty: Database["public"]["Enums"]["question_difficulty"]
+          explanation: Json | null
+          id: string
+          is_published: boolean
+          options: Json
+          question: Json
+          source: string | null
+          subject_id: string | null
+          target_exam: Database["public"]["Enums"]["target_exam"] | null
+          topic_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          correct_index: number
+          created_at?: string
+          created_by?: string | null
+          difficulty?: Database["public"]["Enums"]["question_difficulty"]
+          explanation?: Json | null
+          id?: string
+          is_published?: boolean
+          options: Json
+          question: Json
+          source?: string | null
+          subject_id?: string | null
+          target_exam?: Database["public"]["Enums"]["target_exam"] | null
+          topic_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          correct_index?: number
+          created_at?: string
+          created_by?: string | null
+          difficulty?: Database["public"]["Enums"]["question_difficulty"]
+          explanation?: Json | null
+          id?: string
+          is_published?: boolean
+          options?: Json
+          question?: Json
+          source?: string | null
+          subject_id?: string | null
+          target_exam?: Database["public"]["Enums"]["target_exam"] | null
+          topic_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questions_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subjects: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+          name_bn: string | null
+          name_hi: string | null
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+          name_bn?: string | null
+          name_hi?: string | null
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          name_bn?: string | null
+          name_hi?: string | null
+          slug?: string
+        }
+        Relationships: []
+      }
+      test_attempts: {
+        Row: {
+          accuracy: number
+          correct_count: number
+          created_at: string
+          id: string
+          incorrect_count: number
+          score: number
+          skipped_count: number
+          started_at: string
+          status: Database["public"]["Enums"]["attempt_status"]
+          submitted_at: string | null
+          test_id: string
+          time_taken_seconds: number | null
+          total_marks: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number
+          correct_count?: number
+          created_at?: string
+          id?: string
+          incorrect_count?: number
+          score?: number
+          skipped_count?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["attempt_status"]
+          submitted_at?: string | null
+          test_id: string
+          time_taken_seconds?: number | null
+          total_marks?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy?: number
+          correct_count?: number
+          created_at?: string
+          id?: string
+          incorrect_count?: number
+          score?: number
+          skipped_count?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["attempt_status"]
+          submitted_at?: string | null
+          test_id?: string
+          time_taken_seconds?: number | null
+          total_marks?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_attempts_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "mock_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      topics: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          name_bn: string | null
+          name_hi: string | null
+          slug: string
+          subject_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          name_bn?: string | null
+          name_hi?: string | null
+          slug: string
+          subject_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          name_bn?: string | null
+          name_hi?: string | null
+          slug?: string
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "topics_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -119,7 +465,9 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      attempt_status: "in_progress" | "submitted" | "abandoned"
       preferred_language: "english" | "bengali" | "hindi"
+      question_difficulty: "easy" | "medium" | "hard"
       subscription_plan: "free" | "pro_monthly" | "pro_yearly"
       target_exam:
         | "ssc_cgl"
@@ -130,6 +478,7 @@ export type Database = {
         | "banking"
         | "police"
         | "other"
+      test_type: "full_mock" | "sectional" | "topic" | "previous_year" | "daily"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -258,7 +607,9 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      attempt_status: ["in_progress", "submitted", "abandoned"],
       preferred_language: ["english", "bengali", "hindi"],
+      question_difficulty: ["easy", "medium", "hard"],
       subscription_plan: ["free", "pro_monthly", "pro_yearly"],
       target_exam: [
         "ssc_cgl",
@@ -270,6 +621,7 @@ export const Constants = {
         "police",
         "other",
       ],
+      test_type: ["full_mock", "sectional", "topic", "previous_year", "daily"],
     },
   },
 } as const
