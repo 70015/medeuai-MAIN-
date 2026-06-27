@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  Brain,
   CreditCard,
   FileText,
   LayoutDashboard,
@@ -10,6 +11,7 @@ import {
   Trophy,
   User as UserIcon,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
