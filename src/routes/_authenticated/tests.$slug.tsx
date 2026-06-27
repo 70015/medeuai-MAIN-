@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, Clock, FileText, PlayCircle } from "lucide-react";
+import { ArrowLeft, Clock, Crown, FileText, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel } from "@/lib/exam";
 import { generatePaperForAttempt } from "@/lib/paper-generation.functions";
+import { getPlanStatus } from "@/lib/payments.functions";
+import { getStripeEnvironment, isPaymentsConfigured } from "@/lib/stripe";
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
   head: () => ({ meta: [{ title: "Mock Test — ParikshaSathi" }] }),
@@ -27,6 +29,13 @@ function TestDetailsPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
   const genPaper = useServerFn(generatePaperForAttempt);
+  const planStatusFn = useServerFn(getPlanStatus);
+  const env = isPaymentsConfigured() ? getStripeEnvironment() : "sandbox";
+
+  const { data: plan } = useQuery({
+    queryKey: ["plan-status", env],
+    queryFn: () => planStatusFn({ data: { environment: env } }),
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["mock-test", slug],
@@ -49,6 +58,7 @@ function TestDetailsPage() {
       if (!data?.test) throw new Error("Test not loaded");
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("Not signed in");
+      // Free-plan cap: check existing in_progress first; only block creating a NEW attempt
       const { data: existing } = await supabase
         .from("test_attempts")
         .select("id")
@@ -58,6 +68,11 @@ function TestDetailsPage() {
         .maybeSingle();
       let attemptId = existing?.id;
       if (!attemptId) {
+        if (plan && !plan.canStartTest) {
+          throw new Error(
+            `Free plan limit reached (${plan.attemptsInWindow}/${plan.freeAttemptsAllowed} in ${plan.windowDays} days). Upgrade to Pro to continue.`,
+          );
+        }
         const { data: ins, error } = await supabase
           .from("test_attempts")
           .insert({
@@ -125,10 +140,36 @@ function TestDetailsPage() {
           </ul>
         </div>
 
+        {plan && !plan.isPro && (
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/30 bg-primary/5 p-4">
+            <div className="text-sm">
+              <div className="font-medium">
+                Free plan: {plan.attemptsInWindow} / {plan.freeAttemptsAllowed} attempts used
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Resets on a rolling {plan.windowDays}-day window. Pro gives you unlimited tests.
+              </div>
+            </div>
+            <Link to="/billing">
+              <Button size="sm" variant="outline">
+                <Crown className="mr-1 h-4 w-4" /> Upgrade
+              </Button>
+            </Link>
+          </div>
+        )}
+
         <div className="mt-6">
-          <Button size="lg" onClick={() => start.mutate()} disabled={start.isPending || data.questionCount === 0}>
+          <Button
+            size="lg"
+            onClick={() => start.mutate()}
+            disabled={start.isPending || data.questionCount === 0 || (plan ? !plan.canStartTest : false)}
+          >
             <PlayCircle className="mr-1.5 h-4 w-4" />
-            {start.isPending ? "Starting…" : "Start test"}
+            {start.isPending
+              ? "Starting…"
+              : plan && !plan.canStartTest
+                ? "Free limit reached"
+                : "Start test"}
           </Button>
         </div>
       </Card>

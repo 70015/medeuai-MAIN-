@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  CreditCard,
   FileText,
   LayoutDashboard,
   LogOut,
@@ -46,6 +47,7 @@ const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/tests", label: "Tests", icon: FileText },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/billing", label: "Billing", icon: CreditCard },
   { to: "/profile", label: "Profile", icon: UserIcon },
 ] as const;
 
