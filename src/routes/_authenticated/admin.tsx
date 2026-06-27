@@ -32,9 +32,12 @@ function useIsAdmin() {
 
 const tabs = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/syllabi", label: "Syllabi", icon: BookText, exact: false },
   { to: "/admin/generate", label: "AI Generate", icon: Sparkles, exact: false },
   { to: "/admin/review", label: "Review Queue", icon: ListChecks, exact: false },
+  { to: "/admin/users", label: "Users", icon: Users, exact: false },
 ] as const;
+
 
 function AdminLayout() {
   const { data: isAdmin, isLoading, refetch } = useIsAdmin();
