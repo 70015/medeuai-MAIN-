@@ -14,6 +14,309 @@ export type Database = {
   }
   public: {
     Tables: {
+      about_content: {
+        Row: {
+          address: string | null
+          business_email: string | null
+          company_description: string
+          cover_image_url: string | null
+          created_at: string
+          founded_year: string
+          founder_image_url: string | null
+          founder_name: string
+          founder_position: string
+          founder_quote: string
+          gallery_images: string[]
+          hero_subtitle: string
+          hero_title: string
+          id: string
+          is_published: boolean
+          location: string
+          logo_url: string | null
+          maps_link: string | null
+          mission_badge: string
+          mission_description: string
+          mission_image_url: string | null
+          mission_title: string
+          phone: string | null
+          problem_list: string[]
+          problem_title: string
+          seo_canonical: string | null
+          seo_description: string
+          seo_keywords: string
+          seo_og_image: string | null
+          seo_title: string
+          seo_twitter_card: string
+          short_intro: string
+          singleton: boolean
+          social_facebook: string | null
+          social_github: string | null
+          social_instagram: string | null
+          social_linkedin: string | null
+          social_telegram: string | null
+          social_website: string | null
+          social_x: string | null
+          social_youtube: string | null
+          solution_list: string[]
+          story_paragraphs: string[]
+          story_title: string
+          support_email: string | null
+          tagline: string
+          updated_at: string
+          vision_badge: string
+          vision_description: string
+          vision_image_url: string | null
+          vision_title: string
+          website_name: string
+          whatsapp: string | null
+          working_hours: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_email?: string | null
+          company_description?: string
+          cover_image_url?: string | null
+          created_at?: string
+          founded_year?: string
+          founder_image_url?: string | null
+          founder_name?: string
+          founder_position?: string
+          founder_quote?: string
+          gallery_images?: string[]
+          hero_subtitle?: string
+          hero_title?: string
+          id?: string
+          is_published?: boolean
+          location?: string
+          logo_url?: string | null
+          maps_link?: string | null
+          mission_badge?: string
+          mission_description?: string
+          mission_image_url?: string | null
+          mission_title?: string
+          phone?: string | null
+          problem_list?: string[]
+          problem_title?: string
+          seo_canonical?: string | null
+          seo_description?: string
+          seo_keywords?: string
+          seo_og_image?: string | null
+          seo_title?: string
+          seo_twitter_card?: string
+          short_intro?: string
+          singleton?: boolean
+          social_facebook?: string | null
+          social_github?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_telegram?: string | null
+          social_website?: string | null
+          social_x?: string | null
+          social_youtube?: string | null
+          solution_list?: string[]
+          story_paragraphs?: string[]
+          story_title?: string
+          support_email?: string | null
+          tagline?: string
+          updated_at?: string
+          vision_badge?: string
+          vision_description?: string
+          vision_image_url?: string | null
+          vision_title?: string
+          website_name?: string
+          whatsapp?: string | null
+          working_hours?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_email?: string | null
+          company_description?: string
+          cover_image_url?: string | null
+          created_at?: string
+          founded_year?: string
+          founder_image_url?: string | null
+          founder_name?: string
+          founder_position?: string
+          founder_quote?: string
+          gallery_images?: string[]
+          hero_subtitle?: string
+          hero_title?: string
+          id?: string
+          is_published?: boolean
+          location?: string
+          logo_url?: string | null
+          maps_link?: string | null
+          mission_badge?: string
+          mission_description?: string
+          mission_image_url?: string | null
+          mission_title?: string
+          phone?: string | null
+          problem_list?: string[]
+          problem_title?: string
+          seo_canonical?: string | null
+          seo_description?: string
+          seo_keywords?: string
+          seo_og_image?: string | null
+          seo_title?: string
+          seo_twitter_card?: string
+          short_intro?: string
+          singleton?: boolean
+          social_facebook?: string | null
+          social_github?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_telegram?: string | null
+          social_website?: string | null
+          social_x?: string | null
+          social_youtube?: string | null
+          solution_list?: string[]
+          story_paragraphs?: string[]
+          story_title?: string
+          support_email?: string | null
+          tagline?: string
+          updated_at?: string
+          vision_badge?: string
+          vision_description?: string
+          vision_image_url?: string | null
+          vision_title?: string
+          website_name?: string
+          whatsapp?: string | null
+          working_hours?: string | null
+        }
+        Relationships: []
+      }
+      about_faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          display_order: number
+          enabled: boolean
+          id: string
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          display_order?: number
+          enabled?: boolean
+          id?: string
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          display_order?: number
+          enabled?: boolean
+          id?: string
+          question?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      about_features: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          enabled: boolean
+          icon: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          display_order?: number
+          enabled?: boolean
+          icon?: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          enabled?: boolean
+          icon?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      about_roadmap: {
+        Row: {
+          created_at: string
+          date_label: string
+          description: string
+          display_order: number
+          enabled: boolean
+          id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date_label: string
+          description: string
+          display_order?: number
+          enabled?: boolean
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date_label?: string
+          description?: string
+          display_order?: number
+          enabled?: boolean
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      about_values: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          enabled: boolean
+          icon: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          display_order?: number
+          enabled?: boolean
+          icon?: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          enabled?: boolean
+          icon?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_generation_jobs: {
         Row: {
           completed_at: string | null
