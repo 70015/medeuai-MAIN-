@@ -137,12 +137,12 @@ function ResultsPage() {
                     );
                   })}
                 </div>
-                {q.explanation && (
+                {q.explanation ? (
                   <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-3 text-xs">
                     <div className="mb-1 font-semibold text-foreground">Explanation</div>
                     <p className="text-muted-foreground">{localize(q.explanation, lang)}</p>
                   </div>
-                )}
+                ) : null}
               </Card>
             );
           })}
