@@ -25,6 +25,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedTestsSlugRouteImport } from './routes/_authenticated/tests.$slug'
 import { Route as AuthenticatedResultsAttemptIdRouteImport } from './routes/_authenticated/results.$attemptId'
 import { Route as AuthenticatedAttemptAttemptIdRouteImport } from './routes/_authenticated/attempt.$attemptId'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminSyllabiRouteImport } from './routes/_authenticated/admin.syllabi'
 import { Route as AuthenticatedAdminReviewRouteImport } from './routes/_authenticated/admin.review'
 import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
@@ -112,6 +113,11 @@ const AuthenticatedAttemptAttemptIdRoute =
     path: '/attempt/$attemptId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminSyllabiRoute =
   AuthenticatedAdminSyllabiRouteImport.update({
     id: '/syllabi',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/_authenticated/admin/review': typeof AuthenticatedAdminReviewRoute
   '/_authenticated/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
   '/_authenticated/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/_authenticated/tests/$slug': typeof AuthenticatedTestsSlugRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/admin/generate'
     | '/admin/review'
     | '/admin/syllabi'
+    | '/admin/users'
     | '/attempt/$attemptId'
     | '/results/$attemptId'
     | '/tests/$slug'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/admin/generate'
     | '/admin/review'
     | '/admin/syllabi'
+    | '/admin/users'
     | '/attempt/$attemptId'
     | '/results/$attemptId'
     | '/tests/$slug'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/generate'
     | '/_authenticated/admin/review'
     | '/_authenticated/admin/syllabi'
+    | '/_authenticated/admin/users'
     | '/_authenticated/attempt/$attemptId'
     | '/_authenticated/results/$attemptId'
     | '/_authenticated/tests/$slug'
@@ -390,6 +402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAttemptAttemptIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/syllabi': {
       id: '/_authenticated/admin/syllabi'
       path: '/syllabi'
@@ -425,6 +444,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminGenerateRoute: typeof AuthenticatedAdminGenerateRoute
   AuthenticatedAdminReviewRoute: typeof AuthenticatedAdminReviewRoute
   AuthenticatedAdminSyllabiRoute: typeof AuthenticatedAdminSyllabiRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -432,6 +452,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminGenerateRoute: AuthenticatedAdminGenerateRoute,
   AuthenticatedAdminReviewRoute: AuthenticatedAdminReviewRoute,
   AuthenticatedAdminSyllabiRoute: AuthenticatedAdminSyllabiRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
