@@ -14,6 +14,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminHost } from "@/lib/host";
+
 
 function NotFoundComponent() {
   return (
@@ -130,6 +132,20 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
 
+  // Admin Mode: when served from admin.* subdomain, force any non-admin,
+  // non-auth path to /admin so the subdomain feels like a separate site.
+  useEffect(() => {
+    if (!isAdminHost()) return;
+    const path = window.location.pathname;
+    const allowed =
+      path.startsWith("/admin") ||
+      path.startsWith("/auth") ||
+      path.startsWith("/reset-password");
+    if (!allowed) {
+      router.navigate({ to: "/admin", replace: true });
+    }
+  }, [router]);
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
@@ -138,6 +154,7 @@ function RootComponent() {
     });
     return () => sub.subscription.unsubscribe();
   }, [queryClient, router]);
+
 
   return (
     <QueryClientProvider client={queryClient}>

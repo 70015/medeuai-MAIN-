@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import {
   ArrowRight,
   Brain,
@@ -14,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SiteHeader } from "@/components/site-header";
+import { isAdminHost } from "@/lib/host";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -79,9 +82,15 @@ const features = [
 ];
 
 function LandingPage() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAdminHost()) navigate({ to: "/admin", replace: true });
+  }, [navigate]);
+  if (isAdminHost()) return null;
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+
 
       {/* Hero */}
       <section className="relative overflow-hidden hero-bg">

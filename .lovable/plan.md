@@ -1,52 +1,38 @@
-# Switch from Stripe to Razorpay
+## Goal
 
-You'll provide `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` now. The webhook secret can be added later — until then, we'll rely on **client-side payment verification** (signature check on the success callback) plus a manual "Refresh subscription status" poll. That's enough to ship and test; the webhook just makes status updates more reliable for cancellations/renewals.
+Make the admin panel feel like a separate site on its own subdomain (e.g. `admin.yourdomain.com`), while keeping it inside the same Lovable project and database.
 
-## What gets built
+## How it will work
 
-**1. Database (already migrated)**
-- `razorpay_plans` table caches auto-created Plan IDs
-- `subscriptions` extended with `provider`, `razorpay_subscription_id`, `razorpay_customer_id`, `razorpay_plan_id`, `short_url`
+Single deployment, host-aware routing:
 
-**2. Server functions** (`src/lib/razorpay.functions.ts`)
-- `ensureRazorpayPlans` — admin-triggered; creates Monthly ₹99 and Yearly ₹799 plans in Razorpay via API, stores Plan IDs in `razorpay_plans`. Idempotent.
-- `createRazorpaySubscription` — creates a Razorpay subscription for the signed-in user, returns `subscription_id` + `short_url` for checkout
-- `verifyRazorpayPayment` — verifies `razorpay_signature` from success handler using HMAC-SHA256, then upserts the `subscriptions` row as active
-- `getPlanStatus` — same shape as today (isPro, attemptsInWindow, canStartTest), reads provider-agnostic
-- `cancelRazorpaySubscription` — cancels at period end via Razorpay API
+- When the app loads from a host starting with `admin.` (or equals `admin.localhost` in dev), it switches into **Admin Mode**:
+  - The marketing site, `/dashboard`, `/tests`, `/ai-teacher`, `/billing`, etc. are hidden/redirected to `/admin`.
+  - The header/shell is replaced with an Admin-only shell (Admin logo, admin tabs, sign out).
+  - Visiting `/` on the admin subdomain auto-redirects to `/admin`.
+- When the app loads from the main host (no `admin.` prefix), behavior is unchanged. `/admin` still works there too (useful as a fallback before DNS is set up).
+- Same Supabase auth, same `has_role('admin')` check — non-admins hitting the admin subdomain see the "Claim admin / access denied" screen we already have.
 
-**3. Webhook route** (`src/routes/api/public/payments/razorpay-webhook.ts`)
-- Built now but only activates once `RAZORPAY_WEBHOOK_SECRET` is set
-- Handles `subscription.activated`, `subscription.charged`, `subscription.cancelled`, `subscription.completed`, `subscription.halted`
-- URL to register later in Razorpay Dashboard → Webhooks: `https://project--919a0eec-4904-4552-a317-8eb48c9a8544.lovable.app/api/public/payments/razorpay-webhook`
+## Changes
 
-**4. Frontend** (`src/routes/_authenticated/billing.tsx` rewritten)
-- Loads Razorpay Checkout script (`https://checkout.razorpay.com/v1/checkout.js`)
-- "Subscribe Monthly / Yearly" → calls `createRazorpaySubscription` → opens Razorpay modal with `subscription_id`
-- On success handler → calls `verifyRazorpayPayment` → invalidates plan status query
-- Shows current plan, period end, "Cancel subscription" button
-- INR pricing display (₹99 / ₹799)
+1. **`src/lib/host.ts`** (new) — `isAdminHost()` helper reading `window.location.hostname`, SSR-safe (returns false on server).
+2. **`src/routes/__root.tsx`** — on admin host, force-redirect any non-`/admin*` and non-`/auth*` path to `/admin`.
+3. **`src/components/app-shell.tsx`** — when `isAdminHost()`, render a slimmer `AdminShell` (no student nav, no "Take a test" CTA, admin-branded title).
+4. **`src/routes/index.tsx`** — on admin host, redirect to `/admin` instead of rendering the marketing landing.
+5. **`src/routes/_authenticated/admin.tsx`** — minor: show "Admin Console" branding more prominently when on the admin subdomain.
+6. **Sidebar link in the main app** — add a visible "Admin" entry in `app-shell` that only renders for users with the admin role (so admins on the main domain can still get in easily).
 
-**5. Admin bootstrap**
-- Add "Initialize Razorpay Plans" button to `/admin` that calls `ensureRazorpayPlans` once
+No database, no auth, no billing changes.
 
-**6. Removals**
-- Delete: `src/lib/stripe.ts`, `src/lib/stripe.server.ts`, `src/lib/payments.functions.ts`, `src/components/stripe-embedded-checkout.tsx`, `src/components/payment-test-mode-banner.tsx`, `src/routes/api/public/payments/webhook.ts`
-- Uninstall: `stripe`, `@stripe/stripe-js`, `@stripe/react-stripe-js`
-- Install: `razorpay` (server SDK)
-- Remove `VITE_PAYMENTS_CLIENT_TOKEN` from `.env.development`
-- Update `tests.$slug.tsx` upgrade banner to point to Razorpay billing
-- Remove the Lovable-managed Stripe connector from Payments dashboard (you do this manually)
+## What you need to do (one-time, outside code)
 
-## What I need from you
+1. In **Project Settings → Domains**, connect your custom domain (e.g. `yourdomain.com`) — or buy one from Lovable.
+2. Add a second entry for `admin.yourdomain.com` in the same Domains screen. Lovable will give you a DNS record to add at your registrar (CNAME or A record).
+3. Publish the project. Once DNS propagates, `admin.yourdomain.com` will serve the admin-only experience and `yourdomain.com` will serve the student app — both from this same project.
 
-1. **Now**: `RAZORPAY_KEY_ID` (e.g. `rzp_test_xxx`) and `RAZORPAY_KEY_SECRET` — from Razorpay Dashboard → Settings → API Keys
-2. **Disconnect Stripe**: open Payments dashboard → three-dots menu → Disconnect
-3. **Later (whenever ready)**: create a webhook in Razorpay Dashboard → Webhooks pointing to the URL above, copy the secret, and tell me — I'll just store it; no code change needed.
+Until DNS is set up, you can keep using `/admin` on the preview URL exactly as you do today.
 
-## Technical notes
+## Out of scope
 
-- Razorpay test mode: use card `4111 1111 1111 1111`, any future expiry, any CVV, OTP `1234`
-- `KEY_ID` is treated as public (passed to browser via a server-fn that reads `process.env.RAZORPAY_KEY_ID` and returns it) — no need for a `VITE_*` var, keeps it out of the bundle source
-- Subscription `current_period_end` derived from Razorpay's `current_end` (Unix seconds)
-- Free-tier cap (3 attempts / 30 days) logic stays unchanged
+- A truly separate codebase / second Lovable project (would duplicate code, auth, and DB connections — not recommended).
+- Different database for admin (we keep RLS + `has_role` as the security boundary).
