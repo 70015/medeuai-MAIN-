@@ -1,0 +1,95 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { FileQuestion, HelpCircle, Users, ClipboardCheck } from "lucide-react";
+
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { getAdminStats } from "@/lib/admin.functions";
+
+export const Route = createFileRoute("/_authenticated/admin/")({
+  head: () => ({ meta: [{ title: "Admin Dashboard — ParikshaSathi" }] }),
+  component: AdminDashboard,
+});
+
+function AdminDashboard() {
+  const fn = useServerFn(getAdminStats);
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: () => fn(),
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Tile icon={Users} label="Total Users" value={data?.users} loading={isLoading} />
+        <Tile
+          icon={FileQuestion}
+          label="Approved Questions"
+          value={data?.approvedQuestions}
+          loading={isLoading}
+          tint="success"
+        />
+        <Tile
+          icon={HelpCircle}
+          label="Pending Review"
+          value={data?.pendingQuestions}
+          loading={isLoading}
+          tint="warning"
+        />
+        <Tile
+          icon={ClipboardCheck}
+          label="Tests Completed"
+          value={data?.attempts}
+          loading={isLoading}
+        />
+      </div>
+
+      <Card className="border-border/60 bg-card/40 p-6">
+        <h2 className="text-base font-semibold">Quick start</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          The question bank powers every mock test. Generate a batch with AI to populate it,
+          then approve the ones you like.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link to="/admin/generate">
+            <Button>Generate AI questions</Button>
+          </Link>
+          <Link to="/admin/review">
+            <Button variant="outline">Review queue ({data?.pendingQuestions ?? 0})</Button>
+          </Link>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function Tile({
+  icon: Icon,
+  label,
+  value,
+  loading,
+  tint = "primary",
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: number | undefined;
+  loading: boolean;
+  tint?: "primary" | "success" | "warning";
+}) {
+  const cls =
+    tint === "success"
+      ? "bg-success/15 text-success"
+      : tint === "warning"
+        ? "bg-warning/15 text-warning"
+        : "bg-primary/15 text-primary";
+  return (
+    <Card className="border-border/60 bg-card/40 p-4">
+      <div className={`grid h-9 w-9 place-items-center rounded-lg ${cls}`}>
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="mt-3 text-2xl font-bold">{loading ? "…" : (value ?? 0)}</div>
+      <div className="text-xs font-medium text-muted-foreground">{label}</div>
+    </Card>
+  );
+}
