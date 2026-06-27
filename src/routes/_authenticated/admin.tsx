@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Shield, Sparkles, ListChecks, LayoutDashboard, BookText, Users } from "lucide-react";
+import { Loader2, Shield, Sparkles, ListChecks, LayoutDashboard, BookText, Users, Info } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -36,6 +36,7 @@ const tabs = [
   { to: "/admin/generate", label: "AI Generate", icon: Sparkles, exact: false },
   { to: "/admin/review", label: "Review Queue", icon: ListChecks, exact: false },
   { to: "/admin/users", label: "Users", icon: Users, exact: false },
+  { to: "/admin/about", label: "About page", icon: Info, exact: false },
 ] as const;
 
 
