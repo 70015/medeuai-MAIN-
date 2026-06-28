@@ -1,35 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import type { Database } from "@/integrations/supabase/types";
-
-
-
-const POOL_TARGET = 2;
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-type SectionCfg = { subject_slug: string; count: number; label?: string };
-type Pattern = {
-  total_questions: number;
-  difficulty_distribution: { easy: number; medium: number; hard: number };
-  sections: SectionCfg[];
-};
-
-function splitByDifficulty(total: number, dist: Pattern["difficulty_distribution"]) {
-  const easy = Math.round(total * dist.easy);
-  const hard = Math.round(total * dist.hard);
-  const medium = Math.max(0, total - easy - hard);
-  return { easy, medium, hard };
-}
 
 type PooledQuestion = {
   question_id: string;
@@ -39,6 +10,7 @@ type PooledQuestion = {
   negative_marks: number;
   section_label: string;
 };
+
 
 // ============================================
 // CLAIM: serve a ready paper to an attempt INSTANTLY
@@ -160,94 +132,8 @@ export const claimPaperForAttempt = createServerFn({ method: "POST" })
     return { claimed: true, source, total: rows.length };
   });
 
-// ============================================
-// REFILL: build papers from approved bank (fast, no AI calls)
-// ============================================
-async function buildPaperFromBank(
-  supabase: SupabaseClient<Database>,
-  testId: string,
-): Promise<PooledQuestion[] | null> {
+// Refill logic lives in src/lib/paper-pool.server.ts (shared with cron route).
 
-  // Resolve test + pattern
-  const { data: test } = await supabase
-    .from("mock_tests")
-    .select("id, target_exam, section_config, negative_marks")
-    .eq("id", testId)
-    .maybeSingle();
-  if (!test) return null;
-  let pattern = test.section_config as Pattern | null;
-  if (!pattern) {
-    const { data: syl } = await supabase
-      .from("exam_syllabi")
-      .select("pattern")
-      .eq("target_exam", test.target_exam)
-      .maybeSingle();
-    pattern = (syl?.pattern as Pattern | null) ?? null;
-  }
-  if (!pattern || !pattern.sections?.length) return null;
-
-  const slugs = pattern.sections.map((s) => s.subject_slug);
-  const { data: subjects } = await supabase
-    .from("subjects")
-    .select("id, slug, name")
-    .in("slug", slugs);
-  const slugToSubject = new Map((subjects ?? []).map((s) => [s.slug, s]));
-
-  const picked: PooledQuestion[] = [];
-  let position = 1;
-
-  for (const section of pattern.sections) {
-    const subject = slugToSubject.get(section.subject_slug);
-    if (!subject) continue;
-    const buckets = splitByDifficulty(section.count, pattern.difficulty_distribution);
-
-    for (const [difficulty, needed] of [
-      ["easy", buckets.easy],
-      ["medium", buckets.medium],
-      ["hard", buckets.hard],
-    ] as Array<["easy" | "medium" | "hard", number]>) {
-      if (needed <= 0) continue;
-      const { data: pool } = await supabase
-        .from("questions")
-        .select("id, options")
-        .eq("target_exam", test.target_exam)
-        .eq("subject_id", subject.id)
-        .eq("difficulty", difficulty)
-        .eq("status", "approved")
-        .eq("is_published", true)
-        .limit(500);
-
-      let take = shuffle(pool ?? []).slice(0, needed);
-      if (take.length < needed) {
-        // top up with any difficulty in the subject
-        const { data: extra } = await supabase
-          .from("questions")
-          .select("id, options")
-          .eq("target_exam", test.target_exam)
-          .eq("subject_id", subject.id)
-          .eq("status", "approved")
-          .eq("is_published", true)
-          .limit(500);
-        const have = new Set(take.map((t) => t.id));
-        const more = shuffle((extra ?? []).filter((e) => !have.has(e.id))).slice(0, needed - take.length);
-        take = [...take, ...more];
-      }
-
-      for (const q of take) {
-        const opts = (q.options as unknown[]) ?? [];
-        picked.push({
-          question_id: q.id,
-          position: position++,
-          options_order: shuffle(opts.map((_, i) => i)),
-          marks: 1,
-          negative_marks: Number(test.negative_marks) || 0,
-          section_label: section.label ?? subject.name,
-        });
-      }
-    }
-  }
-  return picked.length > 0 ? picked : null;
-}
 
 export const refillPaperPool = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -256,51 +142,17 @@ export const refillPaperPool = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    // Authorize: admin only
     const { data: isAdmin } = await supabase.rpc("has_role", {
       _user_id: userId,
       _role: "admin",
     });
     if (!isAdmin) throw new Error("Forbidden");
 
-    // Pick tests to refill
-    let tests: Array<{ id: string }> = [];
-    if (data.testId) {
-      tests = [{ id: data.testId }];
-    } else {
-      const { data: all } = await supabase
-        .from("mock_tests")
-        .select("id")
-        .eq("is_published", true);
-      tests = all ?? [];
-    }
-
-    let createdTotal = 0;
-    const perTest: Array<{ testId: string; created: number; ready: number }> = [];
-
-    for (const t of tests) {
-      const { count: readyCount } = await supabase
-        .from("paper_pool")
-        .select("id", { count: "exact", head: true })
-        .eq("test_id", t.id)
-        .eq("status", "ready");
-
-      const needed = Math.max(0, POOL_TARGET - (readyCount ?? 0));
-      let created = 0;
-      for (let i = 0; i < needed; i++) {
-        const paper = await buildPaperFromBank(supabase, t.id);
-        if (!paper) break;
-        const { error } = await supabase
-          .from("paper_pool")
-          .insert({ test_id: t.id, questions: paper, status: "ready" });
-        if (error) break;
-        created++;
-        createdTotal++;
-      }
-      perTest.push({ testId: t.id, created, ready: (readyCount ?? 0) + created });
-    }
-
-    return { createdTotal, perTest };
+    // Use admin client for inserts so background-style AI generation isn't
+    // bounded by per-user RLS, and reuse the shared refill helper (bank + AI).
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { refillAllPools } = await import("@/lib/paper-pool.server");
+    return refillAllPools(supabaseAdmin, { testId: data.testId, allowAI: true });
   });
 
 // ============================================
