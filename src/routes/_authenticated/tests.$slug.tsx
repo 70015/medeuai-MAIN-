@@ -96,9 +96,13 @@ function TestDetailsPage() {
         if (error) throw error;
         attemptId = ins.id;
       }
-      // Generate paper (no-op if already generated)
-      await genPaper({ data: { attemptId } });
+      // Try pre-generated pool first (instant), fall back to live AI generation
+      const claim = await claimPaper({ data: { attemptId } });
+      if (!claim.claimed && claim.source === "empty") {
+        await genPaper({ data: { attemptId } });
+      }
       return attemptId;
+
     },
     onSuccess: (attemptId) => {
       navigate({ to: "/attempt/$attemptId", params: { attemptId } });
