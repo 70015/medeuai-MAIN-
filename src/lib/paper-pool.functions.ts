@@ -256,51 +256,17 @@ export const refillPaperPool = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    // Authorize: admin only
     const { data: isAdmin } = await supabase.rpc("has_role", {
       _user_id: userId,
       _role: "admin",
     });
     if (!isAdmin) throw new Error("Forbidden");
 
-    // Pick tests to refill
-    let tests: Array<{ id: string }> = [];
-    if (data.testId) {
-      tests = [{ id: data.testId }];
-    } else {
-      const { data: all } = await supabase
-        .from("mock_tests")
-        .select("id")
-        .eq("is_published", true);
-      tests = all ?? [];
-    }
-
-    let createdTotal = 0;
-    const perTest: Array<{ testId: string; created: number; ready: number }> = [];
-
-    for (const t of tests) {
-      const { count: readyCount } = await supabase
-        .from("paper_pool")
-        .select("id", { count: "exact", head: true })
-        .eq("test_id", t.id)
-        .eq("status", "ready");
-
-      const needed = Math.max(0, POOL_TARGET - (readyCount ?? 0));
-      let created = 0;
-      for (let i = 0; i < needed; i++) {
-        const paper = await buildPaperFromBank(supabase, t.id);
-        if (!paper) break;
-        const { error } = await supabase
-          .from("paper_pool")
-          .insert({ test_id: t.id, questions: paper, status: "ready" });
-        if (error) break;
-        created++;
-        createdTotal++;
-      }
-      perTest.push({ testId: t.id, created, ready: (readyCount ?? 0) + created });
-    }
-
-    return { createdTotal, perTest };
+    // Use admin client for inserts so background-style AI generation isn't
+    // bounded by per-user RLS, and reuse the shared refill helper (bank + AI).
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { refillAllPools } = await import("@/lib/paper-pool.server");
+    return refillAllPools(supabaseAdmin, { testId: data.testId, allowAI: true });
   });
 
 // ============================================
