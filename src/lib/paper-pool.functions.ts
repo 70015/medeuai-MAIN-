@@ -69,7 +69,7 @@ async function buildInstantBankPaper(
   // Final fallback: no sections at all -> serve any approved questions for this exam
   if (!pattern || !pattern.sections?.length) {
     const total = pattern?.total_questions ?? 25;
-    const { data: any, error: anyErr } = await supabase
+    const { data: anyQ, error: anyErr } = await supabase
       .from("questions")
       .select("id, options")
       .eq("target_exam", test.target_exam)
@@ -77,7 +77,7 @@ async function buildInstantBankPaper(
       .eq("is_published", true)
       .limit(500);
     if (anyErr) throw new Error(anyErr.message);
-    const take = shuffle(any ?? []).slice(0, total);
+    const take = shuffle(anyQ ?? []).slice(0, total);
     if (take.length === 0) return null;
     return take.map((q, i) => {
       const opts = (q.options as unknown[]) ?? [];
