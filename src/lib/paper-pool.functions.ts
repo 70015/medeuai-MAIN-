@@ -1,35 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import type { Database } from "@/integrations/supabase/types";
-
-
-
-const POOL_TARGET = 2;
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-type SectionCfg = { subject_slug: string; count: number; label?: string };
-type Pattern = {
-  total_questions: number;
-  difficulty_distribution: { easy: number; medium: number; hard: number };
-  sections: SectionCfg[];
-};
-
-function splitByDifficulty(total: number, dist: Pattern["difficulty_distribution"]) {
-  const easy = Math.round(total * dist.easy);
-  const hard = Math.round(total * dist.hard);
-  const medium = Math.max(0, total - easy - hard);
-  return { easy, medium, hard };
-}
 
 type PooledQuestion = {
   question_id: string;
@@ -39,6 +10,7 @@ type PooledQuestion = {
   negative_marks: number;
   section_label: string;
 };
+
 
 // ============================================
 // CLAIM: serve a ready paper to an attempt INSTANTLY
