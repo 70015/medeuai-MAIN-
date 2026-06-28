@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 
 type SectionCfg = { subject_slug: string; count: number; label?: string };
 type Pattern = {
@@ -35,9 +37,7 @@ function splitByDifficulty(total: number, dist: Pattern["difficulty_distribution
 }
 
 async function buildInstantBankPaper(
-  supabase: NonNullable<Parameters<Parameters<typeof createServerFn>[0]>[0]> extends never
-    ? never
-    : import("@supabase/supabase-js").SupabaseClient,
+  supabase: SupabaseClient<Database>,
   testId: string,
 ): Promise<PooledQuestion[] | null> {
   const { data: test, error: tErr } = await supabase
