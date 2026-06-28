@@ -34,6 +34,7 @@ import { Route as AuthenticatedAdminPoolRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
 import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 import { Route as ApiPublicPaymentsRazorpayWebhookRouteImport } from './routes/api/public/payments/razorpay-webhook'
+import { Route as ApiPublicHooksRefillPoolRouteImport } from './routes/api/public/hooks/refill-pool'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -167,6 +168,12 @@ const ApiPublicPaymentsRazorpayWebhookRoute =
     path: '/api/public/payments/razorpay-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksRefillPoolRoute =
+  ApiPublicHooksRefillPoolRouteImport.update({
+    id: '/api/public/hooks/refill-pool',
+    path: '/api/public/hooks/refill-pool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/tests/': typeof AuthenticatedTestsIndexRoute
+  '/api/public/hooks/refill-pool': typeof ApiPublicHooksRefillPoolRoute
   '/api/public/payments/razorpay-webhook': typeof ApiPublicPaymentsRazorpayWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -217,6 +225,7 @@ export interface FileRoutesByTo {
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/tests': typeof AuthenticatedTestsIndexRoute
+  '/api/public/hooks/refill-pool': typeof ApiPublicHooksRefillPoolRoute
   '/api/public/payments/razorpay-webhook': typeof ApiPublicPaymentsRazorpayWebhookRoute
 }
 export interface FileRoutesById {
@@ -245,6 +254,7 @@ export interface FileRoutesById {
   '/_authenticated/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/tests/': typeof AuthenticatedTestsIndexRoute
+  '/api/public/hooks/refill-pool': typeof ApiPublicHooksRefillPoolRoute
   '/api/public/payments/razorpay-webhook': typeof ApiPublicPaymentsRazorpayWebhookRoute
 }
 export interface FileRouteTypes {
@@ -273,6 +283,7 @@ export interface FileRouteTypes {
     | '/tests/$slug'
     | '/admin/'
     | '/tests/'
+    | '/api/public/hooks/refill-pool'
     | '/api/public/payments/razorpay-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -298,6 +309,7 @@ export interface FileRouteTypes {
     | '/tests/$slug'
     | '/admin'
     | '/tests'
+    | '/api/public/hooks/refill-pool'
     | '/api/public/payments/razorpay-webhook'
   id:
     | '__root__'
@@ -325,6 +337,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tests/$slug'
     | '/_authenticated/admin/'
     | '/_authenticated/tests/'
+    | '/api/public/hooks/refill-pool'
     | '/api/public/payments/razorpay-webhook'
   fileRoutesById: FileRoutesById
 }
@@ -335,6 +348,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicHooksRefillPoolRoute: typeof ApiPublicHooksRefillPoolRoute
   ApiPublicPaymentsRazorpayWebhookRoute: typeof ApiPublicPaymentsRazorpayWebhookRoute
 }
 
@@ -515,6 +529,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentsRazorpayWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/refill-pool': {
+      id: '/api/public/hooks/refill-pool'
+      path: '/api/public/hooks/refill-pool'
+      fullPath: '/api/public/hooks/refill-pool'
+      preLoaderRoute: typeof ApiPublicHooksRefillPoolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -579,6 +600,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicHooksRefillPoolRoute: ApiPublicHooksRefillPoolRoute,
   ApiPublicPaymentsRazorpayWebhookRoute: ApiPublicPaymentsRazorpayWebhookRoute,
 }
 export const routeTree = rootRouteImport
