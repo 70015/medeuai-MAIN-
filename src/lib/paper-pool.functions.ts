@@ -1,6 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
+
+
 
 const POOL_TARGET = 2;
 
@@ -115,13 +119,27 @@ export const claimPaperForAttempt = createServerFn({ method: "POST" })
     if (insErr) throw new Error(insErr.message);
 
     const now = new Date().toISOString();
-    const updates: Record<string, unknown> = {
-      status: "used",
-      times_served: paper.times_served + 1,
-      last_served_at: now,
-    };
-    if (source === "ready") updates.first_served_at = now;
-    await supabase.from("paper_pool").update(updates).eq("id", paper.id);
+    if (source === "ready") {
+      await supabase
+        .from("paper_pool")
+        .update({
+          status: "used",
+          times_served: paper.times_served + 1,
+          last_served_at: now,
+          first_served_at: now,
+        })
+        .eq("id", paper.id);
+    } else {
+      await supabase
+        .from("paper_pool")
+        .update({
+          status: "used",
+          times_served: paper.times_served + 1,
+          last_served_at: now,
+        })
+        .eq("id", paper.id);
+    }
+
 
     // User history (best effort)
     await supabase.from("user_question_history").upsert(
@@ -146,9 +164,10 @@ export const claimPaperForAttempt = createServerFn({ method: "POST" })
 // REFILL: build papers from approved bank (fast, no AI calls)
 // ============================================
 async function buildPaperFromBank(
-  supabase: Awaited<ReturnType<typeof import("@/integrations/supabase/auth-middleware").requireSupabaseAuth.execute>>["supabase"] extends infer S ? S : never,
+  supabase: SupabaseClient<Database>,
   testId: string,
 ): Promise<PooledQuestion[] | null> {
+
   // Resolve test + pattern
   const { data: test } = await supabase
     .from("mock_tests")
