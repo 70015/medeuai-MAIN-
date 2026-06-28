@@ -9,7 +9,6 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel } from "@/lib/exam";
-import { generateDynamicPaperForAttempt } from "@/lib/dynamic-paper.functions";
 import { claimPaperForAttempt } from "@/lib/paper-pool.functions";
 import { getPlanStatus } from "@/lib/razorpay.functions";
 
@@ -29,7 +28,6 @@ type TestConfig = {
 function TestDetailsPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
-  const genPaper = useServerFn(generateDynamicPaperForAttempt);
   const claimPaper = useServerFn(claimPaperForAttempt);
   const planStatusFn = useServerFn(getPlanStatus);
 
@@ -96,10 +94,11 @@ function TestDetailsPage() {
         if (error) throw error;
         attemptId = ins.id;
       }
-      // Try pre-generated pool first (instant), fall back to live AI generation
+      // Try pre-generated/reusable papers first, then fast DB-only bank assembly.
+      // Never call live AI here; AI runs only in background/admin pool refill.
       const claim = await claimPaper({ data: { attemptId } });
       if (!claim.claimed && claim.source === "empty") {
-        await genPaper({ data: { attemptId } });
+        throw new Error("Paper is not ready yet. Please try again in a moment while the admin paper pool refills.");
       }
       return attemptId;
 
@@ -149,7 +148,7 @@ function TestDetailsPage() {
           <h2 className="text-sm font-semibold">Instructions</h2>
           <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-muted-foreground">
             <li>The test will run for {t.duration_minutes} minutes from the moment you start.</li>
-            <li>Every attempt generates a fresh, AI-powered paper unique to you — first start may take 20–60 seconds.</li>
+            <li>Your paper is loaded from the ready question pool for an instant start.</li>
             <li>You can navigate freely between questions and mark them for review.</li>
             <li>Negative marking: -{Number(t.negative_marks)} for each incorrect answer.</li>
             <li>Your progress is saved automatically.</li>
@@ -182,7 +181,7 @@ function TestDetailsPage() {
           >
             <PlayCircle className="mr-1.5 h-4 w-4" />
             {start.isPending
-              ? "Generating your paper…"
+              ? "Starting test…"
               : plan && !plan.canStartTest
                 ? "Free limit reached"
                 : "Start test"}

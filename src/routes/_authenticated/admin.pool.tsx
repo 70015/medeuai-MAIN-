@@ -54,9 +54,9 @@ function PoolPage() {
             </div>
             <p className="mt-1 max-w-xl text-xs text-muted-foreground">
               Papers ready in the pool are served instantly when a student starts a test —
-              zero waiting. Target: <strong>2 ready papers per test</strong>. When the
-              ready pool is empty, the oldest used paper is reused. If nothing exists, the
-              system falls back to live AI generation.
+              zero waiting. Target: <strong>3 ready papers per test</strong>. When the
+              ready pool is empty, the oldest used paper is reused; if no pooled copy exists,
+              the app assembles a paper from approved database questions without live AI.
             </p>
           </div>
           <Button onClick={() => refillAll.mutate()} disabled={refillAll.isPending}>
@@ -86,7 +86,7 @@ function PoolPage() {
                     {examLabel(t.target_exam)}
                   </Badge>
                   <Badge
-                    variant={t.ready >= 2 ? "default" : "destructive"}
+                    variant={t.ready >= 3 ? "default" : "destructive"}
                     className="text-[10px]"
                   >
                     {t.ready} ready
