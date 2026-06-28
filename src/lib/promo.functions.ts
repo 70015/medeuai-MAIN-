@@ -85,8 +85,10 @@ export const redeemPromoCode = createServerFn({ method: "POST" })
       .eq("id", userId);
     if (profErr) throw new Error(profErr.message);
 
-    // Insert a subscription row so the existing downgrade cron respects the expiry
-    await supabase.from("subscriptions").insert({
+    // Insert a subscription row so the existing downgrade cron respects the expiry.
+    // RLS restricts inserts to service_role, so use the admin client.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error: subErr } = await supabaseAdmin.from("subscriptions").insert({
       user_id: userId,
       provider: "promo",
       status: "active",
@@ -94,6 +96,7 @@ export const redeemPromoCode = createServerFn({ method: "POST" })
       price_id: plan,
       environment: "live",
     });
+    if (subErr) throw new Error(subErr.message);
 
     await supabase.from("promo_redemptions").insert({
       promo_code_id: promo.id,
