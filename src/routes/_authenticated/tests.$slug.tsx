@@ -10,7 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel } from "@/lib/exam";
 import { generateDynamicPaperForAttempt } from "@/lib/dynamic-paper.functions";
+import { claimPaperForAttempt } from "@/lib/paper-pool.functions";
 import { getPlanStatus } from "@/lib/razorpay.functions";
+
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
   head: () => ({ meta: [{ title: "Mock Test — ParikshaSathi" }] }),
@@ -28,7 +30,9 @@ function TestDetailsPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
   const genPaper = useServerFn(generateDynamicPaperForAttempt);
+  const claimPaper = useServerFn(claimPaperForAttempt);
   const planStatusFn = useServerFn(getPlanStatus);
+
 
   const { data: plan } = useQuery({
     queryKey: ["plan-status"],
@@ -92,9 +96,13 @@ function TestDetailsPage() {
         if (error) throw error;
         attemptId = ins.id;
       }
-      // Generate paper (no-op if already generated)
-      await genPaper({ data: { attemptId } });
+      // Try pre-generated pool first (instant), fall back to live AI generation
+      const claim = await claimPaper({ data: { attemptId } });
+      if (!claim.claimed && claim.source === "empty") {
+        await genPaper({ data: { attemptId } });
+      }
       return attemptId;
+
     },
     onSuccess: (attemptId) => {
       navigate({ to: "/attempt/$attemptId", params: { attemptId } });

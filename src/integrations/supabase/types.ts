@@ -641,6 +641,47 @@ export type Database = {
         }
         Relationships: []
       }
+      paper_pool: {
+        Row: {
+          created_at: string
+          first_served_at: string | null
+          id: string
+          last_served_at: string | null
+          questions: Json
+          status: string
+          test_id: string
+          times_served: number
+        }
+        Insert: {
+          created_at?: string
+          first_served_at?: string | null
+          id?: string
+          last_served_at?: string | null
+          questions: Json
+          status?: string
+          test_id: string
+          times_served?: number
+        }
+        Update: {
+          created_at?: string
+          first_served_at?: string | null
+          id?: string
+          last_served_at?: string | null
+          questions?: Json
+          status?: string
+          test_id?: string
+          times_served?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paper_pool_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "mock_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -709,6 +750,89 @@ export type Database = {
           xp?: number
         }
         Relationships: []
+      }
+      promo_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          created_by: string | null
+          discount_percent: number | null
+          duration_days: number | null
+          expires_at: string | null
+          grant_type: Database["public"]["Enums"]["promo_grant_type"]
+          id: string
+          notes: string | null
+          plan_tier: string | null
+          redemption_count: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          created_by?: string | null
+          discount_percent?: number | null
+          duration_days?: number | null
+          expires_at?: string | null
+          grant_type: Database["public"]["Enums"]["promo_grant_type"]
+          id?: string
+          notes?: string | null
+          plan_tier?: string | null
+          redemption_count?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          discount_percent?: number | null
+          duration_days?: number | null
+          expires_at?: string | null
+          grant_type?: Database["public"]["Enums"]["promo_grant_type"]
+          id?: string
+          notes?: string | null
+          plan_tier?: string | null
+          redemption_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      promo_redemptions: {
+        Row: {
+          applied_plan: string
+          expires_at: string | null
+          id: string
+          promo_code_id: string
+          redeemed_at: string
+          user_id: string
+        }
+        Insert: {
+          applied_plan: string
+          expires_at?: string | null
+          id?: string
+          promo_code_id: string
+          redeemed_at?: string
+          user_id: string
+        }
+        Update: {
+          applied_plan?: string
+          expires_at?: string | null
+          id?: string
+          promo_code_id?: string
+          redeemed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promo_redemptions_promo_code_id_fkey"
+            columns: ["promo_code_id"]
+            isOneToOne: false
+            referencedRelation: "promo_codes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       questions: {
         Row: {
@@ -1098,6 +1222,7 @@ export type Database = {
       app_role: "admin" | "moderator" | "user"
       attempt_status: "in_progress" | "submitted" | "abandoned"
       preferred_language: "english" | "bengali" | "hindi"
+      promo_grant_type: "pro_monthly" | "pro_yearly" | "custom" | "discount"
       question_difficulty: "easy" | "medium" | "hard"
       question_status: "approved" | "pending_review" | "rejected" | "archived"
       subscription_plan: "free" | "pro_monthly" | "pro_yearly"
@@ -1241,6 +1366,7 @@ export const Constants = {
       app_role: ["admin", "moderator", "user"],
       attempt_status: ["in_progress", "submitted", "abandoned"],
       preferred_language: ["english", "bengali", "hindi"],
+      promo_grant_type: ["pro_monthly", "pro_yearly", "custom", "discount"],
       question_difficulty: ["easy", "medium", "hard"],
       question_status: ["approved", "pending_review", "rejected", "archived"],
       subscription_plan: ["free", "pro_monthly", "pro_yearly"],

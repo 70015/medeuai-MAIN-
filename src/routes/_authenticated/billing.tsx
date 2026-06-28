@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Crown, Loader2, Sparkles, XCircle } from "lucide-react";
+import { Check, Crown, Loader2, Sparkles, Tag, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
 import {
@@ -16,6 +18,8 @@ import {
   getRazorpayConfig,
   verifyRazorpayPayment,
 } from "@/lib/razorpay.functions";
+import { redeemPromoCode } from "@/lib/promo.functions";
+
 
 export const Route = createFileRoute("/_authenticated/billing")({
   head: () => ({ meta: [{ title: "Billing — ParikshaSathi" }] }),
@@ -47,6 +51,9 @@ function BillingPage() {
   const createSubFn = useServerFn(createRazorpaySubscription);
   const verifyFn = useServerFn(verifyRazorpayPayment);
   const cancelFn = useServerFn(cancelRazorpaySubscription);
+  const redeemFn = useServerFn(redeemPromoCode);
+  const [promoCode, setPromoCode] = useState("");
+
 
   const { data: plan, isLoading } = useQuery({
     queryKey: ["plan-status"],
@@ -99,6 +106,18 @@ function BillingPage() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  const redeem = useMutation({
+    mutationFn: () => redeemFn({ data: { code: promoCode } }),
+    onSuccess: (r) => {
+      toast.success(r.message);
+      setPromoCode("");
+      queryClient.invalidateQueries({ queryKey: ["plan-status"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
 
   return (
     <div className="space-y-6">
@@ -205,6 +224,35 @@ function BillingPage() {
           ))}
         </div>
       )}
+
+      <Card className="border-border/60 bg-card/40 p-5">
+        <div className="flex items-center gap-2">
+          <Tag className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold">Have a promo code?</h3>
+        </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Redeem a code to unlock Pro for free or get a discount at checkout.
+        </p>
+        <div className="mt-3 flex gap-2">
+          <Input
+            placeholder="ENTER CODE"
+            value={promoCode}
+            onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+            maxLength={64}
+            className="font-mono uppercase tracking-wider"
+          />
+          <Button
+            disabled={!promoCode.trim() || redeem.isPending}
+            onClick={() => redeem.mutate()}
+          >
+            {redeem.isPending ? (
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+            ) : null}
+            Redeem
+          </Button>
+        </div>
+      </Card>
+
     </div>
   );
 }

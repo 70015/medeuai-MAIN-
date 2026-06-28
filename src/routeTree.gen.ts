@@ -29,6 +29,8 @@ import { Route as AuthenticatedAttemptAttemptIdRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminSyllabiRouteImport } from './routes/_authenticated/admin.syllabi'
 import { Route as AuthenticatedAdminReviewRouteImport } from './routes/_authenticated/admin.review'
+import { Route as AuthenticatedAdminPromosRouteImport } from './routes/_authenticated/admin.promos'
+import { Route as AuthenticatedAdminPoolRouteImport } from './routes/_authenticated/admin.pool'
 import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
 import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 import { Route as ApiPublicPaymentsRazorpayWebhookRouteImport } from './routes/api/public/payments/razorpay-webhook'
@@ -137,6 +139,17 @@ const AuthenticatedAdminReviewRoute =
     path: '/review',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPromosRoute =
+  AuthenticatedAdminPromosRouteImport.update({
+    id: '/promos',
+    path: '/promos',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPoolRoute = AuthenticatedAdminPoolRouteImport.update({
+  id: '/pool',
+  path: '/pool',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminGenerateRoute =
   AuthenticatedAdminGenerateRouteImport.update({
     id: '/generate',
@@ -169,6 +182,8 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/pool': typeof AuthenticatedAdminPoolRoute
+  '/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -192,6 +207,8 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/pool': typeof AuthenticatedAdminPoolRoute
+  '/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -218,6 +235,8 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/_authenticated/admin/pool': typeof AuthenticatedAdminPoolRoute
+  '/_authenticated/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/_authenticated/admin/review': typeof AuthenticatedAdminReviewRoute
   '/_authenticated/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -244,6 +263,8 @@ export interface FileRouteTypes {
     | '/profile'
     | '/admin/about'
     | '/admin/generate'
+    | '/admin/pool'
+    | '/admin/promos'
     | '/admin/review'
     | '/admin/syllabi'
     | '/admin/users'
@@ -267,6 +288,8 @@ export interface FileRouteTypes {
     | '/profile'
     | '/admin/about'
     | '/admin/generate'
+    | '/admin/pool'
+    | '/admin/promos'
     | '/admin/review'
     | '/admin/syllabi'
     | '/admin/users'
@@ -292,6 +315,8 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/admin/about'
     | '/_authenticated/admin/generate'
+    | '/_authenticated/admin/pool'
+    | '/_authenticated/admin/promos'
     | '/_authenticated/admin/review'
     | '/_authenticated/admin/syllabi'
     | '/_authenticated/admin/users'
@@ -455,6 +480,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReviewRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/promos': {
+      id: '/_authenticated/admin/promos'
+      path: '/promos'
+      fullPath: '/admin/promos'
+      preLoaderRoute: typeof AuthenticatedAdminPromosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/pool': {
+      id: '/_authenticated/admin/pool'
+      path: '/pool'
+      fullPath: '/admin/pool'
+      preLoaderRoute: typeof AuthenticatedAdminPoolRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/generate': {
       id: '/_authenticated/admin/generate'
       path: '/generate'
@@ -482,6 +521,8 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
   AuthenticatedAdminGenerateRoute: typeof AuthenticatedAdminGenerateRoute
+  AuthenticatedAdminPoolRoute: typeof AuthenticatedAdminPoolRoute
+  AuthenticatedAdminPromosRoute: typeof AuthenticatedAdminPromosRoute
   AuthenticatedAdminReviewRoute: typeof AuthenticatedAdminReviewRoute
   AuthenticatedAdminSyllabiRoute: typeof AuthenticatedAdminSyllabiRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
@@ -491,6 +532,8 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
   AuthenticatedAdminGenerateRoute: AuthenticatedAdminGenerateRoute,
+  AuthenticatedAdminPoolRoute: AuthenticatedAdminPoolRoute,
+  AuthenticatedAdminPromosRoute: AuthenticatedAdminPromosRoute,
   AuthenticatedAdminReviewRoute: AuthenticatedAdminReviewRoute,
   AuthenticatedAdminSyllabiRoute: AuthenticatedAdminSyllabiRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
@@ -541,13 +584,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
