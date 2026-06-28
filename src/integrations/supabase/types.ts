@@ -1206,6 +1206,16 @@ export type Database = {
     }
     Functions: {
       downgrade_expired_plans: { Args: never; Returns: undefined }
+      get_leaderboard: {
+        Args: { p_limit?: number; p_test_id: string }
+        Returns: {
+          avatar_url: string
+          full_name: string
+          score: number
+          time_taken_seconds: number
+          user_id: string
+        }[]
+      }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
         Returns: boolean

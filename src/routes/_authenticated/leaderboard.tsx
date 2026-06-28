@@ -42,45 +42,17 @@ function LeaderboardPage() {
     queryKey: ["leaderboard", testId],
     enabled: !!testId,
     queryFn: async () => {
-      const { data: attempts, error } = await supabase
-        .from("test_attempts")
-        .select("id, user_id, score, time_taken_seconds, submitted_at")
-        .eq("test_id", testId)
-        .eq("status", "submitted")
-        .order("score", { ascending: false })
-        .order("time_taken_seconds", { ascending: true })
-        .limit(50);
+      const { data, error } = await supabase.rpc("get_leaderboard", {
+        p_test_id: testId,
+        p_limit: 50,
+      });
       if (error) throw error;
-      const userIds = [...new Set((attempts ?? []).map((a) => a.user_id))];
-      const profilesMap = new Map<string, { full_name: string | null; avatar_url: string | null }>();
-      if (userIds.length > 0) {
-        const { data: profs } = await supabase
-          .from("profiles")
-          .select("id, full_name, avatar_url")
-          .in("id", userIds);
-        (profs ?? []).forEach((p) =>
-          profilesMap.set(p.id, { full_name: p.full_name, avatar_url: p.avatar_url }),
-        );
-      }
-      // best attempt per user
-      const seen = new Set<string>();
-      const top: Array<{
-        user_id: string;
-        score: number;
-        time_taken_seconds: number | null;
-        full_name: string | null;
-      }> = [];
-      for (const a of attempts ?? []) {
-        if (seen.has(a.user_id)) continue;
-        seen.add(a.user_id);
-        top.push({
-          user_id: a.user_id,
-          score: Number(a.score),
-          time_taken_seconds: a.time_taken_seconds,
-          full_name: profilesMap.get(a.user_id)?.full_name ?? "Student",
-        });
-      }
-      return top;
+      return (data ?? []).map((r) => ({
+        user_id: r.user_id as string,
+        score: Number(r.score ?? 0),
+        time_taken_seconds: r.time_taken_seconds as number | null,
+        full_name: (r.full_name as string | null) ?? "Student",
+      }));
     },
   });
 
