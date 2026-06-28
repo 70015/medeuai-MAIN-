@@ -49,16 +49,48 @@ async function buildInstantBankPaper(
   if (!test) return null;
 
   let pattern = test.section_config as Pattern | null;
-  if (!pattern) {
+  if (!pattern || !pattern.sections?.length) {
     const { data: syllabusRow, error: syErr } = await supabase
       .from("exam_syllabi")
       .select("pattern")
       .eq("target_exam", test.target_exam)
       .maybeSingle();
     if (syErr) throw new Error(syErr.message);
-    pattern = (syllabusRow?.pattern as Pattern | null) ?? null;
+    const sylPattern = (syllabusRow?.pattern as Pattern | null) ?? null;
+    if (sylPattern?.sections?.length) {
+      pattern = {
+        total_questions: pattern?.total_questions ?? sylPattern.total_questions,
+        difficulty_distribution: sylPattern.difficulty_distribution,
+        sections: sylPattern.sections,
+      };
+    }
   }
-  if (!pattern || !pattern.sections?.length) return null;
+
+  // Final fallback: no sections at all -> serve any approved questions for this exam
+  if (!pattern || !pattern.sections?.length) {
+    const total = pattern?.total_questions ?? 25;
+    const { data: any, error: anyErr } = await supabase
+      .from("questions")
+      .select("id, options")
+      .eq("target_exam", test.target_exam)
+      .eq("status", "approved")
+      .eq("is_published", true)
+      .limit(500);
+    if (anyErr) throw new Error(anyErr.message);
+    const take = shuffle(any ?? []).slice(0, total);
+    if (take.length === 0) return null;
+    return take.map((q, i) => {
+      const opts = (q.options as unknown[]) ?? [];
+      return {
+        question_id: q.id,
+        position: i + 1,
+        options_order: shuffle(opts.map((_, k) => k)),
+        marks: 1,
+        negative_marks: Number(test.negative_marks) || 0,
+        section_label: "General",
+      };
+    });
+  }
 
   const slugs = pattern.sections.map((s) => s.subject_slug);
   const { data: subjects, error: sErr } = await supabase
