@@ -224,6 +224,35 @@ function BillingPage() {
           ))}
         </div>
       )}
+
+      <Card className="border-border/60 bg-card/40 p-5">
+        <div className="flex items-center gap-2">
+          <Tag className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold">Have a promo code?</h3>
+        </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Redeem a code to unlock Pro for free or get a discount at checkout.
+        </p>
+        <div className="mt-3 flex gap-2">
+          <Input
+            placeholder="ENTER CODE"
+            value={promoCode}
+            onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+            maxLength={64}
+            className="font-mono uppercase tracking-wider"
+          />
+          <Button
+            disabled={!promoCode.trim() || redeem.isPending}
+            onClick={() => redeem.mutate()}
+          >
+            {redeem.isPending ? (
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+            ) : null}
+            Redeem
+          </Button>
+        </div>
+      </Card>
+
     </div>
   );
 }
