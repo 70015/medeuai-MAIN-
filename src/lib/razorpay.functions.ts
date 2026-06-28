@@ -294,10 +294,26 @@ export const getPlanStatus = createServerFn({ method: "POST" })
     const now = new Date();
     const periodEnd = sub?.current_period_end ? new Date(sub.current_period_end) : null;
     const activeStatuses = ["active", "authenticated", "trialing", "past_due"];
-    const isPro =
+    let isPro =
       !!sub &&
       ((activeStatuses.includes(sub.status) && (!periodEnd || periodEnd > now)) ||
         (["canceled", "cancelled"].includes(sub.status) && periodEnd && periodEnd > now));
+
+    // Fallback: respect profiles.plan (e.g. promo-granted Pro without a subscription row)
+    if (!isPro) {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("plan, subscription_status")
+        .eq("id", userId)
+        .maybeSingle();
+      if (
+        prof &&
+        (prof.plan === "pro_monthly" || prof.plan === "pro_yearly") &&
+        prof.subscription_status === "active"
+      ) {
+        isPro = true;
+      }
+    }
 
     const since = new Date(Date.now() - WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString();
     const { count } = await supabase
