@@ -23,16 +23,24 @@ function ReviewPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["pending-questions"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("questions")
-        .select(
-          "id, target_exam, difficulty, question, options, correct_index, explanation, ai_generated, created_at, subjects:subject_id (name)",
-        )
-        .eq("status", "pending_review")
-        .order("created_at", { ascending: false })
-        .limit(50);
+      // Uses SECURITY DEFINER RPC — regular users cannot read correct_index
+      // from the questions table anymore.
+      const { data, error } = await supabase.rpc("admin_pending_questions", {
+        p_limit: 50,
+      });
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []).map((r) => ({
+        id: r.id,
+        target_exam: r.target_exam,
+        difficulty: r.difficulty,
+        question: r.q_question,
+        options: r.q_options,
+        correct_index: r.correct_index,
+        explanation: r.explanation,
+        ai_generated: r.ai_generated,
+        created_at: r.created_at,
+        subjects: r.subject_name ? { name: r.subject_name } : null,
+      }));
     },
   });
 
