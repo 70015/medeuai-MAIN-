@@ -1205,7 +1205,39 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_pending_questions: {
+        Args: { p_limit?: number }
+        Returns: {
+          ai_generated: boolean
+          correct_index: number
+          created_at: string
+          difficulty: string
+          explanation: Json
+          id: string
+          q_options: Json
+          q_question: Json
+          subject_name: string
+          target_exam: string
+        }[]
+      }
       downgrade_expired_plans: { Args: never; Returns: undefined }
+      get_attempt_review: {
+        Args: { p_attempt_id: string }
+        Returns: {
+          awarded_marks: number
+          correct_index: number
+          explanation: Json
+          is_correct: boolean
+          marks: number
+          options_order: Json
+          q_options: Json
+          q_position: number
+          q_question: Json
+          question_id: string
+          section_label: string
+          selected_index: number
+        }[]
+      }
       get_leaderboard: {
         Args: { p_limit?: number; p_test_id: string }
         Returns: {
@@ -1226,6 +1258,18 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      submit_attempt: {
+        Args: { p_attempt_id: string }
+        Returns: {
+          out_accuracy: number
+          out_correct_count: number
+          out_incorrect_count: number
+          out_score: number
+          out_skipped_count: number
+          out_time_taken_seconds: number
+          out_total_marks: number
+        }[]
       }
     }
     Enums: {

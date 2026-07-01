@@ -31,24 +31,41 @@ function ResultsPage() {
       if (error) throw error;
       if (!attempt) return null;
 
-      const { data: aq } = await supabase
-        .from("attempt_questions")
-        .select(
-          "position, marks, options_order, section_label, questions:question_id (id, question, options, correct_index, explanation)",
-        )
-        .eq("attempt_id", attemptId)
-        .order("position");
+      // Answers + correct_index are only released by this RPC after the
+      // attempt is submitted (or to admins). The questions table's
+      // correct_index column is not readable by clients directly.
+      const { data: review, error: rErr } = await supabase.rpc("get_attempt_review", {
+        p_attempt_id: attemptId,
+      });
+      if (rErr) throw rErr;
 
-      const { data: answers } = await supabase
-        .from("attempt_answers")
-        .select("question_id, selected_index, is_correct, awarded_marks")
-        .eq("attempt_id", attemptId);
+      const items = (review ?? []).map((r) => ({
+        position: r.q_position,
+        marks: r.marks,
+        options_order: r.options_order,
+        section_label: r.section_label,
+        questions: {
+          id: r.question_id,
+          question: r.q_question,
+          options: r.q_options,
+          correct_index: r.correct_index,
+          explanation: r.explanation,
+        },
+      }));
 
       const answerMap = new Map(
-        (answers ?? []).map((a) => [a.question_id, a]),
+        (review ?? []).map((r) => [
+          r.question_id,
+          {
+            question_id: r.question_id,
+            selected_index: r.selected_index,
+            is_correct: r.is_correct,
+            awarded_marks: r.awarded_marks,
+          },
+        ]),
       );
 
-      return { attempt, items: aq ?? [], answerMap };
+      return { attempt, items, answerMap };
     },
   });
 

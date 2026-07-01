@@ -119,64 +119,12 @@ function AttemptPage() {
   const submit = useMutation({
     mutationFn: async () => {
       if (!data) throw new Error("Not loaded");
-      // fetch correct indices server-side
-      const ids = data.questions.map((q) => q.id);
-      const { data: correctRows, error } = await supabase
-        .from("questions")
-        .select("id, correct_index")
-        .in("id", ids);
-      if (error) throw error;
-      const correctMap = new Map<string, number>(
-        (correctRows ?? []).map((r) => [r.id as string, r.correct_index as number]),
-      );
-
-      let score = 0;
-      let correct = 0;
-      let incorrect = 0;
-      let skipped = 0;
-      const rows = data.questions.map((q) => {
-        const a = data.answers[q.id];
-        const sel = a?.selected_index ?? null;
-        const isCorrect = sel !== null && sel === correctMap.get(q.id);
-        const awarded = sel === null ? 0 : isCorrect ? q.marks : -q.negative_marks;
-        if (sel === null) skipped++;
-        else if (isCorrect) correct++;
-        else incorrect++;
-        score += awarded;
-        return {
-          attempt_id: data.attempt.id,
-          question_id: q.id,
-          selected_index: sel,
-          is_correct: sel === null ? null : isCorrect,
-          is_marked: a?.is_marked ?? false,
-          awarded_marks: awarded,
-        };
+      // Scoring happens server-side via a SECURITY DEFINER function.
+      // The client is not trusted with correct_index or awarded_marks.
+      const { error } = await supabase.rpc("submit_attempt", {
+        p_attempt_id: data.attempt.id,
       });
-
-      const { error: upErr } = await supabase
-        .from("attempt_answers")
-        .upsert(rows, { onConflict: "attempt_id,question_id" });
-      if (upErr) throw upErr;
-
-      const total = data.questions.length;
-      const attempted = total - skipped;
-      const accuracy = attempted === 0 ? 0 : Math.round((correct / attempted) * 1000) / 10;
-      const elapsed = Math.floor((Date.now() - new Date(data.attempt.started_at).getTime()) / 1000);
-
-      const { error: sErr } = await supabase
-        .from("test_attempts")
-        .update({
-          status: "submitted",
-          submitted_at: new Date().toISOString(),
-          time_taken_seconds: elapsed,
-          score,
-          correct_count: correct,
-          incorrect_count: incorrect,
-          skipped_count: skipped,
-          accuracy,
-        })
-        .eq("id", data.attempt.id);
-      if (sErr) throw sErr;
+      if (error) throw error;
     },
     onSuccess: () => {
       toast.success("Submitted!");

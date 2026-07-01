@@ -13,10 +13,18 @@ export const redeemPromoCode = createServerFn({ method: "POST" })
     z.object({ code: z.string().trim().min(1).max(64) }).parse(d),
   )
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
+    const { userId } = context;
     const code = data.code.toUpperCase().trim();
 
-    const { data: promo, error } = await supabase
+    // Use admin client for promo lookups and writes:
+    // - regular users no longer have SELECT on promo_codes (the broad
+    //   validation policy has been dropped)
+    // - promo_redemptions has no user-level INSERT policy, so writing
+    //   with the user client would silently fail and let the same code
+    //   be redeemed repeatedly.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: promo, error } = await supabaseAdmin
       .from("promo_codes")
       .select("*")
       .eq("code", code)
@@ -29,7 +37,7 @@ export const redeemPromoCode = createServerFn({ method: "POST" })
     }
 
     // One redemption per user
-    const { data: prior } = await supabase
+    const { data: prior } = await supabaseAdmin
       .from("promo_redemptions")
       .select("id")
       .eq("promo_code_id", promo.id)
@@ -40,13 +48,13 @@ export const redeemPromoCode = createServerFn({ method: "POST" })
     const grant = promo.grant_type as GrantType;
 
     if (grant === "discount") {
-      // Discount applies at checkout — just record the redemption intent
-      await supabase.from("promo_redemptions").insert({
+      const { error: insErr } = await supabaseAdmin.from("promo_redemptions").insert({
         promo_code_id: promo.id,
         user_id: userId,
         applied_plan: "discount",
       });
-      await supabase
+      if (insErr) throw new Error(insErr.message);
+      await supabaseAdmin
         .from("promo_codes")
         .update({ redemption_count: promo.redemption_count + 1 })
         .eq("id", promo.id);
@@ -68,26 +76,18 @@ export const redeemPromoCode = createServerFn({ method: "POST" })
       plan = "pro_yearly";
       days = promo.duration_days ?? 365;
     } else {
-      // custom
       plan = (promo.plan_tier as "pro_monthly" | "pro_yearly") ?? "pro_monthly";
       days = promo.duration_days ?? 30;
     }
 
     const expiresAt = new Date(Date.now() + days * 86400_000).toISOString();
 
-    // Upgrade profile
-    const { error: profErr } = await supabase
+    const { error: profErr } = await supabaseAdmin
       .from("profiles")
-      .update({
-        plan,
-        subscription_status: "active",
-      })
+      .update({ plan, subscription_status: "active" })
       .eq("id", userId);
     if (profErr) throw new Error(profErr.message);
 
-    // Insert a subscription row so the existing downgrade cron respects the expiry.
-    // RLS restricts inserts to service_role, so use the admin client.
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error: subErr } = await supabaseAdmin.from("subscriptions").insert({
       user_id: userId,
       provider: "promo",
@@ -98,14 +98,15 @@ export const redeemPromoCode = createServerFn({ method: "POST" })
     });
     if (subErr) throw new Error(subErr.message);
 
-    await supabase.from("promo_redemptions").insert({
+    const { error: redErr } = await supabaseAdmin.from("promo_redemptions").insert({
       promo_code_id: promo.id,
       user_id: userId,
       applied_plan: plan,
       expires_at: expiresAt,
     });
+    if (redErr) throw new Error(redErr.message);
 
-    await supabase
+    await supabaseAdmin
       .from("promo_codes")
       .update({ redemption_count: promo.redemption_count + 1 })
       .eq("id", promo.id);
