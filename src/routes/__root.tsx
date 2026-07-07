@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { PageTransition } from "@/components/page-transition";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminHost } from "@/lib/host";
 
