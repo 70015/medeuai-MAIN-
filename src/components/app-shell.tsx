@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
+import { PageTransition } from "@/components/page-transition";
 import {
   Brain,
   CreditCard,
