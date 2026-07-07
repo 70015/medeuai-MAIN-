@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
+import { PageTransition } from "@/components/page-transition";
 import {
   Brain,
   CreditCard,
@@ -206,7 +207,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="container mx-auto max-w-6xl px-4 py-8">{children}</main>
+      <main className="container mx-auto max-w-6xl px-4 py-8">
+        <PageTransition>{children}</PageTransition>
+      </main>
     </div>
   );
 }

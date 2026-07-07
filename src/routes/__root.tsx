@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -13,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { PageTransition } from "@/components/page-transition";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminHost } from "@/lib/host";
 
@@ -166,9 +168,31 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+        <RootOutlet />
         <Toaster richColors position="top-center" />
       </ThemeProvider>
     </QueryClientProvider>
+  );
+}
+
+function RootOutlet() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // Authenticated routes render inside <AppShell>, which owns its own
+  // PageTransition scoped to <main> so the header doesn't re-animate.
+  const isAuthenticatedShell =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/tests") ||
+    pathname.startsWith("/leaderboard") ||
+    pathname.startsWith("/billing") ||
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/ai-teacher") ||
+    pathname.startsWith("/attempt") ||
+    pathname.startsWith("/results") ||
+    pathname.startsWith("/admin");
+  if (isAuthenticatedShell) return <Outlet />;
+  return (
+    <PageTransition>
+      <Outlet />
+    </PageTransition>
   );
 }
