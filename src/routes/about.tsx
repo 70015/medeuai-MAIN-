@@ -15,15 +15,17 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "ParikshaSathi is an AI-powered mock-test and study platform for Indian government exams, built for Bengali, Hindi and English-medium aspirants.",
+          "ParikshaSathi is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
       },
       { property: "og:title", content: "About ParikshaSathi" },
       {
         property: "og:description",
         content:
-          "Learn about our mission to make world-class exam preparation accessible to every Indian aspirant.",
+          "Our mission to make world-class exam preparation accessible to every Indian aspirant.",
       },
+      { property: "og:url", content: "https://pariksha-sathi-ai.lovable.app/about" },
     ],
+    links: [{ rel: "canonical", href: "https://pariksha-sathi-ai.lovable.app/about" }],
   }),
   component: AboutPage,
 });
