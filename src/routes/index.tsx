@@ -21,18 +21,20 @@ import { isAdminHost } from "@/lib/host";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ParikshaSathi — AI Mock Tests for SSC, WBCS, Railway, Banking" },
+      { title: "ParikshaSathi — AI Mock Tests for Indian Exams" },
       {
         name: "description",
         content:
-          "Prepare smarter for SSC CGL, CHSL, WBCS, WBPSC, Railway, Banking and Police exams. AI mock tests, PYQs, deep analytics and an AI teacher — built for Bengali, Hindi and English medium aspirants.",
+          "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking — in Bengali, Hindi and English.",
       },
       { property: "og:title", content: "ParikshaSathi — Prepare Smarter. Rank Faster." },
       {
         property: "og:description",
-        content: "AI-powered exam prep platform for Indian government exam aspirants.",
+        content: "AI-powered exam prep for SSC, WBCS, Railway, Banking and more.",
       },
+      { property: "og:url", content: "https://pariksha-sathi-ai.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://pariksha-sathi-ai.lovable.app/" }],
   }),
   component: LandingPage,
 });
