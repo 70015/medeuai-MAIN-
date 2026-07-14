@@ -92,6 +92,7 @@ function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main>
 
 
       {/* Hero */}
