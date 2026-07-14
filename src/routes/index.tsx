@@ -253,6 +253,7 @@ function LandingPage() {
           </div>
         </div>
       </section>
+      </main>
 
       <footer className="border-t border-border/60 py-10">
         <div className="container mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
