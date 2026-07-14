@@ -15,15 +15,17 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "ParikshaSathi is an AI-powered mock-test and study platform for Indian government exams, built for Bengali, Hindi and English-medium aspirants.",
+          "ParikshaSathi is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
       },
       { property: "og:title", content: "About ParikshaSathi" },
       {
         property: "og:description",
         content:
-          "Learn about our mission to make world-class exam preparation accessible to every Indian aspirant.",
+          "Our mission to make world-class exam preparation accessible to every Indian aspirant.",
       },
+      { property: "og:url", content: "https://pariksha-sathi-ai.lovable.app/about" },
     ],
+    links: [{ rel: "canonical", href: "https://pariksha-sathi-ai.lovable.app/about" }],
   }),
   component: AboutPage,
 });
@@ -67,6 +69,7 @@ function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main>
 
       <section className="relative overflow-hidden hero-bg">
         <div className="container mx-auto max-w-4xl px-4 pb-16 pt-16 text-center sm:pt-24">
@@ -99,7 +102,7 @@ function AboutPage() {
               {founderImg ? (
                 <img
                   src={founderImg}
-                  alt={about?.founder_name ?? "Founder"}
+                  alt={about?.founder_name ? `${about.founder_name}, Founder of ParikshaSathi` : "Founder of ParikshaSathi"}
                   className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
                 />
               ) : (
@@ -158,6 +161,7 @@ function AboutPage() {
           </div>
         </div>
       </section>
+      </main>
 
       <footer className="border-t border-border/60 py-10">
         <div className="container mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">

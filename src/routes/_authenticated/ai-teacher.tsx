@@ -219,6 +219,7 @@ function AITeacherPage() {
         <Button
           type="submit"
           size="icon"
+          aria-label="Send message"
           className="h-11 w-11 shrink-0 rounded-full"
           disabled={send.isPending || !input.trim()}
         >
