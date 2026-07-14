@@ -84,27 +84,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ParikshaSathi — AI Mock Tests for SSC, WBCS, Railway, Banking" },
+      { title: "ParikshaSathi — AI Mock Tests for Indian Exams" },
       {
         name: "description",
         content:
-          "AI-powered exam prep for SSC, WBCS, Railway, Banking and more. Built for Bengali-medium aspirants.",
+          "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking — in Bengali, Hindi and English.",
       },
       { name: "author", content: "ParikshaSathi" },
       { name: "theme-color", content: "#0f0f0f" },
-      { property: "og:title", content: "ParikshaSathi — AI Mock Tests for SSC, WBCS, Railway, Banking" },
+      { property: "og:site_name", content: "ParikshaSathi" },
+      { property: "og:title", content: "ParikshaSathi — AI Mock Tests for Indian Exams" },
       {
         property: "og:description",
-        content: "AI mock tests, PYQs, analytics and an AI teacher for Indian government exams.",
+        content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking — in Bengali, Hindi and English.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ParikshaSathi — AI Mock Tests for SSC, WBCS, Railway, Banking" },
-      { name: "description", content: "Prepare smarter for SSC CGL, CHSL, WBCS, WBPSC, Railway, Banking and Police exams. AI mock tests, PYQs, deep analytics and an AI teacher — built for Bengali, Hindi and English medium aspirants." },
-      { property: "og:description", content: "Prepare smarter for SSC CGL, CHSL, WBCS, WBPSC, Railway, Banking and Police exams. AI mock tests, PYQs, deep analytics and an AI teacher — built for Bengali, Hindi and English medium aspirants." },
-      { name: "twitter:description", content: "Prepare smarter for SSC CGL, CHSL, WBCS, WBPSC, Railway, Banking and Police exams. AI mock tests, PYQs, deep analytics and an AI teacher — built for Bengali, Hindi and English medium aspirants." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/22dd151e-401e-46b5-bd83-2278f5ea67e4/id-preview-5807d325--919a0eec-4904-4552-a317-8eb48c9a8544.lovable.app-1782880305322.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/22dd151e-401e-46b5-bd83-2278f5ea67e4/id-preview-5807d325--919a0eec-4904-4552-a317-8eb48c9a8544.lovable.app-1782880305322.png" },
+      { name: "twitter:title", content: "ParikshaSathi — AI Mock Tests for Indian Exams" },
+      { name: "twitter:description", content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking — in Bengali, Hindi and English." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -113,6 +110,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "ParikshaSathi",
+          url: "https://pariksha-sathi-ai.lovable.app",
+          logo: "https://pariksha-sathi-ai.lovable.app/favicon.ico",
+          description: "AI-powered exam prep for SSC, WBCS, Railway, Banking and more Indian government exams.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "ParikshaSathi",
+          url: "https://pariksha-sathi-ai.lovable.app",
+        }),
       },
     ],
   }),
