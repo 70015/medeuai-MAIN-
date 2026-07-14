@@ -99,7 +99,7 @@ function AboutPage() {
               {founderImg ? (
                 <img
                   src={founderImg}
-                  alt={about?.founder_name ?? "Founder"}
+                  alt={about?.founder_name ? `${about.founder_name}, Founder of ParikshaSathi` : "Founder of ParikshaSathi"}
                   className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
                 />
               ) : (
