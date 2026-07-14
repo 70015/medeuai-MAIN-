@@ -251,6 +251,31 @@ function AuthPage() {
               </button>
             )}
 
+            {mode === "signin" && (
+              <p className="pt-1 text-center text-sm text-muted-foreground">
+                New to ParikshaSathi?{" "}
+                <button
+                  type="button"
+                  onClick={() => setMode("signup")}
+                  className="font-medium text-primary hover:underline"
+                >
+                  Create a free account
+                </button>
+              </p>
+            )}
+            {mode === "signup" && (
+              <p className="pt-1 text-center text-sm text-muted-foreground">
+                Already have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => setMode("signin")}
+                  className="font-medium text-primary hover:underline"
+                >
+                  Sign in
+                </button>
+              </p>
+            )}
+
             <p className="pt-2 text-center text-xs text-muted-foreground">
               By continuing you agree to our terms and privacy policy.
             </p>
