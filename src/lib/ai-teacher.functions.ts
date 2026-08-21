@@ -64,13 +64,6 @@ export const askAITeacher = createServerFn({ method: "POST" })
     }
 
 
-    const lang =
-      data.language === "bengali"
-        ? "Bengali (বাংলা)"
-        : data.language === "hindi"
-          ? "Hindi (हिन्दी)"
-          : "English";
-
     const res = await fetch(GATEWAY_URL, {
       method: "POST",
       headers: {
