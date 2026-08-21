@@ -74,7 +74,7 @@ export const askAITeacher = createServerFn({ method: "POST" })
       body: JSON.stringify({
         model: MODEL,
         messages: [
-          { role: "system", content: SYSTEM(lang, data.targetExam) },
+          { role: "system", content: buildSystemPrompt(data) },
           ...data.messages,
         ],
       }),
