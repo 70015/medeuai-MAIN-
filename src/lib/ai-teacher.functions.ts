@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { buildSystemPrompt } from "@/lib/ai-teacher-prompt";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-3-flash-preview";
@@ -14,21 +15,10 @@ const Input = z.object({
   messages: z.array(Message).min(1).max(40),
   language: z.enum(["english", "bengali", "hindi"]).optional(),
   targetExam: z.string().optional(),
+  level: z.enum(["beginner", "intermediate", "advanced"]).optional(),
+  mode: z.enum(["teach", "steps", "quiz", "plan"]).optional(),
 });
 
-const SYSTEM = (lang: string, exam?: string) =>
-  `You are ParikshaSathi AI Teacher — a friendly tutor for Indian government exams${
-    exam ? ` (focus: ${exam.toUpperCase()})` : ""
-  }.
-Respond in ${lang}; mix in English terms when natural.
-
-Style rules (IMPORTANT — keep replies SHORT and scannable):
-- Default reply length: 80–160 words. Never lecture.
-- Use markdown: short bullets, bold key terms, tiny code/math when needed.
-- No long intros or recap of the question. Get straight to the answer.
-- For math/reasoning: show only the essential steps.
-- End with ONE short follow-up prompt or practice question (optional).
-- If off-topic, politely steer back in one line.`;
 
 const FREE_DAILY_LIMIT = 10;
 
@@ -74,13 +64,6 @@ export const askAITeacher = createServerFn({ method: "POST" })
     }
 
 
-    const lang =
-      data.language === "bengali"
-        ? "Bengali (বাংলা)"
-        : data.language === "hindi"
-          ? "Hindi (हिन्दी)"
-          : "English";
-
     const res = await fetch(GATEWAY_URL, {
       method: "POST",
       headers: {
@@ -91,7 +74,7 @@ export const askAITeacher = createServerFn({ method: "POST" })
       body: JSON.stringify({
         model: MODEL,
         messages: [
-          { role: "system", content: SYSTEM(lang, data.targetExam) },
+          { role: "system", content: buildSystemPrompt(data) },
           ...data.messages,
         ],
       }),
