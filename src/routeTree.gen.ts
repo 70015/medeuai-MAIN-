@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiAiTeacherRouteImport } from './routes/api/ai-teacher'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -63,6 +64,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiTeacherRoute = ApiAiTeacherRouteImport.update({
+  id: '/api/ai-teacher',
+  path: '/api/ai-teacher',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/pool': typeof AuthenticatedAdminPoolRoute
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/pool': typeof AuthenticatedAdminPoolRoute
@@ -242,6 +250,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/_authenticated/admin/pool': typeof AuthenticatedAdminPoolRoute
@@ -271,6 +280,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
     | '/admin/pool'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
     | '/admin/pool'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/leaderboard'
     | '/_authenticated/profile'
+    | '/api/ai-teacher'
     | '/_authenticated/admin/about'
     | '/_authenticated/admin/generate'
     | '/_authenticated/admin/pool'
@@ -348,6 +360,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiAiTeacherRoute: typeof ApiAiTeacherRoute
   ApiPublicHooksRefillPoolRoute: typeof ApiPublicHooksRefillPoolRoute
   ApiPublicPaymentsRazorpayWebhookRoute: typeof ApiPublicPaymentsRazorpayWebhookRoute
 }
@@ -394,6 +407,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-teacher': {
+      id: '/api/ai-teacher'
+      path: '/api/ai-teacher'
+      fullPath: '/api/ai-teacher'
+      preLoaderRoute: typeof ApiAiTeacherRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/profile': {
@@ -600,6 +620,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiAiTeacherRoute: ApiAiTeacherRoute,
   ApiPublicHooksRefillPoolRoute: ApiPublicHooksRefillPoolRoute,
   ApiPublicPaymentsRazorpayWebhookRoute: ApiPublicPaymentsRazorpayWebhookRoute,
 }
