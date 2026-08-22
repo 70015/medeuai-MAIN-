@@ -29,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { BrandMark } from "@/components/brand-logo";
+import { useAvatarUrl } from "@/lib/avatar";
 import { isAdminHost } from "@/lib/host";
 import { ThemeToggle } from "./theme-toggle";
 
