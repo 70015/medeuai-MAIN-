@@ -27,6 +27,7 @@ import { Route as AuthenticatedTestsIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedTestsSlugRouteImport } from './routes/_authenticated/tests.$slug'
 import { Route as AuthenticatedResultsAttemptIdRouteImport } from './routes/_authenticated/results.$attemptId'
+import { Route as AuthenticatedPayPlanRouteImport } from './routes/_authenticated/pay.$plan'
 import { Route as AuthenticatedAttemptAttemptIdRouteImport } from './routes/_authenticated/attempt.$attemptId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminSyllabiRouteImport } from './routes/_authenticated/admin.syllabi'
@@ -129,6 +130,11 @@ const AuthenticatedResultsAttemptIdRoute =
     path: '/results/$attemptId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPayPlanRoute = AuthenticatedPayPlanRouteImport.update({
+  id: '/pay/$plan',
+  path: '/pay/$plan',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAttemptAttemptIdRoute =
   AuthenticatedAttemptAttemptIdRouteImport.update({
     id: '/attempt/$attemptId',
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -237,6 +244,7 @@ export interface FileRoutesByTo {
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -268,6 +276,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/_authenticated/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/_authenticated/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/_authenticated/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/admin/syllabi'
     | '/admin/users'
     | '/attempt/$attemptId'
+    | '/pay/$plan'
     | '/results/$attemptId'
     | '/tests/$slug'
     | '/admin/'
@@ -327,6 +337,7 @@ export interface FileRouteTypes {
     | '/admin/syllabi'
     | '/admin/users'
     | '/attempt/$attemptId'
+    | '/pay/$plan'
     | '/results/$attemptId'
     | '/tests/$slug'
     | '/admin'
@@ -357,6 +368,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/syllabi'
     | '/_authenticated/admin/users'
     | '/_authenticated/attempt/$attemptId'
+    | '/_authenticated/pay/$plan'
     | '/_authenticated/results/$attemptId'
     | '/_authenticated/tests/$slug'
     | '/_authenticated/admin/'
@@ -505,6 +517,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedResultsAttemptIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pay/$plan': {
+      id: '/_authenticated/pay/$plan'
+      path: '/pay/$plan'
+      fullPath: '/pay/$plan'
+      preLoaderRoute: typeof AuthenticatedPayPlanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/attempt/$attemptId': {
       id: '/_authenticated/attempt/$attemptId'
       path: '/attempt/$attemptId'
@@ -612,6 +631,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
+  AuthenticatedPayPlanRoute: typeof AuthenticatedPayPlanRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
   AuthenticatedTestsSlugRoute: typeof AuthenticatedTestsSlugRoute
   AuthenticatedTestsIndexRoute: typeof AuthenticatedTestsIndexRoute
@@ -626,6 +646,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
+  AuthenticatedPayPlanRoute: AuthenticatedPayPlanRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
   AuthenticatedTestsSlugRoute: AuthenticatedTestsSlugRoute,
   AuthenticatedTestsIndexRoute: AuthenticatedTestsIndexRoute,
