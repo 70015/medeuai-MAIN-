@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Crown, Loader2, Sparkles, Tag, XCircle } from "lucide-react";
+import { Check, Clock, Crown, Loader2, Sparkles, Tag } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
@@ -10,20 +10,20 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { BackLink } from "@/components/back-link";
-import { supabase } from "@/integrations/supabase/client";
-import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
-import {
-  cancelRazorpaySubscription,
-  createRazorpaySubscription,
-  getPlanStatus,
-  getRazorpayConfig,
-  verifyRazorpayPayment,
-} from "@/lib/razorpay.functions";
+import { getPlanStatus } from "@/lib/razorpay.functions";
+import { getMyPaymentRequests, getPaymentSettings } from "@/lib/payments.functions";
 import { redeemPromoCode } from "@/lib/promo.functions";
 
-
 export const Route = createFileRoute("/_authenticated/billing")({
-  head: () => ({ meta: [{ title: "Billing — MedEu.Ai" }] }),
+  head: () => ({
+    meta: [
+      { title: "Billing & Plans — MedEu.Ai" },
+      {
+        name: "description",
+        content: "Manage your MedEu.Ai Pro plan, pay by UPI and redeem promo codes.",
+      },
+    ],
+  }),
   component: BillingPage,
 });
 
@@ -31,15 +31,13 @@ const PLANS = [
   {
     lookup_key: "pro_monthly" as const,
     name: "Pro Monthly",
-    price: "₹99",
     cadence: "per month",
     perks: ["Unlimited mock tests", "AI explanations & similar questions", "Full analytics"],
   },
   {
     lookup_key: "pro_yearly" as const,
     name: "Pro Yearly",
-    price: "₹799",
-    cadence: "per year — save ₹389",
+    cadence: "per year",
     perks: ["Everything in Monthly", "Priority support", "Early access to new exams"],
     highlight: true,
   },
@@ -48,65 +46,27 @@ const PLANS = [
 function BillingPage() {
   const queryClient = useQueryClient();
   const planFn = useServerFn(getPlanStatus);
-  const configFn = useServerFn(getRazorpayConfig);
-  const createSubFn = useServerFn(createRazorpaySubscription);
-  const verifyFn = useServerFn(verifyRazorpayPayment);
-  const cancelFn = useServerFn(cancelRazorpaySubscription);
+  const settingsFn = useServerFn(getPaymentSettings);
+  const requestsFn = useServerFn(getMyPaymentRequests);
   const redeemFn = useServerFn(redeemPromoCode);
   const [promoCode, setPromoCode] = useState("");
-
 
   const { data: plan, isLoading } = useQuery({
     queryKey: ["plan-status"],
     queryFn: () => planFn(),
   });
 
-  const { data: config } = useQuery({
-    queryKey: ["razorpay-config"],
-    queryFn: () => configFn(),
+  const { data: settings } = useQuery({
+    queryKey: ["payment-settings"],
+    queryFn: () => settingsFn(),
   });
 
-  const subscribe = useMutation({
-    mutationFn: async (lookup_key: "pro_monthly" | "pro_yearly") => {
-      if (!config?.keyId) throw new Error("Razorpay is not configured yet");
-      const { data: u } = await supabase.auth.getUser();
-      const { subscriptionId } = await createSubFn({ data: { lookup_key } });
-      await new Promise<void>((resolve, reject) => {
-        openRazorpayCheckout({
-          keyId: config.keyId!,
-          subscriptionId,
-          name: "MedEu.Ai",
-          description: lookup_key === "pro_yearly" ? "Pro Yearly Subscription" : "Pro Monthly Subscription",
-          prefill: { email: u?.user?.email ?? undefined },
-          onSuccess: async (r) => {
-            try {
-              await verifyFn({ data: r });
-              resolve();
-            } catch (e) {
-              reject(e);
-            }
-          },
-          onDismiss: () => reject(new Error("Checkout cancelled")),
-        });
-      });
-    },
-    onSuccess: () => {
-      toast.success("Subscription activated. Welcome to Pro!");
-      queryClient.invalidateQueries({ queryKey: ["plan-status"] });
-    },
-    onError: (e: Error) => {
-      if (e.message !== "Checkout cancelled") toast.error(e.message);
-    },
+  const { data: myRequests } = useQuery({
+    queryKey: ["my-payment-requests"],
+    queryFn: () => requestsFn(),
   });
 
-  const cancel = useMutation({
-    mutationFn: () => cancelFn(),
-    onSuccess: () => {
-      toast.success("Subscription will end at the period close");
-      queryClient.invalidateQueries({ queryKey: ["plan-status"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
+  const pending = myRequests?.find((r) => r.status === "pending");
 
   const redeem = useMutation({
     mutationFn: () => redeemFn({ data: { code: promoCode } }),
@@ -118,60 +78,32 @@ function BillingPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-
+  const priceFor = (key: "pro_monthly" | "pro_yearly") =>
+    key === "pro_yearly" ? settings?.yearlyPriceInr : settings?.monthlyPriceInr;
 
   return (
     <div className="space-y-6">
       <BackLink to="/profile" label="Back to Profile" />
-      {config && !config.keyId && (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive">
-          Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.
-        </div>
-      )}
-      {config?.environment === "test" && (
-        <div className="rounded-lg border border-border bg-muted px-4 py-2 text-xs text-muted-foreground">
-          Test mode — use card 4111 1111 1111 1111, any future expiry, any CVV, OTP 1234.
-        </div>
-      )}
+
       <div className="flex items-center gap-2">
-        <Crown className="h-5 w-5 text-primary" />
+        <Crown className="h-5 w-5 text-[#03824F]" />
         <h1 className="text-xl font-bold tracking-tight">Billing & Plans</h1>
       </div>
 
       {isLoading ? (
-        <div className="h-24 animate-pulse rounded-lg bg-muted/40" />
+        <div className="h-24 animate-pulse rounded-xl bg-muted/40" />
       ) : plan?.isPro ? (
-        <Card className="border-primary/40 bg-primary/5 p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <Badge className="mb-2">Pro active</Badge>
-              <h2 className="text-lg font-semibold">
-                You're on the {plan.priceId === "pro_yearly" ? "Yearly" : "Monthly"} plan
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Status: {plan.status}
-                {plan.currentPeriodEnd
-                  ? ` · ${plan.cancelAtPeriodEnd ? "Ends" : "Renews"} ${new Date(plan.currentPeriodEnd).toLocaleDateString()}`
-                  : ""}
-              </p>
-            </div>
-            {!plan.cancelAtPeriodEnd && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (confirm("Cancel subscription at the end of the current period?")) cancel.mutate();
-                }}
-                disabled={cancel.isPending}
-              >
-                {cancel.isPending ? (
-                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                ) : (
-                  <XCircle className="mr-1 h-4 w-4" />
-                )}
-                Cancel subscription
-              </Button>
-            )}
-          </div>
+        <Card className="border-[#03824F]/40 bg-[#EAF7F1] p-6">
+          <Badge className="mb-2 bg-[#03824F] text-white hover:bg-[#02663E]">Pro active</Badge>
+          <h2 className="text-lg font-semibold text-[#04211C]">
+            You're on the {plan.priceId === "pro_yearly" ? "Yearly" : "Monthly"} plan
+          </h2>
+          <p className="mt-1 text-sm text-[#33403D]">
+            Status: {plan.status}
+            {plan.currentPeriodEnd
+              ? ` · access until ${new Date(plan.currentPeriodEnd).toLocaleDateString()}`
+              : ""}
+          </p>
         </Card>
       ) : (
         <Card className="border-border/60 bg-card/40 p-6">
@@ -184,44 +116,64 @@ function BillingPage() {
         </Card>
       )}
 
-      {!plan?.isPro && (
+      {pending && (
+        <Card className="border-[#02663E]/40 bg-card/40 p-5">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <Clock className="h-4 w-4 text-[#03824F]" /> Payment awaiting verification
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your ₹{pending.amount_inr} payment (UTR {pending.utr}) is being reviewed. Pro unlocks
+            as soon as it's verified.
+          </p>
+          <Link to="/pay/$plan" params={{ plan: pending.plan }}>
+            <Button variant="outline" className="mt-3">
+              View payment status
+            </Button>
+          </Link>
+        </Card>
+      )}
+
+      {!plan?.isPro && !pending && (
         <div className="grid gap-4 md:grid-cols-2">
           {PLANS.map((p) => (
             <Card
               key={p.lookup_key}
               className={
                 "relative border-border/60 bg-card/40 p-6 " +
-                (p.highlight ? "border-primary/60 ring-1 ring-primary/30" : "")
+                (p.highlight ? "border-[#03824F]/60 ring-1 ring-[#03824F]/20" : "")
               }
             >
               {p.highlight && (
-                <Badge className="absolute -top-2 right-4 bg-primary">
+                <Badge className="absolute -top-2 right-4 bg-[#03824F] text-white hover:bg-[#02663E]">
                   <Sparkles className="mr-1 h-3 w-3" /> Best value
                 </Badge>
               )}
               <h3 className="text-lg font-semibold">{p.name}</h3>
               <div className="mt-2 flex items-baseline gap-1">
-                <span className="text-3xl font-bold">{p.price}</span>
+                <span className="text-3xl font-bold">
+                  {priceFor(p.lookup_key) ? `₹${priceFor(p.lookup_key)}` : "—"}
+                </span>
                 <span className="text-sm text-muted-foreground">{p.cadence}</span>
               </div>
               <ul className="mt-4 space-y-2 text-sm">
                 {p.perks.map((perk) => (
                   <li key={perk} className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-4 w-4 text-primary" />
+                    <Check className="mt-0.5 h-4 w-4 text-[#03824F]" />
                     <span>{perk}</span>
                   </li>
                 ))}
               </ul>
-              <Button
-                className="mt-6 w-full"
-                disabled={!config?.keyId || subscribe.isPending}
-                onClick={() => subscribe.mutate(p.lookup_key)}
-              >
-                {subscribe.isPending ? (
-                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                ) : null}
-                {config?.keyId ? "Subscribe" : "Payments not configured"}
-              </Button>
+              {settings?.upiId ? (
+                <Link to="/pay/$plan" params={{ plan: p.lookup_key }} className="mt-6 block">
+                  <Button className="w-full bg-[#03824F] text-white hover:bg-[#02663E]">
+                    Subscribe with UPI
+                  </Button>
+                </Link>
+              ) : (
+                <Button className="mt-6 w-full" disabled>
+                  Payments not configured
+                </Button>
+              )}
             </Card>
           ))}
         </div>
@@ -229,11 +181,11 @@ function BillingPage() {
 
       <Card className="border-border/60 bg-card/40 p-5">
         <div className="flex items-center gap-2">
-          <Tag className="h-4 w-4 text-primary" />
+          <Tag className="h-4 w-4 text-[#03824F]" />
           <h3 className="text-sm font-semibold">Have a promo code?</h3>
         </div>
         <p className="mt-1 text-xs text-muted-foreground">
-          Redeem a code to unlock Pro for free or get a discount at checkout.
+          Redeem a code to unlock Pro for free or get a discount.
         </p>
         <div className="mt-3 flex gap-2">
           <Input
@@ -244,17 +196,15 @@ function BillingPage() {
             className="font-mono uppercase tracking-wider"
           />
           <Button
+            className="bg-[#04211C] text-white hover:bg-[#02663E]"
             disabled={!promoCode.trim() || redeem.isPending}
             onClick={() => redeem.mutate()}
           >
-            {redeem.isPending ? (
-              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-            ) : null}
+            {redeem.isPending ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : null}
             Redeem
           </Button>
         </div>
       </Card>
-
     </div>
   );
 }

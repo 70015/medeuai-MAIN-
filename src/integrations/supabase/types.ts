@@ -682,6 +682,105 @@ export type Database = {
           },
         ]
       }
+      payment_requests: {
+        Row: {
+          admin_note: string | null
+          amount_inr: number
+          created_at: string
+          id: string
+          paid_on: string
+          plan: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          screenshot_path: string | null
+          status: string
+          updated_at: string
+          upi_id: string | null
+          user_id: string
+          utr: string
+        }
+        Insert: {
+          admin_note?: string | null
+          amount_inr: number
+          created_at?: string
+          id?: string
+          paid_on: string
+          plan: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_path?: string | null
+          status?: string
+          updated_at?: string
+          upi_id?: string | null
+          user_id: string
+          utr: string
+        }
+        Update: {
+          admin_note?: string | null
+          amount_inr?: number
+          created_at?: string
+          id?: string
+          paid_on?: string
+          plan?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_path?: string | null
+          status?: string
+          updated_at?: string
+          upi_id?: string | null
+          user_id?: string
+          utr?: string
+        }
+        Relationships: []
+      }
+      payment_settings: {
+        Row: {
+          created_at: string
+          id: string
+          instructions: string
+          merchant_name: string
+          monthly_price_inr: number
+          monthly_qr_path: string | null
+          qr_enabled: boolean
+          singleton: boolean
+          updated_at: string
+          upi_id: string
+          upi_intent_enabled: boolean
+          yearly_price_inr: number
+          yearly_qr_path: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          instructions?: string
+          merchant_name?: string
+          monthly_price_inr?: number
+          monthly_qr_path?: string | null
+          qr_enabled?: boolean
+          singleton?: boolean
+          updated_at?: string
+          upi_id?: string
+          upi_intent_enabled?: boolean
+          yearly_price_inr?: number
+          yearly_qr_path?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          instructions?: string
+          merchant_name?: string
+          monthly_price_inr?: number
+          monthly_qr_path?: string | null
+          qr_enabled?: boolean
+          singleton?: boolean
+          updated_at?: string
+          upi_id?: string
+          upi_intent_enabled?: boolean
+          yearly_price_inr?: number
+          yearly_qr_path?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1259,6 +1358,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      reject_payment_request: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: undefined
+      }
       submit_attempt: {
         Args: { p_attempt_id: string }
         Returns: {
@@ -1269,6 +1372,14 @@ export type Database = {
           out_skipped_count: number
           out_time_taken_seconds: number
           out_total_marks: number
+        }[]
+      }
+      verify_payment_request: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: {
+          out_expires_at: string
+          out_plan: string
+          out_user_id: string
         }[]
       }
     }

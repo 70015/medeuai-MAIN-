@@ -27,12 +27,14 @@ import { Route as AuthenticatedTestsIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedTestsSlugRouteImport } from './routes/_authenticated/tests.$slug'
 import { Route as AuthenticatedResultsAttemptIdRouteImport } from './routes/_authenticated/results.$attemptId'
+import { Route as AuthenticatedPayPlanRouteImport } from './routes/_authenticated/pay.$plan'
 import { Route as AuthenticatedAttemptAttemptIdRouteImport } from './routes/_authenticated/attempt.$attemptId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminSyllabiRouteImport } from './routes/_authenticated/admin.syllabi'
 import { Route as AuthenticatedAdminReviewRouteImport } from './routes/_authenticated/admin.review'
 import { Route as AuthenticatedAdminPromosRouteImport } from './routes/_authenticated/admin.promos'
 import { Route as AuthenticatedAdminPoolRouteImport } from './routes/_authenticated/admin.pool'
+import { Route as AuthenticatedAdminPaymentsRouteImport } from './routes/_authenticated/admin.payments'
 import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
 import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 import { Route as ApiPublicPaymentsRazorpayWebhookRouteImport } from './routes/api/public/payments/razorpay-webhook'
@@ -129,6 +131,11 @@ const AuthenticatedResultsAttemptIdRoute =
     path: '/results/$attemptId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPayPlanRoute = AuthenticatedPayPlanRouteImport.update({
+  id: '/pay/$plan',
+  path: '/pay/$plan',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAttemptAttemptIdRoute =
   AuthenticatedAttemptAttemptIdRouteImport.update({
     id: '/attempt/$attemptId',
@@ -163,6 +170,12 @@ const AuthenticatedAdminPoolRoute = AuthenticatedAdminPoolRouteImport.update({
   path: '/pool',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminPaymentsRoute =
+  AuthenticatedAdminPaymentsRouteImport.update({
+    id: '/payments',
+    path: '/payments',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminGenerateRoute =
   AuthenticatedAdminGenerateRouteImport.update({
     id: '/generate',
@@ -203,12 +216,14 @@ export interface FileRoutesByFullPath {
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/admin/pool': typeof AuthenticatedAdminPoolRoute
   '/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -231,12 +246,14 @@ export interface FileRoutesByTo {
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/admin/pool': typeof AuthenticatedAdminPoolRoute
   '/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
   '/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -262,12 +279,14 @@ export interface FileRoutesById {
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/_authenticated/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/_authenticated/admin/pool': typeof AuthenticatedAdminPoolRoute
   '/_authenticated/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/_authenticated/admin/review': typeof AuthenticatedAdminReviewRoute
   '/_authenticated/admin/syllabi': typeof AuthenticatedAdminSyllabiRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/_authenticated/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/_authenticated/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/_authenticated/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -293,12 +312,14 @@ export interface FileRouteTypes {
     | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
+    | '/admin/payments'
     | '/admin/pool'
     | '/admin/promos'
     | '/admin/review'
     | '/admin/syllabi'
     | '/admin/users'
     | '/attempt/$attemptId'
+    | '/pay/$plan'
     | '/results/$attemptId'
     | '/tests/$slug'
     | '/admin/'
@@ -321,12 +342,14 @@ export interface FileRouteTypes {
     | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
+    | '/admin/payments'
     | '/admin/pool'
     | '/admin/promos'
     | '/admin/review'
     | '/admin/syllabi'
     | '/admin/users'
     | '/attempt/$attemptId'
+    | '/pay/$plan'
     | '/results/$attemptId'
     | '/tests/$slug'
     | '/admin'
@@ -351,12 +374,14 @@ export interface FileRouteTypes {
     | '/api/ai-teacher'
     | '/_authenticated/admin/about'
     | '/_authenticated/admin/generate'
+    | '/_authenticated/admin/payments'
     | '/_authenticated/admin/pool'
     | '/_authenticated/admin/promos'
     | '/_authenticated/admin/review'
     | '/_authenticated/admin/syllabi'
     | '/_authenticated/admin/users'
     | '/_authenticated/attempt/$attemptId'
+    | '/_authenticated/pay/$plan'
     | '/_authenticated/results/$attemptId'
     | '/_authenticated/tests/$slug'
     | '/_authenticated/admin/'
@@ -505,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedResultsAttemptIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pay/$plan': {
+      id: '/_authenticated/pay/$plan'
+      path: '/pay/$plan'
+      fullPath: '/pay/$plan'
+      preLoaderRoute: typeof AuthenticatedPayPlanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/attempt/$attemptId': {
       id: '/_authenticated/attempt/$attemptId'
       path: '/attempt/$attemptId'
@@ -547,6 +579,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPoolRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/payments': {
+      id: '/_authenticated/admin/payments'
+      path: '/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/generate': {
       id: '/_authenticated/admin/generate'
       path: '/generate'
@@ -581,6 +620,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
   AuthenticatedAdminGenerateRoute: typeof AuthenticatedAdminGenerateRoute
+  AuthenticatedAdminPaymentsRoute: typeof AuthenticatedAdminPaymentsRoute
   AuthenticatedAdminPoolRoute: typeof AuthenticatedAdminPoolRoute
   AuthenticatedAdminPromosRoute: typeof AuthenticatedAdminPromosRoute
   AuthenticatedAdminReviewRoute: typeof AuthenticatedAdminReviewRoute
@@ -592,6 +632,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
   AuthenticatedAdminGenerateRoute: AuthenticatedAdminGenerateRoute,
+  AuthenticatedAdminPaymentsRoute: AuthenticatedAdminPaymentsRoute,
   AuthenticatedAdminPoolRoute: AuthenticatedAdminPoolRoute,
   AuthenticatedAdminPromosRoute: AuthenticatedAdminPromosRoute,
   AuthenticatedAdminReviewRoute: AuthenticatedAdminReviewRoute,
@@ -612,6 +653,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
+  AuthenticatedPayPlanRoute: typeof AuthenticatedPayPlanRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
   AuthenticatedTestsSlugRoute: typeof AuthenticatedTestsSlugRoute
   AuthenticatedTestsIndexRoute: typeof AuthenticatedTestsIndexRoute
@@ -626,6 +668,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
+  AuthenticatedPayPlanRoute: AuthenticatedPayPlanRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
   AuthenticatedTestsSlugRoute: AuthenticatedTestsSlugRoute,
   AuthenticatedTestsIndexRoute: AuthenticatedTestsIndexRoute,
