@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { BackLink } from "@/components/back-link";
 import { supabase } from "@/integrations/supabase/client";
 import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
 import {
@@ -121,13 +122,14 @@ function BillingPage() {
 
   return (
     <div className="space-y-6">
+      <BackLink to="/profile" label="Back to Profile" />
       {config && !config.keyId && (
-        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-400">
+        <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive">
           Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.
         </div>
       )}
       {config?.environment === "test" && (
-        <div className="rounded-lg border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-xs text-orange-300">
+        <div className="rounded-lg border border-border bg-muted px-4 py-2 text-xs text-muted-foreground">
           Test mode — use card 4111 1111 1111 1111, any future expiry, any CVV, OTP 1234.
         </div>
       )}

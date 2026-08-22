@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Crown, Medal, Trophy } from "lucide-react";
 
+import { BackLink } from "@/components/back-link";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +59,7 @@ function LeaderboardPage() {
 
   return (
     <div className="space-y-6">
+      <BackLink to="/progress" label="Back to Progress" />
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Leaderboard</h1>

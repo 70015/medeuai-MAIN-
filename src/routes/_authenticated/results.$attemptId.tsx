@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, GraduationCap, MinusCircle, XCircle } from "l
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { BackLink } from "@/components/back-link";
 import { useProfile } from "@/components/app-shell";
 import { formatSeconds, localize, type Lang } from "@/lib/exam";
 import { cn } from "@/lib/utils";
@@ -112,6 +113,7 @@ function ResultsPage() {
 
   return (
     <div className="space-y-10 pb-4">
+      <BackLink to="/tests" label="Back to Practice" />
       {/* Score */}
       <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">

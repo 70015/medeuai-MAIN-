@@ -1,11 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, Crown, PlayCircle } from "lucide-react";
+import { Crown, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { BackLink } from "@/components/back-link";
 import { examLabel, formatSeconds } from "@/lib/exam";
 import { claimPaperForAttempt } from "@/lib/paper-pool.functions";
 import { getPlanStatus } from "@/lib/razorpay.functions";
@@ -134,7 +135,7 @@ function TestDetailsPage() {
       <div className="rounded-xl border border-border p-8 text-center">
         <p className="text-sm text-muted-foreground">Test not found.</p>
         <Link to="/tests" className="mt-3 inline-block">
-          <Button variant="outline" size="sm">Back to practice</Button>
+          <Button variant="outline" size="sm">Back to Practice</Button>
         </Link>
       </div>
     );
@@ -152,12 +153,7 @@ function TestDetailsPage() {
 
   return (
     <div className="space-y-8 pb-4">
-      <Link
-        to="/tests"
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="mr-1 h-4 w-4" /> All practice
-      </Link>
+      <BackLink to="/tests" label="Back to Practice" />
 
       {/* Briefing header */}
       <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
