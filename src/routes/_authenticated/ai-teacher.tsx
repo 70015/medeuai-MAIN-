@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
+import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -45,7 +47,12 @@ import { supabase } from "@/integrations/supabase/client";
 import type { TeacherLevel, TeacherMode } from "@/lib/ai-teacher-prompt";
 import teacherMark from "@/assets/medeu-teacher-mark.png";
 
+const searchSchema = z.object({
+  q: fallback(z.string(), "").default(""),
+});
+
 export const Route = createFileRoute("/_authenticated/ai-teacher")({
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
       { title: "AI Teacher — Your personal tutor | MedEu.Ai" },
@@ -189,6 +196,7 @@ function examLabel(code: string | null | undefined) {
 
 function AITeacherPage() {
   const { data: profile } = useProfile();
+  const { q: prefill } = Route.useSearch();
   const tts = useServerFn(synthesizeSpeech);
 
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -205,6 +213,11 @@ function AITeacherPage() {
   const nextKindRef = useRef<MsgKind | null>(null);
   const [speakingIdx, setSpeakingIdx] = useState<number | null>(null);
   const [loadingSpeakIdx, setLoadingSpeakIdx] = useState<number | null>(null);
+
+  // Prefill the composer from a link (e.g. "explain my mistakes" on the results page).
+  useEffect(() => {
+    if (prefill) setInput(prefill);
+  }, [prefill]);
 
   // Restore chat + preferences
   useEffect(() => {
