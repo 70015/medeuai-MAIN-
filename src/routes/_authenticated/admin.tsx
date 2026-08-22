@@ -107,7 +107,7 @@ function AdminLayout() {
               key={t.to}
               to={t.to}
               className={
-                "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors " +
+                "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors " +
                 (active
                   ? "bg-secondary text-foreground"
                   : "text-muted-foreground hover:text-foreground")
