@@ -105,6 +105,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -120,7 +122,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "MedEu.Ai",
           url: "https://pariksha-sathi-ai.lovable.app",
-          logo: "https://pariksha-sathi-ai.lovable.app/favicon.ico",
+          logo: "https://pariksha-sathi-ai.lovable.app/favicon.png",
           description: "Your Personal AI Teacher, 24/7 — AI-powered exam prep for SSC, WBCS, Railway, Banking and more Indian government exams.",
         }),
       },
