@@ -295,9 +295,6 @@
     font-weight: 700;
     letter-spacing: -0.02em;
   }
-  p {
-    color: var(--muted-foreground);
-  }
   ::selection {
     background: var(--secondary);
     color: var(--foreground);
