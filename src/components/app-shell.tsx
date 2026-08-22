@@ -75,6 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const queryClient = useQueryClient();
   const { data: profile } = useProfile();
+  const avatarSrc = useAvatarUrl(profile?.avatar_url);
   const [email, setEmail] = useState<string | null>(null);
 
   const { data: isAdmin } = useQuery({
@@ -184,7 +185,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="border-t border-border p-3">
             <div className="flex items-center gap-3 px-2 py-1.5">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={profile?.avatar_url ?? undefined} />
+                <AvatarImage src={avatarSrc} alt={profile?.full_name ?? "Your profile photo"} />
                 <AvatarFallback className="bg-secondary text-xs font-semibold text-primary">
                   {initials}
                 </AvatarFallback>
@@ -226,7 +227,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     aria-label="Account menu"
                   >
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={profile?.avatar_url ?? undefined} />
+                      <AvatarImage src={avatarSrc} alt={profile?.full_name ?? "Your profile photo"} />
                       <AvatarFallback className="bg-secondary text-xs font-semibold text-primary">
                         {initials}
                       </AvatarFallback>
@@ -244,11 +245,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <DropdownMenuItem asChild>
                     <Link to="/about" className="cursor-pointer">
                       <Info className="mr-2 h-4 w-4" /> About us
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="cursor-pointer">
-                      <UserIcon className="mr-2 h-4 w-4" /> Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
