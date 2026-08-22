@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { claimAdminIfNone } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin — ParikshaSathi" }] }),
+  head: () => ({ meta: [{ title: "Admin — MedEu.Ai" }] }),
   component: AdminLayout,
 });
 

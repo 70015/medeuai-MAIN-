@@ -5,14 +5,14 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const PLANS = [
   {
     lookup_key: "pro_monthly",
-    name: "ParikshaSathi Pro Monthly",
+    name: "MedEu.Ai Pro Monthly",
     period: "monthly" as const,
     interval: 1,
     amount: 9900, // ₹99 in paise
   },
   {
     lookup_key: "pro_yearly",
-    name: "ParikshaSathi Pro Yearly",
+    name: "MedEu.Ai Pro Yearly",
     period: "yearly" as const,
     interval: 1,
     amount: 79900, // ₹799 in paise

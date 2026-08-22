@@ -1,9 +1,9 @@
-# ParikshaSathi
+# MedEu.Ai
 
 > AI-powered mock test and exam preparation platform for Indian government exams — SSC, WBCS, WBPSC, Railway, Banking and Police — in Bengali, Hindi and English.
 
-ParikshaSathi helps aspirants prepare smarter with AI-generated mock tests, previous-year questions, deep analytics and an AI teacher that explains every wrong answer in the learner's chosen medium.
+MedEu.Ai helps aspirants prepare smarter with AI-generated mock tests, previous-year questions, deep analytics and an AI teacher that explains every wrong answer in the learner's chosen medium.
 
 ## Pages
-- [Home](/): Overview of ParikshaSathi's features, exams and pricing.
+- [Home](/): Overview of MedEu.Ai's features, exams and pricing.
 - [About](/about): Our mission, founder and principles behind the platform.

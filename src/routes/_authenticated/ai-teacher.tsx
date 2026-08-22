@@ -45,7 +45,7 @@ import { synthesizeSpeech } from "@/lib/ai-tts.functions";
 import { useProfile } from "@/components/app-shell";
 import { supabase } from "@/integrations/supabase/client";
 import type { TeacherLevel, TeacherMode } from "@/lib/ai-teacher-prompt";
-import teacherMark from "@/assets/medeu-teacher-mark.png";
+import { BRAND_LOGO_URL } from "@/components/brand-logo";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -410,16 +410,14 @@ function AITeacherPage() {
       <header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 pb-4">
         <div className="flex min-w-0 items-center gap-3">
           <img
-            src={teacherMark}
-            alt="MedEu AI Teacher"
-            width={512}
-            height={512}
-            className="h-10 w-10 shrink-0 rounded-md bg-secondary p-1"
+            src={BRAND_LOGO_URL}
+            alt="MedEu.Ai AI Teacher"
+            className="h-10 w-10 shrink-0 rounded-md object-contain"
           />
           <div className="min-w-0">
             <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">AI Teacher</h1>
             <p className="truncate text-xs text-muted-foreground sm:text-sm">
-              {pending ? "Teaching…" : "Your personal teacher, available 24/7."}
+              {pending ? "Teaching…" : "Your Personal AI Teacher, 24/7."}
             </p>
           </div>
         </div>

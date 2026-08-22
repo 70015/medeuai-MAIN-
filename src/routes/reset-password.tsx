@@ -1,18 +1,19 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BrandMark } from "@/components/brand-logo";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Reset password — ParikshaSathi" },
+      { title: "Reset password — MedEu.Ai" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -43,11 +44,9 @@ function ResetPasswordPage() {
     <div className="relative min-h-screen bg-background hero-bg">
       <div className="container mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-4 py-12">
         <Link to="/" className="mb-8 flex items-center gap-2 font-semibold">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Sparkles className="h-4 w-4" />
-          </span>
+          <BrandMark className="h-10 w-10" />
           <span>
-            Pariksha<span className="text-primary">Sathi</span>
+            MedEu<span className="text-primary">.Ai</span>
           </span>
         </Link>
         <Card className="w-full border-border/60 bg-card/70 p-6 backdrop-blur sm:p-8">

@@ -12,7 +12,7 @@ import { reviewQuestion } from "@/lib/admin.functions";
 import { localize } from "@/lib/exam";
 
 export const Route = createFileRoute("/_authenticated/admin/review")({
-  head: () => ({ meta: [{ title: "Review Queue — ParikshaSathi" }] }),
+  head: () => ({ meta: [{ title: "Review Queue — MedEu.Ai" }] }),
   component: ReviewPage,
 });
 

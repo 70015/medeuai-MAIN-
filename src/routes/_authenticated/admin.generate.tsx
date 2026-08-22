@@ -21,7 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { generateAIQuestions } from "@/lib/ai-questions.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/generate")({
-  head: () => ({ meta: [{ title: "AI Generate — ParikshaSathi" }] }),
+  head: () => ({ meta: [{ title: "AI Generate — MedEu.Ai" }] }),
   component: GeneratePage,
 });
 

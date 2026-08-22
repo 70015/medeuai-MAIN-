@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Brain, Languages, ShieldCheck, Sparkles, Target, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { BrandLogoFull, BrandMark } from "@/components/brand-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
@@ -11,13 +12,13 @@ import { useQuery } from "@tanstack/react-query";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About ParikshaSathi — AI Exam Prep for India" },
+      { title: "About MedEu.Ai — AI Exam Prep for India" },
       {
         name: "description",
         content:
-          "ParikshaSathi is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
+          "MedEu.Ai is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
       },
-      { property: "og:title", content: "About ParikshaSathi" },
+      { property: "og:title", content: "About MedEu.Ai" },
       {
         property: "og:description",
         content:
@@ -73,6 +74,7 @@ function AboutPage() {
 
       <section className="relative overflow-hidden hero-bg">
         <div className="container mx-auto max-w-4xl px-4 pb-16 pt-16 text-center sm:pt-24">
+          <BrandLogoFull className="mb-6 h-32 sm:h-44" />
           <Badge variant="secondary" className="mb-6 gap-1.5">
             <Sparkles className="h-3 w-3 text-primary" /> About us
           </Badge>
@@ -81,7 +83,7 @@ function AboutPage() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
             {about?.hero_subtitle ??
-              "ParikshaSathi is an AI-first exam preparation platform built for SSC, WBCS, WBPSC, Railway, Banking, Police and other Indian government exams."}
+              "MedEu.Ai is an AI-first exam preparation platform built for SSC, WBCS, WBPSC, Railway, Banking, Police and other Indian government exams."}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">
@@ -102,7 +104,7 @@ function AboutPage() {
               {founderImg ? (
                 <img
                   src={founderImg}
-                  alt={about?.founder_name ? `${about.founder_name}, Founder of ParikshaSathi` : "Founder of ParikshaSathi"}
+                  alt={about?.founder_name ? `${about.founder_name}, Founder of MedEu.Ai` : "Founder of MedEu.Ai"}
                   className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
                 />
               ) : (
@@ -112,7 +114,7 @@ function AboutPage() {
               )}
               <div>
                 <Badge variant="secondary" className="mb-3">Meet the founder</Badge>
-                <h2 className="text-2xl font-bold tracking-tight">{about?.founder_name ?? "Our Founder"}</h2>
+                <h2 className="text-2xl font-bold tracking-tight">{about?.founder_name ?? "Rahamat Ali"}</h2>
                 <p className="mt-1 text-sm text-primary">{about?.founder_position ?? "Founder & CEO"}</p>
                 {about?.founder_quote && (
                   <blockquote className="mt-4 border-l-2 border-primary/60 pl-4 text-pretty text-muted-foreground">
@@ -129,7 +131,7 @@ function AboutPage() {
         <div className="container mx-auto max-w-6xl px-4">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">What we stand for</h2>
-            <p className="mt-3 text-muted-foreground">Six principles shape every decision we make about ParikshaSathi.</p>
+            <p className="mt-3 text-muted-foreground">Six principles shape every decision we make about MedEu.Ai.</p>
           </div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((v) => (
@@ -153,7 +155,7 @@ function AboutPage() {
               ? (about!.story_paragraphs as string[]).map((p, i) => <p key={i}>{p}</p>)
               : (
                 <p>
-                  ParikshaSathi started with a simple frustration — the best test-prep platforms in India are
+                  MedEu.Ai started with a simple frustration — the best test-prep platforms in India are
                   expensive, English-only, and built for metro students. Aspirants from Bengal, Bihar and small
                   towns deserve the same quality of preparation in their language.
                 </p>
@@ -166,11 +168,11 @@ function AboutPage() {
       <footer className="border-t border-border/60 py-10">
         <div className="container mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>ParikshaSathi · Prepare Smarter. Rank Faster.</span>
+            <BrandMark className="h-7 w-7" />
+            <span>MedEu.Ai · Your Personal AI Teacher, 24/7.</span>
           </div>
           <div className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ParikshaSathi. All rights reserved.
+            © {new Date().getFullYear()} MedEu.Ai. All rights reserved.
           </div>
         </div>
       </footer>

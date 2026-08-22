@@ -17,6 +17,7 @@ import {
   Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/brand-logo";
 import { SiteHeader } from "@/components/site-header";
 import { isAdminHost } from "@/lib/host";
 
@@ -369,9 +370,7 @@ function LandingPage() {
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2 font-bold tracking-tight">
-                <span className="grid h-8 w-8 place-items-center rounded-md bg-ink text-ink-foreground">
-                  <Sparkles className="h-4 w-4" />
-                </span>
+                <BrandMark className="h-10 w-10" />
                 <span>
                   MedEu<span className="text-primary">.Ai</span>
                 </span>
@@ -476,9 +475,7 @@ function PreviewChrome({ children, label }: { children: React.ReactNode; label: 
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-[var(--shadow-elegant)]">
       <div className="flex items-center justify-between border-b border-border bg-secondary px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-ink text-ink-foreground">
-            <Brain className="h-3.5 w-3.5" />
-          </span>
+          <BrandMark className="h-8 w-8 rounded-md" />
           <div className="leading-tight">
             <div className="text-sm font-bold">MedEu.Ai Teacher</div>
             <div className="text-[11px] text-muted-foreground">{label}</div>

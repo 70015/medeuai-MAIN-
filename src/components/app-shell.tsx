@@ -10,7 +10,6 @@ import {
   LogOut,
   Settings,
   Shield,
-  Sparkles,
   Layers,
   User as UserIcon,
 } from "lucide-react";
@@ -29,6 +28,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { BrandMark } from "@/components/brand-logo";
 import { isAdminHost } from "@/lib/host";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -116,14 +116,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       to={adminMode ? "/admin" : "/dashboard"}
       className="flex items-center gap-2 font-bold tracking-tight"
     >
-      <span
-        className={
-          "grid h-8 w-8 place-items-center rounded-md " +
-          (adminMode ? "bg-destructive text-destructive-foreground" : "bg-ink text-ink-foreground")
-        }
-      >
-        {adminMode ? <Shield className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-      </span>
+      {adminMode ? (
+        <span className="grid h-9 w-9 place-items-center rounded-md bg-destructive text-destructive-foreground">
+          <Shield className="h-4 w-4" />
+        </span>
+      ) : (
+        <BrandMark className="h-9 w-9" />
+      )}
       <span className="text-base">
         MedEu<span className={adminMode ? "text-destructive" : "text-primary"}>.Ai</span>
         {adminMode && (

@@ -22,7 +22,7 @@ import { redeemPromoCode } from "@/lib/promo.functions";
 
 
 export const Route = createFileRoute("/_authenticated/billing")({
-  head: () => ({ meta: [{ title: "Billing — ParikshaSathi" }] }),
+  head: () => ({ meta: [{ title: "Billing — MedEu.Ai" }] }),
   component: BillingPage,
 });
 
@@ -74,7 +74,7 @@ function BillingPage() {
         openRazorpayCheckout({
           keyId: config.keyId!,
           subscriptionId,
-          name: "ParikshaSathi",
+          name: "MedEu.Ai",
           description: lookup_key === "pro_yearly" ? "Pro Yearly Subscription" : "Pro Monthly Subscription",
           prefill: { email: u?.user?.email ?? undefined },
           onSuccess: async (r) => {
