@@ -1,20 +1,19 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, Clock, Crown, FileText, PlayCircle } from "lucide-react";
+import { ArrowLeft, Crown, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { examLabel } from "@/lib/exam";
+import { examLabel, formatSeconds } from "@/lib/exam";
 import { claimPaperForAttempt } from "@/lib/paper-pool.functions";
 import { getPlanStatus } from "@/lib/razorpay.functions";
 
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
-  head: () => ({ meta: [{ title: "Mock Test — ParikshaSathi" }] }),
+  head: () => ({ meta: [{ title: "Test briefing | MedEu.Ai" }] }),
   component: TestDetailsPage,
 });
 
@@ -49,6 +48,7 @@ function TestDetailsPage() {
       if (!test) return null;
       const cfg = test.section_config as TestConfig | null;
       let questionCount = cfg?.total_questions ?? 0;
+      let pattern: TestConfig | null = cfg;
       if (!questionCount) {
         const { data: syl } = await supabase
           .from("exam_syllabi")
@@ -57,8 +57,26 @@ function TestDetailsPage() {
           .maybeSingle();
         const sylPattern = syl?.pattern as TestConfig | null;
         questionCount = sylPattern?.total_questions ?? 0;
+        pattern = pattern ?? sylPattern;
       }
-      return { test, questionCount, cfg };
+      return { test, questionCount, cfg, pattern };
+    },
+  });
+
+  const testId = data?.test?.id;
+  const { data: history } = useQuery({
+    enabled: !!testId,
+    queryKey: ["test-history", testId],
+    queryFn: async () => {
+      const { data: rows, error } = await supabase
+        .from("test_attempts")
+        .select("id, score, total_marks, accuracy, time_taken_seconds, submitted_at, status")
+        .eq("test_id", testId!)
+        .eq("status", "submitted")
+        .order("submitted_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      return rows ?? [];
     },
   });
 
@@ -110,70 +128,158 @@ function TestDetailsPage() {
   });
 
   if (isLoading) {
-    return <div className="h-64 animate-pulse rounded-lg bg-muted/40" />;
+    return <div className="h-64 animate-pulse rounded-xl bg-muted/50" />;
   }
   if (!data?.test) {
     return (
-      <Card className="border-border/60 bg-card/40 p-8 text-center">
+      <div className="rounded-xl border border-border p-8 text-center">
         <p className="text-sm text-muted-foreground">Test not found.</p>
         <Link to="/tests" className="mt-3 inline-block">
-          <Button variant="outline" size="sm">Back to tests</Button>
+          <Button variant="outline" size="sm">Back to practice</Button>
         </Link>
-      </Card>
+      </div>
     );
   }
   const t = data.test;
+  const sections = data.pattern?.sections ?? [];
+  const dist = data.pattern?.difficulty_distribution;
+  const difficulty = dist
+    ? `Easy ${dist.easy ?? 0} · Medium ${dist.medium ?? 0} · Hard ${dist.hard ?? 0}`
+    : "Balanced mix";
+  const best = (history ?? []).reduce<number | null>((acc, h) => {
+    const pct = Number(h.total_marks) > 0 ? (Number(h.score) / Number(h.total_marks)) * 100 : 0;
+    return acc === null || pct > acc ? pct : acc;
+  }, null);
 
   return (
-    <div className="space-y-6">
-      <Link to="/tests" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="mr-1 h-4 w-4" /> All tests
+    <div className="space-y-8 pb-4">
+      <Link
+        to="/tests"
+        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeft className="mr-1 h-4 w-4" /> All practice
       </Link>
 
-      <Card className="border-border/60 bg-card/40 p-6 sm:p-8">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <Badge variant="secondary">{examLabel(t.target_exam)}</Badge>
-          <Badge variant="outline" className="capitalize">{t.test_type.replace("_", " ")}</Badge>
+      {/* Briefing header */}
+      <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+          <span>{examLabel(t.target_exam)}</span>
+          <span className="text-white/30">/</span>
+          <span className="capitalize">{t.test_type.replace("_", " ")}</span>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight">{t.title}</h1>
-        {t.description && <p className="mt-2 text-sm text-muted-foreground">{t.description}</p>}
+        <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">{t.title}</h1>
+        {t.description && <p className="mt-2 max-w-2xl text-sm text-white/70">{t.description}</p>}
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <InfoTile icon={Clock} label="Duration" value={`${t.duration_minutes} min`} />
-          <InfoTile icon={FileText} label="Questions" value={`${data.questionCount}`} />
-          <InfoTile icon={FileText} label="Marks" value={`${Number(t.total_marks)} (-${Number(t.negative_marks)})`} />
+        <dl className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
+          <Stat label="Questions" value={`${data.questionCount || "—"}`} />
+          <Stat label="Time" value={`${t.duration_minutes} min`} />
+          <Stat label="Marks" value={`${Number(t.total_marks)}`} hint={`-${Number(t.negative_marks)} per wrong`} />
+          <Stat label="Difficulty" value={dist ? "Mixed" : "Balanced"} hint={difficulty} />
+        </dl>
+      </section>
+
+      <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
+        <div className="space-y-8">
+          {/* Subjects */}
+          <section>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Subjects covered
+            </h2>
+            {sections.length ? (
+              <ul className="mt-3 divide-y divide-border border-y border-border">
+                {sections.map((s, i) => (
+                  <li key={`${s.subject_slug}-${i}`} className="flex items-center justify-between py-3 text-sm">
+                    <span className="font-medium">{s.label ?? s.subject_slug}</span>
+                    <span className="text-muted-foreground">{s.count} questions</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-sm text-muted-foreground">
+                Mixed syllabus paper — the exact subject split is drawn from the exam pattern at start.
+              </p>
+            )}
+          </section>
+
+          {/* Instructions */}
+          <section>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Before you begin
+            </h2>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <li>The timer runs for {t.duration_minutes} minutes from the moment you start.</li>
+              <li>You can move freely between questions and mark them for review.</li>
+              <li>Negative marking: -{Number(t.negative_marks)} for each incorrect answer.</li>
+              <li>Every answer is saved automatically; the paper submits itself when time ends.</li>
+            </ul>
+          </section>
         </div>
 
-        <div className="mt-6 rounded-lg border border-border/60 bg-background/40 p-4">
-          <h2 className="text-sm font-semibold">Instructions</h2>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-muted-foreground">
-            <li>The test will run for {t.duration_minutes} minutes from the moment you start.</li>
-            <li>Your paper is loaded from the ready question pool for an instant start.</li>
-            <li>You can navigate freely between questions and mark them for review.</li>
-            <li>Negative marking: -{Number(t.negative_marks)} for each incorrect answer.</li>
-            <li>Your progress is saved automatically.</li>
-          </ul>
-        </div>
+        {/* Previous performance */}
+        <aside className="space-y-6">
+          <section className="rounded-xl border border-border p-5">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Your previous attempts
+            </h2>
+            {(history ?? []).length === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">
+                You haven’t attempted this paper yet. This run becomes your baseline.
+              </p>
+            ) : (
+              <>
+                {best !== null && (
+                  <p className="mt-3 text-sm">
+                    <span className="text-2xl font-bold">{Math.round(best)}%</span>{" "}
+                    <span className="text-muted-foreground">best score</span>
+                  </p>
+                )}
+                <ul className="mt-3 divide-y divide-border">
+                  {(history ?? []).map((h) => (
+                    <li key={h.id} className="py-2.5 text-sm">
+                      <Link
+                        to="/results/$attemptId"
+                        params={{ attemptId: h.id }}
+                        className="flex items-center justify-between gap-3 hover:text-primary"
+                      >
+                        <span>
+                          {Number(h.score).toFixed(1)} / {Number(h.total_marks)}
+                          <span className="ml-2 text-muted-foreground">{h.accuracy}% accuracy</span>
+                        </span>
+                        <span className="shrink-0 text-xs text-muted-foreground">
+                          {formatSeconds(h.time_taken_seconds ?? 0)}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </section>
 
-        {plan && !plan.isPro && (
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/30 bg-primary/5 p-4">
-            <div className="text-sm">
-              <div className="font-medium">
+          {plan && !plan.isPro && (
+            <section className="rounded-xl border border-primary/30 bg-primary/5 p-5">
+              <div className="text-sm font-medium">
                 Free plan: {plan.attemptsInWindow} / {plan.freeAttemptsAllowed} attempts used
               </div>
-              <div className="text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Resets on a rolling {plan.windowDays}-day window. Pro gives you unlimited tests.
-              </div>
-            </div>
-            <Link to="/billing">
-              <Button size="sm" variant="outline">
-                <Crown className="mr-1 h-4 w-4" /> Upgrade
-              </Button>
-            </Link>
-          </div>
-        )}
+              </p>
+              <Link to="/billing" className="mt-3 inline-block">
+                <Button size="sm" variant="outline">
+                  <Crown className="mr-1 h-4 w-4" /> Upgrade
+                </Button>
+              </Link>
+            </section>
+          )}
+        </aside>
+      </div>
 
-        <div className="mt-6">
+      {/* Sticky start bar */}
+      <div className="sticky bottom-[env(safe-area-inset-bottom)] z-20 -mx-4 border-t border-border bg-background/95 px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-xl sm:border sm:px-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="text-xs text-muted-foreground">
+            {data.questionCount || "—"} questions · {t.duration_minutes} minutes · exam conditions
+          </div>
           <Button
             size="lg"
             onClick={() => start.mutate()}
@@ -187,26 +293,21 @@ function TestDetailsPage() {
                 : "Start test"}
           </Button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
 
-function InfoTile({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string;
-}) {
+function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className="rounded-lg border border-border/60 bg-background/40 p-4">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <Icon className="h-3.5 w-3.5" /> {label}
-      </div>
-      <div className="mt-1 text-lg font-semibold">{value}</div>
+    <div>
+      <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+        {label}
+      </dt>
+      <dd className="mt-1 text-xl font-semibold">{value}</dd>
+      {hint && <dd className="mt-0.5 text-xs text-white/60">{hint}</dd>}
     </div>
   );
 }
+
+export { Badge };
