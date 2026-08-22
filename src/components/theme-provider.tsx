@@ -10,7 +10,7 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-const STORAGE_KEY = "parikshasathi-theme";
+const STORAGE_KEY = "medeuai-theme";
 
 function applyTheme(theme: Theme) {
   if (typeof document === "undefined") return;
@@ -21,14 +21,14 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
 
   // Read preference on mount (client-only)
   useEffect(() => {
     const stored = (typeof window !== "undefined"
       ? (window.localStorage.getItem(STORAGE_KEY) as Theme | null)
       : null);
-    const initial: Theme = stored ?? "dark";
+    const initial: Theme = stored ?? "light";
     setThemeState(initial);
     applyTheme(initial);
   }, []);
