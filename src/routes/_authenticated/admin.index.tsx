@@ -79,6 +79,21 @@ function AdminDashboard() {
 
       <Card className="border-border/60 bg-card/40 p-6">
         <h2 className="flex items-center gap-2 text-base font-semibold">
+          <CreditCard className="h-4 w-4" /> Payment settings &amp; requests
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Configure your UPI ID, plan prices and QR codes, and verify or reject pending
+          payment requests from students.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link to="/admin/payments" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">Open Payment settings &amp; requests</Button>
+          </Link>
+        </div>
+      </Card>
+
+      <Card className="border-border/60 bg-card/40 p-6">
+        <h2 className="flex items-center gap-2 text-base font-semibold">
           <CreditCard className="h-4 w-4" /> Razorpay setup
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
