@@ -21,14 +21,14 @@ export function SiteHeader() {
   if (pathname.startsWith("/dashboard") || pathname.startsWith("/profile")) return null;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 glass">
+    <header className="sticky top-0 z-40 w-full glass">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+        <Link to="/" className="flex items-center gap-2 font-bold tracking-tight">
+          <span className="grid h-8 w-8 place-items-center rounded-md bg-ink text-ink-foreground">
             <Sparkles className="h-4 w-4" />
           </span>
           <span className="text-base">
-            Pariksha<span className="text-primary">Sathi</span>
+            MedEu<span className="text-primary">.Ai</span>
           </span>
         </Link>
 

@@ -111,21 +111,23 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             <span
               className={
-                "grid h-8 w-8 place-items-center rounded-lg text-primary-foreground " +
-                (adminMode ? "bg-destructive" : "bg-primary")
+                "grid h-8 w-8 place-items-center rounded-md " +
+                (adminMode
+                  ? "bg-destructive text-destructive-foreground"
+                  : "bg-ink text-ink-foreground")
               }
             >
               {adminMode ? <Shield className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
             </span>
-            <span className="hidden sm:inline">
+            <span className="hidden font-bold sm:inline">
               {adminMode ? (
                 <>
-                  Pariksha<span className="text-destructive">Sathi</span>{" "}
+                  MedEu<span className="text-destructive">.Ai</span>{" "}
                   <span className="text-xs font-medium text-muted-foreground">Admin</span>
                 </>
               ) : (
                 <>
-                  Pariksha<span className="text-primary">Sathi</span>
+                  MedEu<span className="text-primary">.Ai</span>
                 </>
               )}
             </span>
