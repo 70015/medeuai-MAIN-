@@ -29,6 +29,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile } from "@/components/app-shell";
+import { ProfilePhoto } from "@/components/profile-photo";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
