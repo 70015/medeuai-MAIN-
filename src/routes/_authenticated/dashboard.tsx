@@ -63,6 +63,8 @@ function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      <OnboardingFlow name={profile?.full_name?.split(" ")[0]} />
+
       {/* Welcome */}
       <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-6 sm:p-8 hero-bg">
         <Badge variant="secondary" className="mb-3">
