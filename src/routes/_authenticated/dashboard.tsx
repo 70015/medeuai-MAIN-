@@ -73,7 +73,7 @@ function useAttempts() {
       const { data, error } = await supabase
         .from("test_attempts")
         .select(
-          "id, status, accuracy, correct_count, incorrect_count, skipped_count, started_at, submitted_at, test_id, mock_tests(title, slug, exam_code)",
+          "id, status, accuracy, correct_count, incorrect_count, skipped_count, started_at, submitted_at, test_id, mock_tests(title, slug)",
         )
         .eq("user_id", u.user.id)
         .order("started_at", { ascending: false })
