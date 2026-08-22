@@ -9,6 +9,7 @@ import {
   LifeBuoy,
   Loader2,
   LogOut,
+  Mail,
   Shield,
   Target,
 } from "lucide-react";
@@ -333,6 +334,22 @@ function ProfilePage() {
             </div>
             <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
           </Link>
+
+          <a
+            href="mailto:hello.medeu.ai@gmail.com"
+            className="flex items-center gap-4 py-4 transition-colors hover:bg-muted/40"
+          >
+            <Mail className="h-4 w-4 shrink-0 text-primary" />
+            <div className="min-w-0 grow">
+              <div className="text-sm font-medium">Contact support</div>
+              <div className="text-xs text-muted-foreground">
+                For any questions, feedback or help — tap to email us.
+              </div>
+            </div>
+            <span className="shrink-0 text-sm font-medium text-primary hover:underline">
+              hello.medeu.ai@gmail.com
+            </span>
+          </a>
 
           <Link
             to="/ai-teacher"
