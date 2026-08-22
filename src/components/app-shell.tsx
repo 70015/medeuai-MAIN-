@@ -290,7 +290,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     >
                       <span
                         className={
-                          "grid h-13 w-13 place-items-center rounded-full border-4 border-background " +
+                          "grid place-items-center rounded-full border-4 border-background " +
                           (active
                             ? "bg-ink text-ink-foreground"
                             : "bg-primary text-primary-foreground")
