@@ -193,7 +193,7 @@ export const reviewPaymentRequest = createServerFn({ method: "POST" })
     if (data.action === "verify") {
       const { data: res, error } = await context.supabase.rpc("verify_payment_request", {
         p_request_id: data.id,
-        p_note: data.note ?? null,
+        p_note: data.note,
       });
       if (error) throw new Error(error.message);
       const row = Array.isArray(res) ? res[0] : res;
@@ -201,7 +201,7 @@ export const reviewPaymentRequest = createServerFn({ method: "POST" })
     }
     const { error } = await context.supabase.rpc("reject_payment_request", {
       p_request_id: data.id,
-      p_note: data.note ?? null,
+      p_note: data.note,
     });
     if (error) throw new Error(error.message);
     return { status: "rejected" as const, expiresAt: null };
