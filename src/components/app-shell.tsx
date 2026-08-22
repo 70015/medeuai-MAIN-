@@ -147,7 +147,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="flex h-16 items-center px-5">{brand}</div>
           <nav className="flex-1 space-y-1 px-3 py-4">
             {sidebarNav.map((n) => {
-              const active = isActive(n.to) && (n.label !== "Previous Papers" ? true : false);
+              const active = n.label === "Previous Papers" ? false : isActive(n.to);
               return (
                 <Link
                   key={n.label}
