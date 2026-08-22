@@ -36,6 +36,7 @@ const tabs = [
   { to: "/admin/generate", label: "AI Generate", icon: Sparkles, exact: false },
   { to: "/admin/review", label: "Review Queue", icon: ListChecks, exact: false },
   { to: "/admin/pool", label: "Paper Pool", icon: Layers, exact: false },
+  { to: "/admin/payments", label: "Payments", icon: CreditCard, exact: false },
   { to: "/admin/promos", label: "Promo Codes", icon: Tag, exact: false },
   { to: "/admin/users", label: "Users", icon: Users, exact: false },
   { to: "/admin/about", label: "About page", icon: Info, exact: false },
