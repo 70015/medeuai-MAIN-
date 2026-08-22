@@ -157,12 +157,12 @@ function ProfilePage() {
       {/* Identity */}
       <header className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-          <Avatar className="h-16 w-16 border border-white/15">
-            <AvatarImage src={profile.avatar_url ?? undefined} alt={profile.full_name ?? "You"} />
-            <AvatarFallback className="bg-white/10 text-lg font-semibold text-white">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
+          <ProfilePhoto
+            userId={profile.id}
+            avatarUrl={profile.avatar_url}
+            initials={initials}
+            name={profile.full_name}
+          />
           <div className="min-w-0">
             <h1 className="truncate text-2xl font-bold tracking-tight">
               {profile.full_name || "Add your name"}
