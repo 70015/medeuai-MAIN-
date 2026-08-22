@@ -1,0 +1,1 @@
+UPDATE about_content SET founder_image_url = 'https://ogrfckvypncotvymghkt.supabase.co/storage/v1/object/public/about-media/founder.jpg' WHERE id = '49d95b4e-4538-4a1b-9bd3-f9a0cec01567'
