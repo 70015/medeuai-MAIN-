@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ManualUpiPayments } from "@/components/admin/manual-upi-payments";
 import { getAdminStats } from "@/lib/admin.functions";
 import { ensureRazorpayPlans } from "@/lib/razorpay.functions";
 
