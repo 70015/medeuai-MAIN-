@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Shield, Sparkles, ListChecks, LayoutDashboard, BookText, Users, Info, Tag, Layers } from "lucide-react";
+import { Loader2, Shield, Sparkles, ListChecks, LayoutDashboard, BookText, Users, Info, Tag, Layers, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
