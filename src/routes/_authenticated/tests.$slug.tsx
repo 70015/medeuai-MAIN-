@@ -5,7 +5,6 @@ import { ArrowLeft, Crown, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { examLabel, formatSeconds } from "@/lib/exam";
 import { claimPaperForAttempt } from "@/lib/paper-pool.functions";
@@ -309,5 +308,3 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
     </div>
   );
 }
-
-export { Badge };
