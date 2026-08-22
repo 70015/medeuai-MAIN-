@@ -55,7 +55,7 @@ const sidebarNav = [
   { to: "/ai-teacher", label: "AI Teacher", icon: Brain },
   { to: "/tests", label: "Practice", icon: FileText },
   { to: "/tests", label: "Previous Papers", icon: Layers, search: { exam: "all" } as const },
-  { to: "/leaderboard", label: "Progress", icon: LineChart },
+  { to: "/progress", label: "Progress", icon: LineChart },
   { to: "/profile", label: "Profile", icon: UserIcon },
   { to: "/billing", label: "Settings", icon: Settings },
 ] as const;
@@ -65,7 +65,7 @@ const mobileNav = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/tests", label: "Practice", icon: FileText },
   { to: "/ai-teacher", label: "AI Teacher", icon: Brain, primary: true },
-  { to: "/leaderboard", label: "Progress", icon: LineChart },
+  { to: "/progress", label: "Progress", icon: LineChart },
   { to: "/profile", label: "Profile", icon: UserIcon },
 ] as const;
 

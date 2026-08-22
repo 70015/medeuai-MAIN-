@@ -68,17 +68,11 @@ const langOptions = [
   { value: "hindi", label: "हिन्दी (Hindi)" },
 ] as const;
 
-const levelLabels: Record<string, string> = {
-  beginner: "Beginner",
-  intermediate: "Intermediate",
-  advanced: "Advanced",
-};
-
 /** Preparation level captured during onboarding, stored client-side only. */
 function readOnboardingLevel(): string | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem("medeu.onboarding");
+    const raw = window.localStorage.getItem("medeuai-onboarding");
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { level?: string };
     return parsed?.level ?? null;
@@ -179,7 +173,7 @@ function ProfilePage() {
                 {examName ? `Target: ${examName}` : "Target exam not set"}
               </span>
               <span className="rounded-full border border-white/20 px-2.5 py-1 text-white/80">
-                {level ? `Level: ${levelLabels[level] ?? level}` : "Level not set"}
+                {level ? `Level: ${level}` : "Level not set"}
               </span>
               <span className="rounded-full bg-white/10 px-2.5 py-1 font-medium text-white">
                 {profile.plan === "free" ? "Free plan" : "Pro plan"}
@@ -229,7 +223,7 @@ function ProfilePage() {
             <Label>Preparation level</Label>
             <p className="rounded-md border border-border px-3 py-2 text-sm text-muted-foreground">
               {level
-                ? `${levelLabels[level] ?? level} — set during onboarding and used by the AI Teacher.`
+                ? `${level} — set during onboarding and used by the AI Teacher.`
                 : "Not set yet. The AI Teacher will adapt as you chat with it."}
             </p>
           </div>
