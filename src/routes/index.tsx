@@ -475,9 +475,7 @@ function PreviewChrome({ children, label }: { children: React.ReactNode; label: 
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-[var(--shadow-elegant)]">
       <div className="flex items-center justify-between border-b border-border bg-secondary px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-ink text-ink-foreground">
-            <Brain className="h-3.5 w-3.5" />
-          </span>
+          <BrandMark className="h-8 w-8 rounded-md" />
           <div className="leading-tight">
             <div className="text-sm font-bold">MedEu.Ai Teacher</div>
             <div className="text-[11px] text-muted-foreground">{label}</div>
