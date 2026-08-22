@@ -8,6 +8,7 @@ import {
   Info,
   LineChart,
   LogOut,
+  MoreVertical,
   Settings,
   Shield,
   Layers,
