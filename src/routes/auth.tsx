@@ -21,8 +21,8 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Sign in to ParikshaSathi" },
-      { name: "description", content: "Sign in or create your free ParikshaSathi account." },
+      { title: "Sign in to MedEu.Ai" },
+      { name: "description", content: "Sign in or create your free MedEu.Ai account." },
       { name: "robots", content: "noindex" },
     ],
   }),
