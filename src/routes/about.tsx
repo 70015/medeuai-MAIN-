@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Brain, Languages, ShieldCheck, Sparkles, Target, Trophy } from "lucide-react";
+import { Brain, Languages, Mail, ShieldCheck, Sparkles, Target, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { BrandLogoFull, BrandMark } from "@/components/brand-logo";
 import { Badge } from "@/components/ui/badge";
@@ -161,6 +161,24 @@ function AboutPage() {
                 </p>
               )}
           </div>
+        </div>
+      </section>
+
+      <section className="border-t border-border/60 py-16">
+        <div className="container mx-auto max-w-3xl px-4 text-center">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-primary/15 text-primary">
+            <Mail className="h-5 w-5" />
+          </div>
+          <h2 className="mt-5 text-2xl font-bold tracking-tight">Help &amp; support</h2>
+          <p className="mt-2 text-muted-foreground">
+            Have a question, feedback, or need help with anything on MedEu.Ai?
+          </p>
+          <a
+            href="mailto:hello.medeu.ai@gmail.com"
+            className="mt-5 inline-block text-base font-semibold text-primary hover:underline sm:text-lg"
+          >
+            hello.medeu.ai@gmail.com
+          </a>
         </div>
       </section>
       </main>
