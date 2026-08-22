@@ -11,13 +11,13 @@ import { useQuery } from "@tanstack/react-query";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About ParikshaSathi — AI Exam Prep for India" },
+      { title: "About MedEu.Ai — AI Exam Prep for India" },
       {
         name: "description",
         content:
-          "ParikshaSathi is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
+          "MedEu.Ai is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
       },
-      { property: "og:title", content: "About ParikshaSathi" },
+      { property: "og:title", content: "About MedEu.Ai" },
       {
         property: "og:description",
         content:
@@ -81,7 +81,7 @@ function AboutPage() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
             {about?.hero_subtitle ??
-              "ParikshaSathi is an AI-first exam preparation platform built for SSC, WBCS, WBPSC, Railway, Banking, Police and other Indian government exams."}
+              "MedEu.Ai is an AI-first exam preparation platform built for SSC, WBCS, WBPSC, Railway, Banking, Police and other Indian government exams."}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">
@@ -102,7 +102,7 @@ function AboutPage() {
               {founderImg ? (
                 <img
                   src={founderImg}
-                  alt={about?.founder_name ? `${about.founder_name}, Founder of ParikshaSathi` : "Founder of ParikshaSathi"}
+                  alt={about?.founder_name ? `${about.founder_name}, Founder of MedEu.Ai` : "Founder of MedEu.Ai"}
                   className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
                 />
               ) : (
@@ -129,7 +129,7 @@ function AboutPage() {
         <div className="container mx-auto max-w-6xl px-4">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">What we stand for</h2>
-            <p className="mt-3 text-muted-foreground">Six principles shape every decision we make about ParikshaSathi.</p>
+            <p className="mt-3 text-muted-foreground">Six principles shape every decision we make about MedEu.Ai.</p>
           </div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((v) => (
@@ -153,7 +153,7 @@ function AboutPage() {
               ? (about!.story_paragraphs as string[]).map((p, i) => <p key={i}>{p}</p>)
               : (
                 <p>
-                  ParikshaSathi started with a simple frustration — the best test-prep platforms in India are
+                  MedEu.Ai started with a simple frustration — the best test-prep platforms in India are
                   expensive, English-only, and built for metro students. Aspirants from Bengal, Bihar and small
                   towns deserve the same quality of preparation in their language.
                 </p>
@@ -167,10 +167,10 @@ function AboutPage() {
         <div className="container mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>ParikshaSathi · Prepare Smarter. Rank Faster.</span>
+            <span>MedEu.Ai · Prepare Smarter. Rank Faster.</span>
           </div>
           <div className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ParikshaSathi. All rights reserved.
+            © {new Date().getFullYear()} MedEu.Ai. All rights reserved.
           </div>
         </div>
       </footer>

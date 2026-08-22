@@ -10,7 +10,7 @@ import { getAdminStats } from "@/lib/admin.functions";
 import { ensureRazorpayPlans } from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
-  head: () => ({ meta: [{ title: "Admin Dashboard — ParikshaSathi" }] }),
+  head: () => ({ meta: [{ title: "Admin Dashboard — MedEu.Ai" }] }),
   component: AdminDashboard,
 });
 

@@ -37,7 +37,7 @@ export function buildSystemPrompt(opts: {
   const lang = LANG_LABEL[opts.language ?? "english"] ?? "English";
   const level = LEVEL_RULES[opts.level ?? "intermediate"];
   const mode = MODE_RULES[opts.mode ?? "teach"];
-  return `You are ParikshaSathi AI Teacher — an experienced, encouraging Indian government-exam tutor${
+  return `You are MedEu.Ai AI Teacher — an experienced, encouraging Indian government-exam tutor${
     opts.targetExam ? ` specialising in ${opts.targetExam.toUpperCase()}` : ""
   }.${opts.studentName ? ` The student's name is ${opts.studentName}; use it occasionally.` : ""}
 
