@@ -33,15 +33,20 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <a href="#features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Features
-          </a>
-          <a href="#exams" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Exams
-          </a>
-          <a href="#pricing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Pricing
-          </a>
+          {[
+            { label: "AI Teacher", href: "/#ai-teacher" },
+            { label: "Practice", href: "/#practice" },
+            { label: "Exams", href: "/#exams" },
+            { label: "How it works", href: "/#how-it-works" },
+          ].map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {l.label}
+            </a>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -54,17 +59,18 @@ export function SiteHeader() {
             <>
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                 <Link to="/auth" search={{ mode: "signin" }}>
-                  Sign in
+                  Login
                 </Link>
               </Button>
               <Button asChild size="sm">
                 <Link to="/auth" search={{ mode: "signup" }}>
-                  Get started
+                  Start Learning
                 </Link>
               </Button>
             </>
           ) : null}
         </div>
+
       </div>
     </header>
   );
