@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { BrandLockup } from "@/components/brand-logo";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -24,12 +24,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full glass">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-md bg-ink text-ink-foreground">
-            <Sparkles className="h-4 w-4" />
-          </span>
-          <span className="text-base">
-            MedEu<span className="text-primary">.Ai</span>
-          </span>
+          <BrandLockup markClassName="h-9 w-9 sm:h-10 sm:w-10" />
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

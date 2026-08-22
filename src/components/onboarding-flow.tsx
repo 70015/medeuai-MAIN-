@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Brain, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/brand-logo";
 
 /**
  * Presentation-only onboarding. Answers are stored in localStorage —
@@ -82,9 +83,7 @@ export function OnboardingFlow({ name }: { name?: string }) {
         {/* header */}
         <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4 sm:px-8">
           <div className="flex items-center gap-2 text-sm font-bold tracking-tight">
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-ink text-ink-foreground">
-              <Sparkles className="h-3.5 w-3.5" />
-            </span>
+            <BrandMark className="h-8 w-8" />
             MedEu<span className="-ml-2 text-primary">.Ai</span>
           </div>
           <div className="flex items-center gap-1.5" aria-hidden="true">

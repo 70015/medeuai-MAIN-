@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { BrandMark } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const searchSchema = z.object({
@@ -115,9 +116,7 @@ function AuthPage() {
       {/* Brand panel */}
       <aside className="ink-section hidden flex-col justify-between p-12 lg:flex">
         <Link to="/" className="flex items-center gap-2 text-base font-bold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-md bg-ink-foreground text-ink">
-            <Sparkles className="h-4 w-4" />
-          </span>
+          <BrandMark className="h-10 w-10 rounded-md bg-white p-0.5" />
           MedEu.Ai
         </Link>
         <div>
@@ -149,9 +148,7 @@ function AuthPage() {
       <div className="relative flex min-h-screen flex-col bg-background">
         <div className="flex items-center justify-between px-5 py-5 sm:px-8">
           <Link to="/" className="flex items-center gap-2 text-base font-bold tracking-tight lg:invisible">
-            <span className="grid h-8 w-8 place-items-center rounded-md bg-ink text-ink-foreground">
-              <Sparkles className="h-4 w-4" />
-            </span>
+            <BrandMark className="h-9 w-9" />
             <span>
               MedEu<span className="text-primary">.Ai</span>
             </span>

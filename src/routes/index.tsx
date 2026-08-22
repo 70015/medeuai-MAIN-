@@ -17,6 +17,7 @@ import {
   Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/brand-logo";
 import { SiteHeader } from "@/components/site-header";
 import { isAdminHost } from "@/lib/host";
 
@@ -369,9 +370,7 @@ function LandingPage() {
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2 font-bold tracking-tight">
-                <span className="grid h-8 w-8 place-items-center rounded-md bg-ink text-ink-foreground">
-                  <Sparkles className="h-4 w-4" />
-                </span>
+                <BrandMark className="h-10 w-10" />
                 <span>
                   MedEu<span className="text-primary">.Ai</span>
                 </span>
