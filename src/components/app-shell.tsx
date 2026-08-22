@@ -10,7 +10,6 @@ import {
   LogOut,
   Settings,
   Shield,
-  Sparkles,
   Layers,
   User as UserIcon,
 } from "lucide-react";

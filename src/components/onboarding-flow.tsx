@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Brain, Check, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Brain, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-logo";
 
