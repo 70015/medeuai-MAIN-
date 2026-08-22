@@ -16,6 +16,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAiTeacherRouteImport } from './routes/api/ai-teacher'
+import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -70,6 +71,11 @@ const ApiAiTeacherRoute = ApiAiTeacherRouteImport.update({
   id: '/api/ai-teacher',
   path: '/api/ai-teacher',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedProgressRoute = AuthenticatedProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/progress': typeof AuthenticatedProgressRoute
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
@@ -220,6 +227,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/progress': typeof AuthenticatedProgressRoute
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
@@ -250,6 +258,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
@@ -280,6 +289,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/progress'
     | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leaderboard'
     | '/profile'
+    | '/progress'
     | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
@@ -336,6 +347,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/leaderboard'
     | '/_authenticated/profile'
+    | '/_authenticated/progress'
     | '/api/ai-teacher'
     | '/_authenticated/admin/about'
     | '/_authenticated/admin/generate'
@@ -415,6 +427,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/ai-teacher'
       preLoaderRoute: typeof ApiAiTeacherRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/progress': {
+      id: '/_authenticated/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof AuthenticatedProgressRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
@@ -591,6 +610,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
   AuthenticatedTestsSlugRoute: typeof AuthenticatedTestsSlugRoute
@@ -604,6 +624,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
   AuthenticatedTestsSlugRoute: AuthenticatedTestsSlugRoute,
