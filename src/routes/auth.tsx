@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,8 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Sign in to ParikshaSathi" },
-      { name: "description", content: "Sign in or create your free ParikshaSathi account." },
+      { title: "Sign in to MedEu.Ai" },
+      { name: "description", content: "Sign in or create your free MedEu.Ai account." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -111,44 +111,78 @@ function AuthPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background hero-bg">
-      <div className="absolute right-4 top-4">
-        <ThemeToggle />
-      </div>
-      <div className="container relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-4 py-12">
-        <Link to="/" className="mb-8 flex items-center gap-2 font-semibold">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+    <div className="min-h-screen bg-background lg:grid lg:grid-cols-2">
+      {/* Brand panel */}
+      <aside className="ink-section hidden flex-col justify-between p-12 lg:flex">
+        <Link to="/" className="flex items-center gap-2 text-base font-bold tracking-tight">
+          <span className="grid h-8 w-8 place-items-center rounded-md bg-ink-foreground text-ink">
             <Sparkles className="h-4 w-4" />
           </span>
-          <span>
-            Pariksha<span className="text-primary">Sathi</span>
-          </span>
+          MedEu.Ai
         </Link>
+        <div>
+          <h2 className="max-w-sm text-balance text-4xl font-extrabold leading-[1.1] tracking-tight">
+            Your Personal AI Teacher, 24/7.
+          </h2>
+          <p className="mt-5 max-w-sm text-base leading-relaxed opacity-80">
+            Learn smarter. Understand better. Prepare with MedEu.Ai.
+          </p>
+          <ul className="mt-8 space-y-3 text-sm opacity-90">
+            {[
+              "Ask doubts anytime in English, हिन्दी or বাংলা",
+              "Unlimited mock tests and previous-year papers",
+              "Performance analysis after every attempt",
+            ].map((f) => (
+              <li key={f} className="flex items-start gap-2.5">
+                <Check className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p className="text-xs opacity-60">
+          © {new Date().getFullYear()} MedEu.Ai · Made in India for Indian exam aspirants.
+        </p>
+      </aside>
 
-        <Card className="w-full border-border/60 bg-card/70 p-6 backdrop-blur sm:p-8">
-          {mode !== "reset" && (
-            <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")}>
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Sign in</TabsTrigger>
-                <TabsTrigger value="signup">Create account</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          )}
+      {/* Form panel */}
+      <div className="relative flex min-h-screen flex-col bg-background">
+        <div className="flex items-center justify-between px-5 py-5 sm:px-8">
+          <Link to="/" className="flex items-center gap-2 text-base font-bold tracking-tight lg:invisible">
+            <span className="grid h-8 w-8 place-items-center rounded-md bg-ink text-ink-foreground">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <span>
+              MedEu<span className="text-primary">.Ai</span>
+            </span>
+          </Link>
+          <ThemeToggle />
+        </div>
 
-          <div className="mt-6 space-y-4">
-            <h1 className="text-2xl font-bold tracking-tight">
+        <div className="flex flex-1 items-center justify-center px-5 pb-12 sm:px-8">
+          <div className="w-full max-w-sm">
+            {mode !== "reset" && (
+              <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")}>
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="signin">Sign in</TabsTrigger>
+                  <TabsTrigger value="signup">Create account</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            )}
+
+            <h1 className="mt-8 text-3xl font-extrabold tracking-tight">
               {mode === "signup"
-                ? "Start your prep journey"
+                ? "Start learning free"
                 : mode === "reset"
                   ? "Reset your password"
                   : "Welcome back"}
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="mt-2 text-sm text-muted-foreground">
               {mode === "signup"
-                ? "Free forever plan. No credit card required."
+                ? "One minute to set up. No credit card required."
                 : mode === "reset"
                   ? "We'll email you a link to set a new password."
-                  : "Sign in to continue preparing."}
+                  : "Sign in to continue with your AI teacher."}
             </p>
 
             {mode !== "reset" && (
@@ -156,7 +190,7 @@ function AuthPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full"
+                  className="mt-7 w-full"
                   onClick={handleGoogle}
                   disabled={googleLoading}
                 >
@@ -167,18 +201,18 @@ function AuthPage() {
                   )}
                   Continue with Google
                 </Button>
-                <div className="relative">
+                <div className="relative my-6">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-border" />
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-card px-2 text-muted-foreground">or with email</span>
+                    <span className="bg-background px-3 text-muted-foreground">or with email</span>
                   </div>
                 </div>
               </>
             )}
 
-            <form onSubmit={handleEmailAuth} className="space-y-3">
+            <form onSubmit={handleEmailAuth} className={mode === "reset" ? "mt-7 space-y-4" : "space-y-4"}>
               {mode === "signup" && (
                 <div className="space-y-1.5">
                   <Label htmlFor="name">Full name</Label>
@@ -212,9 +246,9 @@ function AuthPage() {
                       <button
                         type="button"
                         onClick={() => setMode("reset")}
-                        className="text-xs text-muted-foreground hover:text-primary"
+                        className="text-xs font-medium text-primary hover:underline"
                       >
-                        Forgot?
+                        Forgot password?
                       </button>
                     )}
                   </div>
@@ -231,10 +265,10 @@ function AuthPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" size="lg" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {mode === "signup"
-                  ? "Create account"
+                  ? "Create free account"
                   : mode === "reset"
                     ? "Send reset link"
                     : "Sign in"}
@@ -245,46 +279,47 @@ function AuthPage() {
               <button
                 type="button"
                 onClick={() => setMode("signin")}
-                className="block w-full text-center text-xs text-muted-foreground hover:text-primary"
+                className="mt-5 block w-full text-center text-sm text-muted-foreground hover:text-primary"
               >
                 ← Back to sign in
               </button>
             )}
 
             {mode === "signin" && (
-              <p className="pt-1 text-center text-sm text-muted-foreground">
-                New to ParikshaSathi?{" "}
+              <p className="mt-6 text-center text-sm text-muted-foreground">
+                New to MedEu.Ai?{" "}
                 <button
                   type="button"
                   onClick={() => setMode("signup")}
-                  className="font-medium text-primary hover:underline"
+                  className="font-semibold text-primary hover:underline"
                 >
                   Create a free account
                 </button>
               </p>
             )}
             {mode === "signup" && (
-              <p className="pt-1 text-center text-sm text-muted-foreground">
+              <p className="mt-6 text-center text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <button
                   type="button"
                   onClick={() => setMode("signin")}
-                  className="font-medium text-primary hover:underline"
+                  className="font-semibold text-primary hover:underline"
                 >
                   Sign in
                 </button>
               </p>
             )}
 
-            <p className="pt-2 text-center text-xs text-muted-foreground">
+            <p className="mt-6 text-center text-xs text-muted-foreground">
               By continuing you agree to our terms and privacy policy.
             </p>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );
 }
+
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
