@@ -5,6 +5,7 @@ import { ArrowRight, GraduationCap, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/components/app-shell";
+import { BrandMark } from "@/components/brand-logo";
 import { examLabel } from "@/lib/exam";
 import { cn } from "@/lib/utils";
 
@@ -185,13 +186,26 @@ function ProgressPage() {
 
   const weak = sections.filter((s) => s.total >= 2 && s.pct < 70).slice(0, 5);
 
-  const recommendation = !submitted.length
-    ? "Complete one 25-question mock. That single paper gives MedEu enough signal to point you at the right topics."
+  /** Premium AI-Teacher guidance derived from real attempt data. */
+  const guidance = !submitted.length
+    ? {
+        focus: "Start with one full mock test",
+        body: "You haven't completed a paper yet. One 25-question mock gives MedEu enough signal to pinpoint the exact areas holding your score back.",
+      }
     : weak.length
-      ? `${weak[0].label} — you're at ${weak[0].pct}% there. Ask MedEu to explain the concept, then re-test it.`
+      ? {
+          focus: `Focus on ${weak[0].label}`,
+          body: `Your recent tests show that this is one of your weaker areas — ${weak[0].pct}% accuracy over ${weak[0].total} questions. A few focused practice sessions could improve your accuracy.`,
+        }
       : accuracy < 60
-        ? "reviewing every incorrect answer with MedEu before your next mock — accuracy is the fastest gain right now."
-        : "speed under timed conditions. Your accuracy is solid, so attempt a full paper and watch the clock.";
+        ? {
+            focus: "Focus on reviewing your mistakes",
+            body: `Your overall accuracy is ${accuracy}%. Reviewing every incorrect answer before your next paper is the fastest way to lift that number.`,
+          }
+        : {
+            focus: "Focus on speed under timed conditions",
+            body: "Your accuracy is solid across every measured area. Attempt full papers against the clock so timing stops costing you marks.",
+          };
 
   if (isLoading) {
     return (
@@ -328,32 +342,36 @@ function ProgressPage() {
         )}
       </section>
 
-      {/* AI recommendation */}
-      <section className="rounded-xl border border-border p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          MedEu recommends focusing on…
-        </h2>
-        <p className="mt-3 text-base leading-relaxed">
-          {recommendation}
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          <Link
-            to="/ai-teacher"
-            search={{
-              q: weak.length
-                ? `Help me improve in ${weak[0].label}. My accuracy there is ${weak[0].pct}%. Explain the key concepts and give me 5 practice questions.`
-                : "",
-            }}
-          >
-            <Button>
-              <GraduationCap className="mr-1.5 h-4 w-4" /> Work on it with MedEu
-            </Button>
-          </Link>
-          <Link to="/tests">
-            <Button variant="outline">
-              Practise now <ArrowRight className="ml-1.5 h-4 w-4" />
-            </Button>
-          </Link>
+      {/* MedEu recommendation — premium AI Teacher guidance */}
+      <section className="overflow-hidden rounded-xl bg-[#04211C] text-white">
+        <div className="p-6 sm:p-8">
+          <div className="flex items-center gap-2.5">
+            <BrandMark className="h-8 w-8 rounded-md bg-white p-0.5" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/60">
+              MedEu recommends
+            </p>
+          </div>
+          <h2 className="mt-4 text-xl font-bold tracking-tight sm:text-2xl">{guidance.focus}</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/70">{guidance.body}</p>
+
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <Link to="/tests">
+              <Button className="bg-[#03824F] text-white hover:bg-[#02663E]">
+                Practice now <ArrowRight className="ml-1.5 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link
+              to="/ai-teacher"
+              search={{
+                q: weak.length
+                  ? `Help me improve in ${weak[0].label}. My accuracy there is ${weak[0].pct}%. Explain the key concepts and give me 5 practice questions.`
+                  : "",
+              }}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-white/80 underline-offset-4 hover:text-white hover:underline"
+            >
+              <GraduationCap className="h-4 w-4" /> Work on it with your AI Teacher
+            </Link>
+          </div>
         </div>
       </section>
 
