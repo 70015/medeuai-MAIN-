@@ -34,6 +34,7 @@ import { Route as AuthenticatedAdminSyllabiRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminReviewRouteImport } from './routes/_authenticated/admin.review'
 import { Route as AuthenticatedAdminPromosRouteImport } from './routes/_authenticated/admin.promos'
 import { Route as AuthenticatedAdminPoolRouteImport } from './routes/_authenticated/admin.pool'
+import { Route as AuthenticatedAdminPaymentsRouteImport } from './routes/_authenticated/admin.payments'
 import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
 import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 import { Route as ApiPublicPaymentsRazorpayWebhookRouteImport } from './routes/api/public/payments/razorpay-webhook'
@@ -169,6 +170,12 @@ const AuthenticatedAdminPoolRoute = AuthenticatedAdminPoolRouteImport.update({
   path: '/pool',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminPaymentsRoute =
+  AuthenticatedAdminPaymentsRouteImport.update({
+    id: '/payments',
+    path: '/payments',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminGenerateRoute =
   AuthenticatedAdminGenerateRouteImport.update({
     id: '/generate',
@@ -209,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/admin/pool': typeof AuthenticatedAdminPoolRoute
   '/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
@@ -238,6 +246,7 @@ export interface FileRoutesByTo {
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/admin/pool': typeof AuthenticatedAdminPoolRoute
   '/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/admin/review': typeof AuthenticatedAdminReviewRoute
@@ -270,6 +279,7 @@ export interface FileRoutesById {
   '/api/ai-teacher': typeof ApiAiTeacherRoute
   '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
+  '/_authenticated/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/_authenticated/admin/pool': typeof AuthenticatedAdminPoolRoute
   '/_authenticated/admin/promos': typeof AuthenticatedAdminPromosRoute
   '/_authenticated/admin/review': typeof AuthenticatedAdminReviewRoute
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
+    | '/admin/payments'
     | '/admin/pool'
     | '/admin/promos'
     | '/admin/review'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/api/ai-teacher'
     | '/admin/about'
     | '/admin/generate'
+    | '/admin/payments'
     | '/admin/pool'
     | '/admin/promos'
     | '/admin/review'
@@ -362,6 +374,7 @@ export interface FileRouteTypes {
     | '/api/ai-teacher'
     | '/_authenticated/admin/about'
     | '/_authenticated/admin/generate'
+    | '/_authenticated/admin/payments'
     | '/_authenticated/admin/pool'
     | '/_authenticated/admin/promos'
     | '/_authenticated/admin/review'
@@ -566,6 +579,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPoolRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/payments': {
+      id: '/_authenticated/admin/payments'
+      path: '/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/generate': {
       id: '/_authenticated/admin/generate'
       path: '/generate'
@@ -600,6 +620,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
   AuthenticatedAdminGenerateRoute: typeof AuthenticatedAdminGenerateRoute
+  AuthenticatedAdminPaymentsRoute: typeof AuthenticatedAdminPaymentsRoute
   AuthenticatedAdminPoolRoute: typeof AuthenticatedAdminPoolRoute
   AuthenticatedAdminPromosRoute: typeof AuthenticatedAdminPromosRoute
   AuthenticatedAdminReviewRoute: typeof AuthenticatedAdminReviewRoute
@@ -611,6 +632,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
   AuthenticatedAdminGenerateRoute: AuthenticatedAdminGenerateRoute,
+  AuthenticatedAdminPaymentsRoute: AuthenticatedAdminPaymentsRoute,
   AuthenticatedAdminPoolRoute: AuthenticatedAdminPoolRoute,
   AuthenticatedAdminPromosRoute: AuthenticatedAdminPromosRoute,
   AuthenticatedAdminReviewRoute: AuthenticatedAdminReviewRoute,
