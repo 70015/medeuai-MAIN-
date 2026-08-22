@@ -99,7 +99,7 @@ function AdminLayout() {
         <Shield className="h-5 w-5 text-primary" />
         <h1 className="text-xl font-bold tracking-tight">Admin</h1>
       </div>
-      <div className="flex flex-wrap gap-1 border-b border-border/60 pb-2">
+      <div className="-mx-4 flex gap-1 overflow-x-auto border-b border-border/60 px-4 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
         {tabs.map((t) => {
           const active = t.exact ? pathname === t.to : pathname.startsWith(t.to);
           return (
