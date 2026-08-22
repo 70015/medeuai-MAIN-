@@ -192,7 +192,6 @@ function ProgressPage() {
       : accuracy < 60
         ? "reviewing every incorrect answer with MedEu before your next mock — accuracy is the fastest gain right now."
         : "speed under timed conditions. Your accuracy is solid, so attempt a full paper and watch the clock.";
-  const recommendationIsSentence = !submitted.length;
 
   if (isLoading) {
     return (
@@ -335,7 +334,7 @@ function ProgressPage() {
           MedEu recommends focusing on…
         </h2>
         <p className="mt-3 text-base leading-relaxed">
-          {recommendationIsSentence ? recommendation : recommendation}
+          {recommendation}
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
