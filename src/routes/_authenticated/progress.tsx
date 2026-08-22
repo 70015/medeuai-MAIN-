@@ -5,6 +5,7 @@ import { ArrowRight, GraduationCap, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/components/app-shell";
+import { BrandMark } from "@/components/brand-logo";
 import { examLabel } from "@/lib/exam";
 import { cn } from "@/lib/utils";
 
