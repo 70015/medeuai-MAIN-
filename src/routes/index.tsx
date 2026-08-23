@@ -340,7 +340,78 @@ function LandingPage() {
           </div>
         </section>
 
+        {/* ---------------- ANDROID APP ---------------- */}
+        <section id="android-app" className="border-b border-border bg-background">
+          <div className="container mx-auto max-w-6xl px-4 py-20 sm:py-24">
+            <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+              <div>
+                <span className="brand-eyebrow">Android app</span>
+                <h2 className="mt-5 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
+                  Carry your AI teacher in your pocket.
+                </h2>
+                <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+                  The MedEu.Ai Android app gives you the full platform — AI Teacher, mock tests,
+                  previous-year papers and analytics — in a fullscreen, distraction-free app. Same
+                  account, same progress, nothing to re-learn.
+                </p>
+
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  {apkAvailable ? (
+                    <Button asChild size="lg" className="w-full sm:w-auto">
+                      <a href={APK_URL} download>
+                        <Download className="mr-1.5 h-4 w-4" /> Download APK ({APK_SIZE})
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button size="lg" disabled className="w-full sm:w-auto">
+                      <Download className="mr-1.5 h-4 w-4" /> APK coming soon
+                    </Button>
+                  )}
+                  <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
+                    <Link to="/auth" search={{ mode: "signup" }}>Use in browser instead</Link>
+                  </Button>
+                </div>
+
+                <p className="mt-4 text-xs text-muted-foreground">
+                  Version {APK_VERSION} · {APK_MIN_ANDROID} · Direct download, not from the Play
+                  Store yet. iOS is not available at the moment.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-border bg-secondary/40 p-7 sm:p-8">
+                <div className="flex items-center gap-2">
+                  <Smartphone className="h-5 w-5 text-primary" />
+                  <h3 className="text-lg font-bold tracking-tight">How to install</h3>
+                </div>
+                <ol className="mt-5 space-y-4">
+                  {[
+                    "Tap Download APK above and wait for the file to finish downloading.",
+                    "Chrome may warn that this file type can harm your device — that is the standard warning for every APK downloaded outside the Play Store. Choose Download anyway.",
+                    "Open the file. Android will ask permission to install unknown apps — allow it for your browser or Files app.",
+                    "Tap Install, then Open. Sign in with your existing MedEu.Ai account.",
+                  ].map((t, i) => (
+                    <li key={i} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
+                      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary">
+                        {i + 1}
+                      </span>
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ol>
+                <div className="mt-6 flex items-start gap-2 border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground">
+                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  <span>
+                    Only download the APK from this page. Files shared on other sites or groups are
+                    not published by us and may be unsafe.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ---------------- FINAL CTA ---------------- */}
+
         <section className="ink-section">
           <div className="container mx-auto max-w-4xl px-4 py-20 text-center sm:py-24">
             <h2 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
