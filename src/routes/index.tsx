@@ -6,6 +6,7 @@ import {
   BookOpen,
   Brain,
   CheckCircle2,
+  Download,
   FileText,
   GraduationCap,
   Languages,
@@ -13,6 +14,8 @@ import {
   ListChecks,
   MessageSquare,
   Send,
+  ShieldCheck,
+  Smartphone,
   Sparkles,
   Target,
 } from "lucide-react";
@@ -20,6 +23,13 @@ import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-logo";
 import { SiteHeader } from "@/components/site-header";
 import { isAdminHost } from "@/lib/host";
+import {
+  APK_MIN_ANDROID,
+  APK_SIZE,
+  APK_URL,
+  APK_VERSION,
+  apkAvailable,
+} from "@/lib/app-download";
 
 export const Route = createFileRoute("/")({
   head: () => ({
