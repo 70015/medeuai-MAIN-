@@ -18,32 +18,40 @@ behave exactly as on the web. No product logic is duplicated natively.
 | A signing keystore (`.jks`) + key alias + passwords | Android refuses to install unsigned release APKs |
 | Your production domain in `capacitor.config.ts` | the app must point at the live site |
 
-## 1. Generate the Android project (one time)
+## 1. Native project — already generated ✅
+
+`android/` is committed and ready (`appId ai.medeu.app`, release signing block
+already wired in `android/app/build.gradle`). After pulling the project, just:
 
 ```bash
 npm install
-npx cap add android
 npx cap sync android
 ```
+
+A build was attempted in this environment and failed with:
+`ERROR: JAVA_HOME is not set and no 'java' command could be found` — no JDK and
+no Android SDK exist here, and no keystore was provided, so no APK was produced.
 
 ## 2. Create a signing key (one time — keep it safe forever)
 
 ```bash
+cd android
 keytool -genkey -v -keystore medeu-release.jks -keyalg RSA \
   -keysize 2048 -validity 10000 -alias medeu
 ```
 
-Then create `android/key.properties` (never commit it):
+Then create `android/key.properties` (git-ignored):
 
 ```properties
-storeFile=../medeu-release.jks
+storeFile=medeu-release.jks
 storePassword=YOUR_STORE_PASSWORD
 keyAlias=medeu
 keyPassword=YOUR_KEY_PASSWORD
 ```
 
-And in `android/app/build.gradle`, load it and add a `signingConfigs.release`
-block referencing those values, wired to `buildTypes.release`.
+`android/app/build.gradle` picks this up automatically and signs the release
+build. If the file is missing, Gradle builds unsigned (debug only).
+
 
 ## 3. Build the signed APK
 
