@@ -211,6 +211,53 @@ export function ManualUpiPayments() {
           />
         </div>
 
+        <div className="mt-6 rounded-xl border border-border/60 bg-background/40 p-4">
+          <h3 className="text-sm font-semibold">Free plan limits</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Controls what students get before upgrading. Changes apply instantly.
+          </p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="free_attempts">Free mock tests</Label>
+              <Input
+                id="free_attempts"
+                type="number"
+                min={0}
+                value={form.free_attempts_allowed}
+                onChange={(e) =>
+                  setForm({ ...form, free_attempts_allowed: Number(e.target.value) || 0 })
+                }
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="free_window">Window (days)</Label>
+              <Input
+                id="free_window"
+                type="number"
+                min={1}
+                value={form.free_window_days}
+                onChange={(e) =>
+                  setForm({ ...form, free_window_days: Number(e.target.value) || 1 })
+                }
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="free_ai">AI questions / day</Label>
+              <Input
+                id="free_ai"
+                type="number"
+                min={0}
+                value={form.free_ai_daily_limit}
+                onChange={(e) =>
+                  setForm({ ...form, free_ai_daily_limit: Number(e.target.value) || 0 })
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+
+
         <Button
           className="mt-6 bg-[#03824F] text-white hover:bg-[#02663E]"
           onClick={() => save.mutate()}
