@@ -169,12 +169,21 @@ function AuthPage() {
     setLoading(true);
     setOtpError(null);
     try {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: step === "verify-signup" ? "email" : "recovery",
-      });
-      if (error) throw error;
+      let error: { message: string } | null = null;
+      if (step === "verify-signup") {
+        // The signup confirmation code is issued as type "signup"; some flows
+        // (e.g. resend after an email change) issue it as "email".
+        const first = await supabase.auth.verifyOtp({ email, token: code, type: "signup" });
+        if (first.error) {
+          const second = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
+          error = second.error ? first.error : null;
+        }
+      } else {
+        const res = await supabase.auth.verifyOtp({ email, token: code, type: "recovery" });
+        error = res.error;
+      }
+      if (error) throw new Error(error.message);
+
 
       if (step === "verify-recovery") {
         const { error: upErr } = await supabase.auth.updateUser({ password: newPassword });
