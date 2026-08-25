@@ -140,6 +140,10 @@ function DashboardPage() {
     <div className="space-y-10">
       <OnboardingFlow name={profile?.full_name?.split(" ")[0]} />
 
+      <PlanBanner />
+
+
+
       {/* Greeting */}
       <section>
         <div className="flex flex-wrap items-center gap-3">
