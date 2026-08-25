@@ -91,6 +91,15 @@ function AuthPage() {
           options: { data: { full_name: fullName } },
         });
         if (error) throw error;
+        // Supabase obfuscates existing accounts: a user object with no identities
+        // means this email is already registered (and likely already verified).
+        if (data.user && (data.user.identities?.length ?? 0) === 0) {
+          toast.info("Account already exists", {
+            description: "Please sign in with your email and password instead.",
+          });
+          setMode("signin");
+          return;
+        }
         if (data.session) {
           navigate({ to: "/dashboard", replace: true });
           return;
@@ -130,6 +139,7 @@ function AuthPage() {
     }
   }
 
+
   async function handleResend() {
     if (cooldown > 0) return;
     setOtpError(null);
@@ -159,12 +169,21 @@ function AuthPage() {
     setLoading(true);
     setOtpError(null);
     try {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: step === "verify-signup" ? "email" : "recovery",
-      });
-      if (error) throw error;
+      let error: { message: string } | null = null;
+      if (step === "verify-signup") {
+        // The signup confirmation code is issued as type "signup"; some flows
+        // (e.g. resend after an email change) issue it as "email".
+        const first = await supabase.auth.verifyOtp({ email, token: code, type: "signup" });
+        if (first.error) {
+          const second = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
+          error = second.error ? first.error : null;
+        }
+      } else {
+        const res = await supabase.auth.verifyOtp({ email, token: code, type: "recovery" });
+        error = res.error;
+      }
+      if (error) throw new Error(error.message);
+
 
       if (step === "verify-recovery") {
         const { error: upErr } = await supabase.auth.updateUser({ password: newPassword });
