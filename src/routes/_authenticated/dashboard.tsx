@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useProfile } from "@/components/app-shell";
 import { OnboardingFlow } from "@/components/onboarding-flow";
+import { PlanBanner } from "@/components/plan-banner";
+
 
 const EXAM_GRID = [
   { code: "ssc_cgl", label: "SSC CGL", desc: "Combined Graduate Level" },
