@@ -4,7 +4,6 @@ import { buildSystemPrompt } from "@/lib/ai-teacher-prompt";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-3-flash-preview";
-const FREE_DAILY_LIMIT = 10;
 
 const Input = z.object({
   messages: z
