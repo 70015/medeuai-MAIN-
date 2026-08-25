@@ -736,6 +736,9 @@ export type Database = {
       payment_settings: {
         Row: {
           created_at: string
+          free_ai_daily_limit: number
+          free_attempts_allowed: number
+          free_window_days: number
           id: string
           instructions: string
           merchant_name: string
@@ -751,6 +754,9 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          free_ai_daily_limit?: number
+          free_attempts_allowed?: number
+          free_window_days?: number
           id?: string
           instructions?: string
           merchant_name?: string
@@ -766,6 +772,9 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          free_ai_daily_limit?: number
+          free_attempts_allowed?: number
+          free_window_days?: number
           id?: string
           instructions?: string
           merchant_name?: string
@@ -1013,48 +1022,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      razorpay_plans: {
-        Row: {
-          amount: number
-          created_at: string
-          currency: string
-          environment: string
-          id: string
-          interval: number
-          lookup_key: string
-          name: string
-          period: string
-          razorpay_plan_id: string
-          updated_at: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          currency?: string
-          environment?: string
-          id?: string
-          interval?: number
-          lookup_key: string
-          name: string
-          period: string
-          razorpay_plan_id: string
-          updated_at?: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          currency?: string
-          environment?: string
-          id?: string
-          interval?: number
-          lookup_key?: string
-          name?: string
-          period?: string
-          razorpay_plan_id?: string
-          updated_at?: string
-        }
-        Relationships: []
       }
       subjects: {
         Row: {
