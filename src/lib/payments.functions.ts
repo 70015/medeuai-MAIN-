@@ -14,6 +14,9 @@ export type PaymentSettings = {
   upiIntentEnabled: boolean;
   qrEnabled: boolean;
   instructions: string;
+  freeAttemptsAllowed: number;
+  freeWindowDays: number;
+  freeAiDailyLimit: number;
 };
 
 const PlanEnum = z.enum(["pro_monthly", "pro_yearly"]);
@@ -38,6 +41,9 @@ export const getPaymentSettings = createServerFn({ method: "GET" })
       upiIntentEnabled: !!data?.upi_intent_enabled,
       qrEnabled: !!data?.qr_enabled,
       instructions: data?.instructions ?? "",
+      freeAttemptsAllowed: data?.free_attempts_allowed ?? 3,
+      freeWindowDays: data?.free_window_days ?? 30,
+      freeAiDailyLimit: data?.free_ai_daily_limit ?? 10,
     };
   });
 
@@ -52,7 +58,11 @@ const SettingsInput = z.object({
   upi_intent_enabled: z.boolean(),
   qr_enabled: z.boolean(),
   instructions: z.string().trim().max(2000),
+  free_attempts_allowed: z.number().int().min(0).max(1000),
+  free_window_days: z.number().int().min(1).max(365),
+  free_ai_daily_limit: z.number().int().min(0).max(1000),
 });
+
 
 async function assertAdmin(context: { supabase: any; userId: string }) {
   const { data: isAdmin } = await context.supabase.rpc("has_role", {

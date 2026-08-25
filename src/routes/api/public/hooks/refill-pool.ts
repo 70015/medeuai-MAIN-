@@ -22,10 +22,13 @@ export const Route = createFileRoute("/api/public/hooks/refill-pool")({
           request.headers.get("x-cron-key") ??
           "";
         const cronSecret = process.env.CRON_SECRET ?? "";
+        const poolSecret = process.env.POOL_CRON_SECRET ?? "";
         const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
         const ok =
           (cronSecret !== "" && timingSafeStringEqual(provided, cronSecret)) ||
+          (poolSecret !== "" && timingSafeStringEqual(provided, poolSecret)) ||
           (serviceKey !== "" && timingSafeStringEqual(provided, serviceKey));
+
         if (!provided || !ok) {
           return new Response("Unauthorized", { status: 401 });
         }

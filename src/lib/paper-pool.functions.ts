@@ -188,6 +188,29 @@ export const claimPaperForAttempt = createServerFn({ method: "POST" })
       return { claimed: false, source: "existing" as const, total: existing ?? 0 };
     }
 
+    // Server-side entitlement gate: the UI check is UX only.
+    const { resolveEntitlement, getFreeLimits } = await import("@/lib/entitlement.server");
+    const [ent, limits] = await Promise.all([
+      resolveEntitlement(supabase, userId),
+      getFreeLimits(supabase),
+    ]);
+    if (!ent.isPro) {
+      const since = new Date(
+        Date.now() - limits.freeWindowDays * 24 * 60 * 60 * 1000,
+      ).toISOString();
+      const { count: used } = await supabase
+        .from("test_attempts")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .gte("started_at", since);
+      if ((used ?? 0) > limits.freeAttemptsAllowed) {
+        throw new Error(
+          `Free plan limit reached (${limits.freeAttemptsAllowed} tests every ${limits.freeWindowDays} days). Upgrade to Pro to continue.`,
+        );
+      }
+    }
+
+
     // 1. Try oldest READY paper
     let paper: { id: string; questions: unknown; times_served: number } | null = null;
     let source: "ready" | "reuse" | "bank" = "ready";

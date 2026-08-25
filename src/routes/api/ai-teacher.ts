@@ -4,7 +4,6 @@ import { buildSystemPrompt } from "@/lib/ai-teacher-prompt";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-3-flash-preview";
-const FREE_DAILY_LIMIT = 10;
 
 const Input = z.object({
   messages: z
@@ -54,12 +53,12 @@ export const Route = createFileRoute("/api/ai-teacher")({
         if (claimsError || !userId) return err("Unauthorized", 401);
 
         // Daily quota for free users
-        const { data: profile } = await supabaseAdmin
-          .from("profiles")
-          .select("plan")
-          .eq("id", userId)
-          .maybeSingle();
-        const isPro = profile?.plan === "pro_monthly" || profile?.plan === "pro_yearly";
+        const { resolveEntitlement, getFreeLimits } = await import("@/lib/entitlement.server");
+        const [ent, limits] = await Promise.all([
+          resolveEntitlement(supabaseAdmin, userId),
+          getFreeLimits(supabaseAdmin),
+        ]);
+        const isPro = ent.isPro;
         if (!isPro) {
           const today = new Date().toISOString().slice(0, 10);
           const { data: usage } = await supabaseAdmin
@@ -69,12 +68,13 @@ export const Route = createFileRoute("/api/ai-teacher")({
             .eq("day", today)
             .maybeSingle();
           const used = usage?.count ?? 0;
-          if (used >= FREE_DAILY_LIMIT) {
+          if (used >= limits.freeAiDailyLimit) {
             return err(
-              `Free plan limit reached (${FREE_DAILY_LIMIT} questions/day). Upgrade to Pro for unlimited AI Teacher.`,
+              `Free plan limit reached (${limits.freeAiDailyLimit} questions/day). Upgrade to Pro for unlimited AI Teacher.`,
               429,
             );
           }
+
           await supabaseAdmin.from("ai_teacher_usage").upsert(
             {
               user_id: userId,

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Clock, Crown, Loader2, Sparkles, Tag } from "lucide-react";
+import { AlertTriangle, Check, Clock, Crown, Loader2, Receipt, Sparkles, Tag } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { BackLink } from "@/components/back-link";
-import { getPlanStatus } from "@/lib/razorpay.functions";
+import { getPlanStatus } from "@/lib/plan.functions";
 import { getMyPaymentRequests, getPaymentSettings } from "@/lib/payments.functions";
 import { redeemPromoCode } from "@/lib/promo.functions";
 
@@ -93,25 +93,39 @@ function BillingPage() {
       {isLoading ? (
         <div className="h-24 animate-pulse rounded-xl bg-muted/40" />
       ) : plan?.isPro ? (
-        <Card className="border-[#03824F]/40 bg-[#EAF7F1] p-6">
+        <Card
+          className={
+            plan.expiringSoon
+              ? "border-amber-500/50 bg-amber-50/60 p-6 dark:bg-amber-950/20"
+              : "border-[#03824F]/40 bg-[#EAF7F1] p-6"
+          }
+        >
           <Badge className="mb-2 bg-[#03824F] text-white hover:bg-[#02663E]">Pro active</Badge>
           <h2 className="text-lg font-semibold text-[#04211C]">
             You're on the {plan.priceId === "pro_yearly" ? "Yearly" : "Monthly"} plan
           </h2>
           <p className="mt-1 text-sm text-[#33403D]">
-            Status: {plan.status}
             {plan.currentPeriodEnd
-              ? ` · access until ${new Date(plan.currentPeriodEnd).toLocaleDateString()}`
-              : ""}
+              ? `Access until ${new Date(plan.currentPeriodEnd).toLocaleDateString()}${
+                  plan.daysLeft !== null ? ` · ${plan.daysLeft} day(s) left` : ""
+                }`
+              : `Status: ${plan.status}`}
           </p>
+          {plan.expiringSoon && (
+            <p className="mt-2 flex items-start gap-2 text-sm font-medium text-amber-800 dark:text-amber-300">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              Your Pro access ends soon. Renew now to keep unlimited tests and AI Teacher — your
+              new period is added on top of the remaining days.
+            </p>
+          )}
         </Card>
       ) : (
         <Card className="border-border/60 bg-card/40 p-6">
           <h2 className="text-lg font-semibold">Free plan</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {plan
-              ? `${plan.attemptsInWindow} of ${plan.freeAttemptsAllowed} free attempts used in the last ${plan.windowDays} days.`
-              : "3 free mock tests every 30 days."}
+              ? `${plan.attemptsInWindow} of ${plan.freeAttemptsAllowed} free attempts used in the last ${plan.windowDays} days · ${plan.aiUsedToday} of ${plan.aiDailyLimit} AI Teacher questions used today.`
+              : "Limited mock tests and AI Teacher questions."}
           </p>
         </Card>
       )}
@@ -133,7 +147,7 @@ function BillingPage() {
         </Card>
       )}
 
-      {!plan?.isPro && !pending && (
+      {!pending && (
         <div className="grid gap-4 md:grid-cols-2">
           {PLANS.map((p) => (
             <Card
@@ -166,7 +180,7 @@ function BillingPage() {
               {settings?.upiId ? (
                 <Link to="/pay/$plan" params={{ plan: p.lookup_key }} className="mt-6 block">
                   <Button className="w-full bg-[#03824F] text-white hover:bg-[#02663E]">
-                    Subscribe with UPI
+                    {plan?.isPro ? "Extend with UPI" : "Subscribe with UPI"}
                   </Button>
                 </Link>
               ) : (
@@ -178,6 +192,43 @@ function BillingPage() {
           ))}
         </div>
       )}
+
+      {myRequests && myRequests.length > 0 && (
+        <Card className="border-border/60 bg-card/40 p-5">
+          <div className="flex items-center gap-2">
+            <Receipt className="h-4 w-4 text-[#03824F]" />
+            <h3 className="text-sm font-semibold">Payment history</h3>
+          </div>
+          <div className="mt-3 divide-y divide-border/60">
+            {myRequests.map((r) => (
+              <div key={r.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">
+                    ₹{r.amount_inr} · {r.plan === "pro_yearly" ? "Pro Yearly" : "Pro Monthly"}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    UTR {r.utr} · {new Date(r.created_at).toLocaleDateString()}
+                    {r.admin_note ? ` · ${r.admin_note}` : ""}
+                  </p>
+                </div>
+                <Badge
+                  variant="outline"
+                  className={
+                    r.status === "verified"
+                      ? "border-[#03824F]/40 text-[#02663E]"
+                      : r.status === "rejected"
+                        ? "border-destructive/40 text-destructive"
+                        : "border-amber-500/40 text-amber-700"
+                  }
+                >
+                  {r.status}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
 
       <Card className="border-border/60 bg-card/40 p-5">
         <div className="flex items-center gap-2">
