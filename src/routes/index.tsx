@@ -142,9 +142,15 @@ const steps = [
 function LandingPage() {
   const navigate = useNavigate();
   useEffect(() => {
-    if (isAdminHost()) navigate({ to: "/admin", replace: true });
+    if (isAdminHost()) {
+      navigate({ to: "/admin", replace: true });
+      return;
+    }
+    // Installed Android app opens the app home, not the marketing page.
+    if (isNativeApp()) navigate({ to: "/dashboard", replace: true });
   }, [navigate]);
   if (isAdminHost()) return null;
+
 
   return (
     <div className="min-h-screen bg-background">
