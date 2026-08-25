@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { BackLink } from "@/components/back-link";
-import { getPlanStatus } from "@/lib/razorpay.functions";
+import { getPlanStatus } from "@/lib/plan.functions";
 import { getMyPaymentRequests, getPaymentSettings } from "@/lib/payments.functions";
 import { redeemPromoCode } from "@/lib/promo.functions";
 

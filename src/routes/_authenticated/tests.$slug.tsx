@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { BackLink } from "@/components/back-link";
 import { examLabel, formatSeconds } from "@/lib/exam";
 import { claimPaperForAttempt } from "@/lib/paper-pool.functions";
-import { getPlanStatus } from "@/lib/razorpay.functions";
+import { getPlanStatus } from "@/lib/plan.functions";
 
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
