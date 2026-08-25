@@ -1,9 +1,12 @@
 /**
  * Android APK download config.
  *
- * Set APK_URL to the public HTTPS link of the signed release APK
- * (see ANDROID_RELEASE.md). While it is empty, the landing page shows an
- * honest "coming soon" state instead of a broken download link.
+ * ▶ OWNER: ONE LINE TO GO LIVE — paste the public HTTPS link of your signed
+ *   release APK into APK_URL below (see ANDROID_RELEASE.md), e.g.
+ *     export const APK_URL = "https://medeu-ai.lovable.app/downloads/medeu-ai.apk";
+ *
+ * While APK_URL is empty, the header button and landing section show an honest
+ * "coming soon" state instead of a fake/broken download link.
  */
 export const APK_URL = "";
 export const APK_VERSION = "1.0.0";

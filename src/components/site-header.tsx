@@ -1,9 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-logo";
 import { supabase } from "@/integrations/supabase/client";
+import { APK_URL, apkAvailable } from "@/lib/app-download";
+import { isNativeApp } from "@/lib/native-app";
 import { ThemeToggle } from "./theme-toggle";
+
 
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -45,7 +49,22 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {!isNativeApp() &&
+            (apkAvailable ? (
+              <Button asChild variant="outline" size="sm">
+                <a href={APK_URL} download aria-label="Download the MedEu.Ai Android app">
+                  <Download className="mr-1.5 h-4 w-4" /> Download App
+                </a>
+              </Button>
+            ) : (
+              <Button asChild variant="outline" size="sm">
+                <a href="/#android-app" aria-label="Android app coming soon">
+                  <Download className="mr-1.5 h-4 w-4" /> App coming soon
+                </a>
+              </Button>
+            ))}
           <ThemeToggle />
+
           {hasSession ? (
             <Button asChild size="sm">
               <Link to="/dashboard">Open dashboard</Link>

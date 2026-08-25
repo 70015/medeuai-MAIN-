@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-logo";
 import { SiteHeader } from "@/components/site-header";
 import { isAdminHost } from "@/lib/host";
+import { isNativeApp } from "@/lib/native-app";
 import {
   APK_MIN_ANDROID,
   APK_SIZE,
@@ -142,9 +143,15 @@ const steps = [
 function LandingPage() {
   const navigate = useNavigate();
   useEffect(() => {
-    if (isAdminHost()) navigate({ to: "/admin", replace: true });
+    if (isAdminHost()) {
+      navigate({ to: "/admin", replace: true });
+      return;
+    }
+    // Installed Android app opens the app home, not the marketing page.
+    if (isNativeApp()) navigate({ to: "/dashboard", replace: true });
   }, [navigate]);
   if (isAdminHost()) return null;
+
 
   return (
     <div className="min-h-screen bg-background">
