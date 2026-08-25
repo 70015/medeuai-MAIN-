@@ -91,6 +91,15 @@ function AuthPage() {
           options: { data: { full_name: fullName } },
         });
         if (error) throw error;
+        // Supabase obfuscates existing accounts: a user object with no identities
+        // means this email is already registered (and likely already verified).
+        if (data.user && (data.user.identities?.length ?? 0) === 0) {
+          toast.info("Account already exists", {
+            description: "Please sign in with your email and password instead.",
+          });
+          setMode("signin");
+          return;
+        }
         if (data.session) {
           navigate({ to: "/dashboard", replace: true });
           return;
@@ -129,6 +138,7 @@ function AuthPage() {
       setLoading(false);
     }
   }
+
 
   async function handleResend() {
     if (cooldown > 0) return;
