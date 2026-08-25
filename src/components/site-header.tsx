@@ -1,9 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLockup } from "@/components/brand-logo";
 import { supabase } from "@/integrations/supabase/client";
+import { APK_URL, apkAvailable } from "@/lib/app-download";
+import { isNativeApp } from "@/lib/native-app";
 import { ThemeToggle } from "./theme-toggle";
+
 
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
