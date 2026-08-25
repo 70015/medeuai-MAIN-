@@ -15,11 +15,14 @@ const config: CapacitorConfig = {
   // Only used as a fallback shell; the app loads server.url at runtime.
   webDir: "public",
   server: {
-    url: "https://medeu-ai.lovable.app",
+    // Launch straight into the authenticated app home. Unauthenticated users
+    // are redirected to sign in by the existing /_authenticated route gate.
+    url: "https://medeu-ai.lovable.app/dashboard",
     cleartext: false,
     androidScheme: "https",
     allowNavigation: ["medeu-ai.lovable.app", "*.lovable.app", "*.supabase.co"],
   },
+  appendUserAgent: "MedEuAiAndroid",
   android: {
     allowMixedContent: false,
     webContentsDebuggingEnabled: false,
