@@ -20,8 +20,6 @@ const Input = z.object({
 });
 
 
-const FREE_DAILY_LIMIT = 10;
-
 export const askAITeacher = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => Input.parse(d))
@@ -31,12 +29,12 @@ export const askAITeacher = createServerFn({ method: "POST" })
 
     // Enforce daily quota for non-Pro users
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("plan")
-      .eq("id", context.userId)
-      .maybeSingle();
-    const isPro = profile?.plan === "pro_monthly" || profile?.plan === "pro_yearly";
+    const { resolveEntitlement, getFreeLimits } = await import("@/lib/entitlement.server");
+    const [ent, limits] = await Promise.all([
+      resolveEntitlement(supabaseAdmin, context.userId),
+      getFreeLimits(supabaseAdmin),
+    ]);
+    const isPro = ent.isPro;
 
     if (!isPro) {
       const today = new Date().toISOString().slice(0, 10);
@@ -47,11 +45,12 @@ export const askAITeacher = createServerFn({ method: "POST" })
         .eq("day", today)
         .maybeSingle();
       const used = usage?.count ?? 0;
-      if (used >= FREE_DAILY_LIMIT) {
+      if (used >= limits.freeAiDailyLimit) {
         throw new Error(
-          `Free plan limit reached (${FREE_DAILY_LIMIT} questions/day). Upgrade to Pro for unlimited AI Teacher access.`,
+          `Free plan limit reached (${limits.freeAiDailyLimit} questions/day). Upgrade to Pro for unlimited AI Teacher access.`,
         );
       }
+
       await supabaseAdmin.from("ai_teacher_usage").upsert(
         {
           user_id: context.userId,
