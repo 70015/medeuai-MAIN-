@@ -1,14 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { FileQuestion, HelpCircle, Users, ClipboardCheck, CreditCard, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { FileQuestion, HelpCircle, Users, ClipboardCheck, CreditCard } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ManualUpiPayments } from "@/components/admin/manual-upi-payments";
 import { getAdminStats } from "@/lib/admin.functions";
-import { ensureRazorpayPlans } from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({ meta: [{ title: "Admin Dashboard — MedEu.Ai" }] }),
@@ -17,24 +15,11 @@ export const Route = createFileRoute("/_authenticated/admin/")({
 
 function AdminDashboard() {
   const fn = useServerFn(getAdminStats);
-  const ensurePlansFn = useServerFn(ensureRazorpayPlans);
   const { data, isLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: () => fn(),
   });
 
-  const ensurePlans = useMutation({
-    mutationFn: () => ensurePlansFn(),
-    onSuccess: (r) => {
-      const created = r.plans.filter((p) => p.created).length;
-      toast.success(
-        created > 0
-          ? `Created ${created} plan(s) in Razorpay.`
-          : "Plans already initialized in Razorpay.",
-      );
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
 
   return (
     <div className="space-y-6">
