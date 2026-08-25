@@ -79,25 +79,6 @@ function AdminDashboard() {
         <ManualUpiPayments />
       </section>
 
-      <Card className="border-border/60 bg-card/40 p-6">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
-          <CreditCard className="h-4 w-4" /> Razorpay</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Run this once to create the Pro Monthly (₹99) and Pro Yearly (₹799) plans in your
-          Razorpay account. Idempotent — safe to re-run.
-        </p>
-        <Button
-          className="mt-4"
-          variant="outline"
-          onClick={() => ensurePlans.mutate()}
-          disabled={ensurePlans.isPending}
-        >
-          {ensurePlans.isPending ? (
-            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-          ) : null}
-          Initialize Razorpay plans
-        </Button>
-      </Card>
     </div>
   );
 }
