@@ -87,3 +87,10 @@ instead of a broken link.
 
 Increase `versionCode` / `versionName` in `android/app/build.gradle`, rebuild,
 re-upload, update `APK_VERSION`.
+
+## 6. Launch behaviour
+
+The installed app opens `/dashboard` (app home) instead of the marketing page —
+`capacitor.config.ts` → `server.url`. Signed-out users are redirected to sign in
+by the existing authenticated-route gate. Re-run `npx cap sync android` after
+changing the URL.
