@@ -58,6 +58,9 @@ export function ManualUpiPayments() {
     upi_intent_enabled: true,
     qr_enabled: true,
     instructions: "",
+    free_attempts_allowed: 3,
+    free_window_days: 30,
+    free_ai_daily_limit: 10,
   });
 
   useEffect(() => {
@@ -72,8 +75,12 @@ export function ManualUpiPayments() {
       upi_intent_enabled: settings.upiIntentEnabled,
       qr_enabled: settings.qrEnabled,
       instructions: settings.instructions,
+      free_attempts_allowed: settings.freeAttemptsAllowed,
+      free_window_days: settings.freeWindowDays,
+      free_ai_daily_limit: settings.freeAiDailyLimit,
     });
   }, [settings]);
+
 
   const save = useMutation({
     mutationFn: () => saveFn({ data: form }),
