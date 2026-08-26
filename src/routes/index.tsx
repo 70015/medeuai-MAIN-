@@ -482,7 +482,7 @@ function LandingPage() {
       <footer className="bg-background">
         <div className="container mx-auto max-w-6xl px-4 py-14">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
-            <div className="lg:col-span-2">
+            <div>
               <div className="flex items-center gap-2 font-bold tracking-tight">
                 <BrandMark className="h-10 w-10" />
                 <span>
