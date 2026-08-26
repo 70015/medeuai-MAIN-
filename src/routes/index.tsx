@@ -48,8 +48,34 @@ export const Route = createFileRoute("/")({
           "Learn smarter. Understand better. Prepare with MedEu.Ai — AI teaching plus exam practice in three languages.",
       },
       { property: "og:url", content: "https://medeu-ai.lovable.app/" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "MedEu.Ai — Your Personal AI Teacher" },
+      {
+        name: "twitter:description",
+        content:
+          "AI teaching, mock tests and previous-year papers for SSC, Railway, Banking, WBCS and WBPSC — in English, Hindi and Bengali.",
+      },
     ],
     links: [{ rel: "canonical", href: "https://medeu-ai.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "MedEu.Ai",
+          applicationCategory: "EducationalApplication",
+          operatingSystem: "Web, Android",
+          url: "https://medeu-ai.lovable.app/",
+          description:
+            "A 24/7 personal AI teacher and exam preparation platform with mock tests, previous-year papers and performance analysis in English, Hindi and Bengali.",
+          inLanguage: ["en", "hi", "bn"],
+          author: { "@type": "Person", name: "Rahamat Ali" },
+          publisher: { "@type": "Organization", name: "MedEu.Ai", email: "hello.medeu.ai@gmail.com" },
+        }),
+      },
+    ],
   }),
   component: LandingPage,
 });
