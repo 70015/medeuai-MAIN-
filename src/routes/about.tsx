@@ -217,7 +217,18 @@ function AboutPage() {
             </span>
             <SocialLinks />
           </div>
-          <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-6 sm:flex-row">
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row">
+            <Link to="/" className="hover:text-primary">
+              Home
+            </Link>
+            <Link to="/about" className="hover:text-primary">
+              About
+            </Link>
+            <Link to="/privacy-policy" className="hover:text-primary">
+              Privacy Policy
+            </Link>
+          </div>
+          <div className="mt-4 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 text-xs text-muted-foreground sm:flex-row">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <BrandMark className="h-7 w-7" />
               <span>MedEu.Ai · Your Personal AI Teacher, 24/7.</span>
