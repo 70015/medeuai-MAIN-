@@ -4,3 +4,6 @@ Disallow: /auth
 Disallow: /reset-password
 Disallow: /dashboard
 Disallow: /profile
+Disallow: /admin
+
+Sitemap: https://medeu-ai.lovable.app/sitemap.xml
