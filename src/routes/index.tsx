@@ -485,15 +485,16 @@ function LandingPage() {
             <div>
               <div className="flex items-center gap-2 font-bold tracking-tight">
                 <BrandMark className="h-10 w-10" />
-                <span>
-                  MedEu<span className="text-primary">.Ai</span>
-                </span>
-              </div>
-              <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-                Your Personal AI Teacher, 24/7. Learn smarter, understand better and prepare with
-                confidence.
-              </p>
+              <span>
+                MedEu<span className="text-primary">.Ai</span>
+              </span>
             </div>
+            <p className="mt-4 max-w-xs text-sm text-muted-foreground">
+              Your Personal AI Teacher, 24/7. Learn smarter, understand better and prepare with
+              confidence.
+            </p>
+            <SocialLinks className="mt-5" />
+          </div>
 
             <FooterCol
               title="Learn"
