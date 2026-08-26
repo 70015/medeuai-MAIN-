@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Instagram, Linkedin } from "lucide-react";
 import logoAsset from "@/assets/medeu-ai-logo.jpg.asset.json";
 
 /** Official MedEu.Ai logo, used unmodified. */
