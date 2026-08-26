@@ -20,7 +20,7 @@ import {
   Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BrandMark } from "@/components/brand-logo";
+import { BrandMark, SocialLinks } from "@/components/brand-logo";
 import { SiteHeader } from "@/components/site-header";
 import { isAdminHost } from "@/lib/host";
 import { isNativeApp } from "@/lib/native-app";
