@@ -210,13 +210,21 @@ function AboutPage() {
       </main>
 
       <footer className="border-t border-border/60 py-10">
-        <div className="container mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <BrandMark className="h-7 w-7" />
-            <span>MedEu.Ai · Your Personal AI Teacher, 24/7.</span>
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Follow us
+            </span>
+            <SocialLinks />
           </div>
-          <div className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} MedEu.Ai. All rights reserved.
+          <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-6 sm:flex-row">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <BrandMark className="h-7 w-7" />
+              <span>MedEu.Ai · Your Personal AI Teacher, 24/7.</span>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} MedEu.Ai. All rights reserved.
+            </div>
           </div>
         </div>
       </footer>
