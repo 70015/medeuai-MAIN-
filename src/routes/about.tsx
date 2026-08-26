@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Brain, Languages, Mail, ShieldCheck, Sparkles, Target, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { BrandLogoFull, BrandMark } from "@/components/brand-logo";
+import { BrandLogoFull, BrandMark, SocialLinks } from "@/components/brand-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
