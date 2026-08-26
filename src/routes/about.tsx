@@ -24,9 +24,9 @@ export const Route = createFileRoute("/about")({
         content:
           "Our mission to make world-class exam preparation accessible to every Indian aspirant.",
       },
-      { property: "og:url", content: "https://pariksha-sathi-ai.lovable.app/about" },
+      { property: "og:url", content: "https://medeu-ai.lovable.app/about" },
     ],
-    links: [{ rel: "canonical", href: "https://pariksha-sathi-ai.lovable.app/about" }],
+    links: [{ rel: "canonical", href: "https://medeu-ai.lovable.app/about" }],
   }),
   component: AboutPage,
 });

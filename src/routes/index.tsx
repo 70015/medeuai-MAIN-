@@ -47,9 +47,9 @@ export const Route = createFileRoute("/")({
         content:
           "Learn smarter. Understand better. Prepare with MedEu.Ai — AI teaching plus exam practice in three languages.",
       },
-      { property: "og:url", content: "https://pariksha-sathi-ai.lovable.app/" },
+      { property: "og:url", content: "https://medeu-ai.lovable.app/" },
     ],
-    links: [{ rel: "canonical", href: "https://pariksha-sathi-ai.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://medeu-ai.lovable.app/" }],
   }),
   component: LandingPage,
 });
