@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Instagram, Linkedin } from "lucide-react";
 import logoAsset from "@/assets/medeu-ai-logo.jpg.asset.json";
 
 /** Official MedEu.Ai logo, used unmodified. */
@@ -67,5 +68,33 @@ export function BrandLogoFull({ className }: { className?: string }) {
       decoding="async"
       className={cn("mx-auto h-40 w-auto max-w-full object-contain sm:h-52", className)}
     />
+  );
+}
+
+/**
+ * Compact, polished social follow buttons used in public-facing footers.
+ */
+export function SocialLinks({ className }: { className?: string }) {
+  return (
+    <div className={cn("flex items-center gap-3", className)}>
+      <a
+        href="https://www.instagram.com/medeu.ai?igsi=MW9heGpyYjk2bDB6cQ=="
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Follow MedEu.Ai on Instagram"
+        className="grid h-8 w-8 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+      >
+        <Instagram className="h-4 w-4" />
+      </a>
+      <a
+        href="https://www.linkedin.com/company/medeuai/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Follow MedEu.Ai on LinkedIn"
+        className="grid h-8 w-8 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+      >
+        <Linkedin className="h-4 w-4" />
+      </a>
+    </div>
   );
 }
