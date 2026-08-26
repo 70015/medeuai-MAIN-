@@ -481,20 +481,20 @@ function LandingPage() {
       {/* ---------------- FOOTER ---------------- */}
       <footer className="bg-background">
         <div className="container mx-auto max-w-6xl px-4 py-14">
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="lg:col-span-2">
               <div className="flex items-center gap-2 font-bold tracking-tight">
                 <BrandMark className="h-10 w-10" />
-              <span>
-                MedEu<span className="text-primary">.Ai</span>
-              </span>
+                <span>
+                  MedEu<span className="text-primary">.Ai</span>
+                </span>
+              </div>
+              <p className="mt-4 max-w-xs text-sm text-muted-foreground">
+                Your Personal AI Teacher, 24/7. Learn smarter, understand better and prepare with
+                confidence.
+              </p>
+              <SocialLinks className="mt-5" />
             </div>
-            <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-              Your Personal AI Teacher, 24/7. Learn smarter, understand better and prepare with
-              confidence.
-            </p>
-            <SocialLinks className="mt-5" />
-          </div>
 
             <FooterCol
               title="Learn"
@@ -540,6 +540,19 @@ function LandingPage() {
                     className="text-foreground hover:text-primary"
                   >
                     Start Learning
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Legal
+              </div>
+              <ul className="mt-4 space-y-2.5 text-sm">
+                <li>
+                  <Link to="/privacy-policy" className="text-foreground hover:text-primary">
+                    Privacy Policy
                   </Link>
                 </li>
               </ul>
