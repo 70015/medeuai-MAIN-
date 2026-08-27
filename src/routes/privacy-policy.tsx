@@ -17,7 +17,7 @@ export const Route = createFileRoute("/privacy-policy")({
         content:
           "Learn how MedEu.Ai collects, uses, protects, and manages your information.",
       },
-      { property: "og:url", content: "https://medeu-ai.lovable.app/privacy-policy" },
+      { property: "og:url", content: "https://medeuai.in/privacy-policy" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Privacy Policy — MedEu.Ai" },
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/privacy-policy")({
       { name: "robots", content: "noindex, follow" },
     ],
     links: [
-      { rel: "canonical", href: "https://medeu-ai.lovable.app/privacy-policy" },
+      { rel: "canonical", href: "https://medeuai.in/privacy-policy" },
     ],
   }),
   component: PrivacyPolicyPage,

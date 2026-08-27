@@ -24,7 +24,7 @@ export const Route = createFileRoute("/about")({
         content:
           "Our mission to make world-class exam preparation accessible to every Indian aspirant. Founded by Rahamat Ali. Support: hello.medeu.ai@gmail.com.",
       },
-      { property: "og:url", content: "https://medeu-ai.lovable.app/about" },
+      { property: "og:url", content: "https://medeuai.in/about" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "About MedEu.Ai" },
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/about")({
           "The mission, founder and principles behind MedEu.Ai — your personal AI teacher, 24/7.",
       },
     ],
-    links: [{ rel: "canonical", href: "https://medeu-ai.lovable.app/about" }],
+    links: [{ rel: "canonical", href: "https://medeuai.in/about" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -42,11 +42,11 @@ export const Route = createFileRoute("/about")({
           "@context": "https://schema.org",
           "@type": "AboutPage",
           name: "About MedEu.Ai",
-          url: "https://medeu-ai.lovable.app/about",
+          url: "https://medeuai.in/about",
           about: {
             "@type": "EducationalOrganization",
             name: "MedEu.Ai",
-            url: "https://medeu-ai.lovable.app",
+            url: "https://medeuai.in",
             email: "hello.medeu.ai@gmail.com",
             founder: { "@type": "Person", name: "Rahamat Ali" },
           },
