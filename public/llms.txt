@@ -7,7 +7,7 @@ MedEu.Ai combines an always-available AI teacher with AI-generated mock tests, p
 - Founder: Rahamat Ali
 - Support: hello.medeu.ai@gmail.com
 - Languages: English, हिन्दी, বাংলা
-- Site: https://medeu-ai.lovable.app
+- Site: https://medeuai.in
 
 ## Pages
 - [Home](/): Overview of MedEu.Ai's AI teacher, exams and pricing.
