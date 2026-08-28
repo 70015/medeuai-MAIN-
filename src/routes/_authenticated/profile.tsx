@@ -5,6 +5,7 @@ import {
   Bell,
   CreditCard,
   HelpCircle,
+  KeyRound,
   Languages,
   LifeBuoy,
   Loader2,
