@@ -314,6 +314,9 @@ function ProfilePage() {
             </div>
           </div>
 
+          <PasswordSection />
+
+
           <div className="space-y-1.5 py-4">
             <Label htmlFor="name">Display name</Label>
             <div className="flex max-w-md gap-2">
