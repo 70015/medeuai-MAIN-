@@ -23,12 +23,22 @@ export default defineConfig({
   },
   vite: {
     resolve: {
-      alias: {
-        // Pin entities deep imports to the hoisted v4.5.0 copy (nested v7 breaks SSR).
-        "entities/lib/decode.js": path.resolve(__dirname, "node_modules/entities/lib/decode.js"),
-        "entities/lib/encode.js": path.resolve(__dirname, "node_modules/entities/lib/encode.js"),
-        entities: path.resolve(__dirname, "node_modules/entities"),
-      },
+      // Array form + exact regex: only bare "entities" and the v4 deep imports are
+      // pinned to the hoisted v4.5.0 copy. A plain string "entities" alias would
+      // also rewrite prefixed subpaths like "entities/escape" (parse5 / entities v7),
+      // which don't exist in v4.5.0 and break the build.
+      alias: [
+        {
+          find: /^entities\/lib\/decode\.js$/,
+          replacement: path.resolve(__dirname, "node_modules/entities/lib/decode.js"),
+        },
+        {
+          find: /^entities\/lib\/encode\.js$/,
+          replacement: path.resolve(__dirname, "node_modules/entities/lib/encode.js"),
+        },
+        { find: /^entities$/, replacement: path.resolve(__dirname, "node_modules/entities") },
+      ],
     },
+
   },
 });
