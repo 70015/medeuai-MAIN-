@@ -82,6 +82,143 @@ function readOnboardingLevel(): string | null {
   }
 }
 
+/** In-app password change — requires the current password, no email link needed. */
+function PasswordSection() {
+  const [open, setOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  function reset() {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setError(null);
+  }
+
+  const strength =
+    newPassword.length === 0
+      ? null
+      : newPassword.length < 8
+        ? "Too short — use at least 8 characters."
+        : /^(?=.*[a-zA-Z])(?=.*\d).+$/.test(newPassword)
+          ? null
+          : "Add at least one letter and one number.";
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (!currentPassword) return setError("Enter your current password.");
+    if (newPassword.length < 8) return setError("New password must be at least 8 characters.");
+    if (!/^(?=.*[a-zA-Z])(?=.*\d).+$/.test(newPassword))
+      return setError("New password must include at least one letter and one number.");
+    if (newPassword !== confirmPassword) return setError("The two new passwords don't match.");
+    if (newPassword === currentPassword)
+      return setError("New password must be different from your current one.");
+
+    setBusy(true);
+    try {
+      const { error: upErr } = await supabase.auth.updateUser({
+        password: newPassword,
+        current_password: currentPassword,
+      } as never);
+      if (upErr) throw upErr;
+      toast.success("Password updated", {
+        description: "Use your new password the next time you sign in.",
+      });
+      reset();
+      setOpen(false);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Could not update your password";
+      setError(
+        /invalid|incorrect|credential/i.test(msg)
+          ? "Your current password is incorrect."
+          : msg,
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="py-4">
+      <div className="flex items-center gap-4">
+        <KeyRound className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <div className="min-w-0 grow">
+          <div className="text-sm font-medium">Password</div>
+          <div className="text-xs text-muted-foreground">
+            Change your password here — no email link needed.
+          </div>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            reset();
+            setOpen((o) => !o);
+          }}
+        >
+          {open ? "Cancel" : "Change password"}
+        </Button>
+      </div>
+
+      {open && (
+        <form onSubmit={submit} className="mt-4 max-w-md space-y-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="current-password">Current password</Label>
+            <Input
+              id="current-password"
+              type="password"
+              autoComplete="current-password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="new-password">New password</Label>
+            <Input
+              id="new-password"
+              type="password"
+              autoComplete="new-password"
+              minLength={8}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+            <p className="text-xs text-muted-foreground">
+              {strength ?? "At least 8 characters, with a letter and a number."}
+            </p>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="confirm-password">Confirm new password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && (
+            <p role="alert" className="text-xs font-medium text-destructive">
+              {error}
+            </p>
+          )}
+          <Button type="submit" disabled={busy}>
+            {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Update password
+          </Button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+
 function ProfilePage() {
   const { data: profile, isLoading } = useProfile();
   const queryClient = useQueryClient();
