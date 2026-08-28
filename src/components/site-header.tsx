@@ -27,11 +27,11 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 w-full glass">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-bold tracking-tight">
+        <Link to="/" className="flex shrink-0 items-center gap-2 whitespace-nowrap font-bold tracking-tight">
           <BrandLockup markClassName="h-9 w-9 sm:h-10 sm:w-10" />
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           {[
             { label: "AI Teacher", href: "/#ai-teacher" },
             { label: "Practice", href: "/#practice" },
@@ -48,16 +48,16 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           {!isNativeApp() &&
             (apkAvailable ? (
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
                 <a href={APK_URL} download aria-label="Download the MedEu.Ai Android app">
                   <Download className="mr-1.5 h-4 w-4" /> Download App
                 </a>
               </Button>
             ) : (
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
                 <a href="/#android-app" aria-label="Android app coming soon">
                   <Download className="mr-1.5 h-4 w-4" /> App coming soon
                 </a>
