@@ -159,17 +159,16 @@ export const setArticleStatus = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     await assertAdmin(supabase, userId);
 
-    const patch: Record<string, unknown> = { status: data.status };
+    let publishedAt: string | null = null;
     if (data.status === "published") {
       const { data: existing } = await supabase
         .from("articles")
         .select("published_at")
         .eq("id", data.id)
         .maybeSingle();
-      patch.published_at = existing?.published_at ?? new Date().toISOString();
-    } else {
-      patch.published_at = null;
+      publishedAt = existing?.published_at ?? new Date().toISOString();
     }
+    const patch = { status: data.status, published_at: publishedAt };
 
     const { error } = await supabase
       .from("articles")
