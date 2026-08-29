@@ -101,9 +101,10 @@ function ArticlePage() {
           />
         ) : null}
 
-        <div className="mt-8 whitespace-pre-wrap text-base leading-relaxed text-foreground">
-          {article.content}
-        </div>
+        <div
+          className="article-content mt-8 text-base leading-relaxed text-foreground"
+          dangerouslySetInnerHTML={{ __html: article.content }}
+        />
       </article>
     </main>
   );
