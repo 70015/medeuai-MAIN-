@@ -26,12 +26,16 @@ export const Route = createFileRoute("/articles/$slug")({
       };
     }
     const desc =
-      loaderData.excerpt ?? `Read "${loaderData.title}" on MedEu.Ai.`;
+      loaderData.meta_description ??
+      loaderData.excerpt ??
+      `Read "${loaderData.title}" on MedEu.Ai.`;
+    const pageTitle =
+      loaderData.meta_title ?? `${loaderData.title} — MedEu.Ai`;
     return {
       meta: [
-        { title: `${loaderData.title} — MedEu.Ai` },
+        { title: pageTitle },
         { name: "description", content: desc },
-        { property: "og:title", content: `${loaderData.title} — MedEu.Ai` },
+        { property: "og:title", content: pageTitle },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
