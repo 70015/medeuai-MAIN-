@@ -16,6 +16,8 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
+import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as ApiAiTeacherRouteImport } from './routes/api/ai-teacher'
 import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -75,6 +77,16 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/articles/$slug',
+  path: '/articles/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAiTeacherRoute = ApiAiTeacherRouteImport.update({
@@ -233,6 +245,8 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/api/ai-teacher': typeof ApiAiTeacherRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
@@ -266,6 +280,8 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/api/ai-teacher': typeof ApiAiTeacherRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles': typeof ArticlesIndexRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
@@ -302,6 +318,8 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/api/ai-teacher': typeof ApiAiTeacherRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
   '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/generate': typeof AuthenticatedAdminGenerateRoute
   '/_authenticated/admin/payments': typeof AuthenticatedAdminPaymentsRoute
@@ -338,6 +356,8 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/api/ai-teacher'
+    | '/articles/$slug'
+    | '/articles/'
     | '/admin/about'
     | '/admin/generate'
     | '/admin/payments'
@@ -371,6 +391,8 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/api/ai-teacher'
+    | '/articles/$slug'
+    | '/articles'
     | '/admin/about'
     | '/admin/generate'
     | '/admin/payments'
@@ -406,6 +428,8 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/progress'
     | '/api/ai-teacher'
+    | '/articles/$slug'
+    | '/articles/'
     | '/_authenticated/admin/about'
     | '/_authenticated/admin/generate'
     | '/_authenticated/admin/payments'
@@ -435,6 +459,8 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiAiTeacherRoute: typeof ApiAiTeacherRoute
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
   ApiPublicHooksRefillPoolRoute: typeof ApiPublicHooksRefillPoolRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -490,6 +516,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/articles/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/ai-teacher': {
@@ -746,6 +786,8 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiAiTeacherRoute: ApiAiTeacherRoute,
+  ArticlesSlugRoute: ArticlesSlugRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
   ApiPublicHooksRefillPoolRoute: ApiPublicHooksRefillPoolRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
