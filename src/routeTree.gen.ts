@@ -40,10 +40,12 @@ import { Route as AuthenticatedAdminPoolRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminPaymentsRouteImport } from './routes/_authenticated/admin.payments'
 import { Route as AuthenticatedAdminGenerateRouteImport } from './routes/_authenticated/admin.generate'
 import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
+import { Route as AuthenticatedAdminArticlesIndexRouteImport } from './routes/_authenticated/admin.articles.index'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as ApiPublicHooksRefillPoolRouteImport } from './routes/api/public/hooks/refill-pool'
+import { Route as AuthenticatedAdminArticlesIdRouteImport } from './routes/_authenticated/admin.articles.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -207,6 +209,12 @@ const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminArticlesIndexRoute =
+  AuthenticatedAdminArticlesIndexRouteImport.update({
+    id: '/articles/',
+    path: '/articles/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -228,6 +236,12 @@ const ApiPublicHooksRefillPoolRoute =
     id: '/api/public/hooks/refill-pool',
     path: '/api/public/hooks/refill-pool',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedAdminArticlesIdRoute =
+  AuthenticatedAdminArticlesIdRouteImport.update({
+    id: '/articles/$id',
+    path: '/articles/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -261,10 +275,12 @@ export interface FileRoutesByFullPath {
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/tests/': typeof AuthenticatedTestsIndexRoute
+  '/admin/articles/$id': typeof AuthenticatedAdminArticlesIdRoute
   '/api/public/hooks/refill-pool': typeof ApiPublicHooksRefillPoolRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/admin/articles/': typeof AuthenticatedAdminArticlesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -296,10 +312,12 @@ export interface FileRoutesByTo {
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/tests': typeof AuthenticatedTestsIndexRoute
+  '/admin/articles/$id': typeof AuthenticatedAdminArticlesIdRoute
   '/api/public/hooks/refill-pool': typeof ApiPublicHooksRefillPoolRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/admin/articles': typeof AuthenticatedAdminArticlesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -334,10 +352,12 @@ export interface FileRoutesById {
   '/_authenticated/tests/$slug': typeof AuthenticatedTestsSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/tests/': typeof AuthenticatedTestsIndexRoute
+  '/_authenticated/admin/articles/$id': typeof AuthenticatedAdminArticlesIdRoute
   '/api/public/hooks/refill-pool': typeof ApiPublicHooksRefillPoolRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/_authenticated/admin/articles/': typeof AuthenticatedAdminArticlesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -372,10 +392,12 @@ export interface FileRouteTypes {
     | '/tests/$slug'
     | '/admin/'
     | '/tests/'
+    | '/admin/articles/$id'
     | '/api/public/hooks/refill-pool'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/admin/articles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -407,10 +429,12 @@ export interface FileRouteTypes {
     | '/tests/$slug'
     | '/admin'
     | '/tests'
+    | '/admin/articles/$id'
     | '/api/public/hooks/refill-pool'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/admin/articles'
   id:
     | '__root__'
     | '/'
@@ -444,10 +468,12 @@ export interface FileRouteTypes {
     | '/_authenticated/tests/$slug'
     | '/_authenticated/admin/'
     | '/_authenticated/tests/'
+    | '/_authenticated/admin/articles/$id'
     | '/api/public/hooks/refill-pool'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/_authenticated/admin/articles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -686,6 +712,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAboutRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/articles/': {
+      id: '/_authenticated/admin/articles/'
+      path: '/articles'
+      fullPath: '/admin/articles/'
+      preLoaderRoute: typeof AuthenticatedAdminArticlesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -714,6 +747,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksRefillPoolRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/articles/$id': {
+      id: '/_authenticated/admin/articles/$id'
+      path: '/articles/$id'
+      fullPath: '/admin/articles/$id'
+      preLoaderRoute: typeof AuthenticatedAdminArticlesIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
@@ -727,6 +767,8 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSyllabiRoute: typeof AuthenticatedAdminSyllabiRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminArticlesIdRoute: typeof AuthenticatedAdminArticlesIdRoute
+  AuthenticatedAdminArticlesIndexRoute: typeof AuthenticatedAdminArticlesIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
@@ -739,6 +781,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSyllabiRoute: AuthenticatedAdminSyllabiRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminArticlesIdRoute: AuthenticatedAdminArticlesIdRoute,
+  AuthenticatedAdminArticlesIndexRoute: AuthenticatedAdminArticlesIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
