@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Loader2, Check, MailCheck, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/password-input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { BrandMark } from "@/components/brand-logo";
@@ -30,9 +30,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const RESEND_COOLDOWN = 60;
-
-type Step = "form" | "verify-signup" | "verify-recovery";
+type Step = "form" | "sent-signup" | "sent-recovery";
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -42,13 +40,7 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-
   const [step, setStep] = useState<Step>("form");
-  const [code, setCode] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [cooldown, setCooldown] = useState(0);
-  const [otpError, setOtpError] = useState<string | null>(null);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Redirect away if already signed in
   useEffect(() => {
@@ -57,26 +49,8 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  const startCooldown = useCallback(() => {
-    setCooldown(RESEND_COOLDOWN);
-    if (timer.current) clearInterval(timer.current);
-    timer.current = setInterval(() => {
-      setCooldown((c) => {
-        if (c <= 1) {
-          if (timer.current) clearInterval(timer.current);
-          return 0;
-        }
-        return c - 1;
-      });
-    }, 1000);
-  }, []);
-
-  useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
-
   const setMode = (m: "signin" | "signup" | "reset") => {
     setStep("form");
-    setCode("");
-    setOtpError(null);
     navigate({ to: "/auth", search: { mode: m }, replace: true });
   };
 
@@ -88,11 +62,14 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: fullName } },
+          options: {
+            data: { full_name: fullName },
+            emailRedirectTo: `${window.location.origin}/dashboard`,
+          },
         });
         if (error) throw error;
         // Supabase obfuscates existing accounts: a user object with no identities
-        // means this email is already registered (and likely already verified).
+        // means this email is already registered.
         if (data.user && (data.user.identities?.length ?? 0) === 0) {
           toast.info("Account already exists", {
             description: "Please sign in with your email and password instead.",
@@ -104,19 +81,21 @@ function AuthPage() {
           navigate({ to: "/dashboard", replace: true });
           return;
         }
-        setStep("verify-signup");
-        setCode("");
-        startCooldown();
-        toast.success("Verification code sent", { description: `We emailed a 6-digit code to ${email}.` });
+        setStep("sent-signup");
+        toast.success("Verification email sent", {
+          description: `Open the link we emailed to ${email} to activate your account.`,
+        });
       } else if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
           if (/not confirmed|not verified/i.test(error.message)) {
-            await supabase.auth.resend({ type: "signup", email });
-            setStep("verify-signup");
-            setCode("");
-            startCooldown();
-            toast.info("Verify your email", { description: "We sent you a new 6-digit code." });
+            toast.error("Email not verified", {
+              description: "Please open the verification link we emailed you, then sign in again.",
+            });
+            return;
+          }
+          if (/invalid login credentials/i.test(error.message)) {
+            toast.error("Incorrect email or password");
             return;
           }
           throw error;
@@ -124,79 +103,15 @@ function AuthPage() {
         toast.success("Welcome back");
         navigate({ to: "/dashboard", replace: true });
       } else {
-        const { error } = await supabase.auth.resetPasswordForEmail(email);
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
         if (error) throw error;
-        setStep("verify-recovery");
-        setCode("");
-        setNewPassword("");
-        startCooldown();
-        toast.success("Reset code sent", { description: `Enter the 6-digit code we emailed to ${email}.` });
+        setStep("sent-recovery");
+        toast.success("Reset link sent", { description: `Check ${email} for the reset link.` });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-
-  async function handleResend() {
-    if (cooldown > 0) return;
-    setOtpError(null);
-    try {
-      const { error } =
-        step === "verify-signup"
-          ? await supabase.auth.resend({ type: "signup", email })
-          : await supabase.auth.resetPasswordForEmail(email);
-      if (error) throw error;
-      startCooldown();
-      toast.success("New code sent");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not resend the code");
-    }
-  }
-
-  async function handleVerify(e: React.FormEvent) {
-    e.preventDefault();
-    if (code.length !== 6) {
-      setOtpError("Enter the full 6-digit code.");
-      return;
-    }
-    if (step === "verify-recovery" && newPassword.length < 6) {
-      setOtpError("New password must be at least 6 characters.");
-      return;
-    }
-    setLoading(true);
-    setOtpError(null);
-    try {
-      let error: { message: string } | null = null;
-      if (step === "verify-signup") {
-        // The signup confirmation code is issued as type "signup"; some flows
-        // (e.g. resend after an email change) issue it as "email".
-        const first = await supabase.auth.verifyOtp({ email, token: code, type: "signup" });
-        if (first.error) {
-          const second = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
-          error = second.error ? first.error : null;
-        }
-      } else {
-        const res = await supabase.auth.verifyOtp({ email, token: code, type: "recovery" });
-        error = res.error;
-      }
-      if (error) throw new Error(error.message);
-
-
-      if (step === "verify-recovery") {
-        const { error: upErr } = await supabase.auth.updateUser({ password: newPassword });
-        if (upErr) throw upErr;
-        toast.success("Password updated", { description: "You're signed in with your new password." });
-      } else {
-        toast.success("Email verified", { description: "Your account is ready." });
-      }
-      navigate({ to: "/dashboard", replace: true });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Verification failed";
-      setOtpError(/expired|invalid/i.test(msg) ? "That code is invalid or expired. Request a new one." : msg);
-      setCode("");
     } finally {
       setLoading(false);
     }
@@ -222,7 +137,7 @@ function AuthPage() {
     }
   }
 
-  const isOtpStep = step !== "form";
+  const isSentStep = step !== "form";
 
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-2">
@@ -271,86 +186,30 @@ function AuthPage() {
 
         <div className="flex flex-1 items-center justify-center px-5 pb-12 sm:px-8">
           <div className="w-full max-w-sm">
-            {isOtpStep ? (
+            {isSentStep ? (
               <>
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <MailCheck className="h-6 w-6" />
                 </div>
                 <h1 className="mt-5 text-3xl font-extrabold tracking-tight">
-                  {step === "verify-signup" ? "Verify your email" : "Enter reset code"}
+                  {step === "sent-signup" ? "Check your email" : "Reset link sent"}
                 </h1>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  We sent a 6-digit code to <span className="font-medium text-foreground">{email}</span>.
-                  {step === "verify-signup" ? " Enter it once to activate your account." : " Then choose a new password."}
+                  We sent a link to <span className="font-medium text-foreground">{email}</span>.{" "}
+                  {step === "sent-signup"
+                    ? "Click it to verify your account, then continue setting up your preparation."
+                    : "Open it to set a new password."}
                 </p>
-
-                <form onSubmit={handleVerify} className="mt-7 space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="otp">Verification code</Label>
-                    <InputOTP
-                      id="otp"
-                      maxLength={6}
-                      value={code}
-                      onChange={(v) => {
-                        setCode(v);
-                        setOtpError(null);
-                      }}
-                      containerClassName="justify-between"
-                      autoFocus
-                    >
-                      <InputOTPGroup className="w-full justify-between gap-1.5 sm:gap-2">
-                        {[0, 1, 2, 3, 4, 5].map((i) => (
-                          <InputOTPSlot key={i} index={i} className="h-12 w-full rounded-md text-lg" />
-                        ))}
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </div>
-
-                  {step === "verify-recovery" && (
-                    <div className="space-y-1.5">
-                      <Label htmlFor="new-password">New password</Label>
-                      <Input
-                        id="new-password"
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder="••••••••"
-                        autoComplete="new-password"
-                        minLength={6}
-                        required
-                      />
-                    </div>
-                  )}
-
-                  {otpError && (
-                    <p role="alert" className="text-sm font-medium text-destructive">
-                      {otpError}
-                    </p>
-                  )}
-
-                  <Button type="submit" size="lg" className="w-full" disabled={loading || code.length !== 6}>
-                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {step === "verify-signup" ? "Verify & continue" : "Update password"}
-                  </Button>
-                </form>
-
-                <div className="mt-5 flex flex-col items-center gap-3 text-sm">
-                  <button
-                    type="button"
-                    onClick={handleResend}
-                    disabled={cooldown > 0}
-                    className="font-medium text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
-                  >
-                    {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMode(step === "verify-signup" ? "signup" : "signin")}
-                    className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary"
-                  >
-                    <ArrowLeft className="h-4 w-4" /> Use a different email
-                  </button>
-                </div>
+                <p className="mt-4 text-xs text-muted-foreground">
+                  Can’t find it? Check your spam folder.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setMode(step === "sent-signup" ? "signup" : "signin")}
+                  className="mt-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
+                >
+                  <ArrowLeft className="h-4 w-4" /> Use a different email
+                </button>
               </>
             ) : (
               <>
@@ -372,9 +231,9 @@ function AuthPage() {
                 </h1>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {mode === "signup"
-                    ? "One minute to set up. We'll email a 6-digit code to verify you."
+                    ? "One minute to set up. We'll email you a link to verify your account."
                     : mode === "reset"
-                      ? "We'll email you a 6-digit code to set a new password."
+                      ? "We'll email you a secure link to set a new password."
                       : "Sign in to continue with your AI teacher."}
                 </p>
 
@@ -445,9 +304,8 @@ function AuthPage() {
                           </button>
                         )}
                       </div>
-                      <Input
+                      <PasswordInput
                         id="password"
-                        type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
@@ -463,7 +321,7 @@ function AuthPage() {
                     {mode === "signup"
                       ? "Create free account"
                       : mode === "reset"
-                        ? "Send reset code"
+                        ? "Send reset link"
                         : "Sign in"}
                   </Button>
                 </form>
