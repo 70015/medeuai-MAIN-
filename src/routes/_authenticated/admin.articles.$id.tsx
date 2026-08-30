@@ -56,6 +56,7 @@ function ArticleEditor() {
   const [content, setContent] = useState("");
   const [metaTitle, setMetaTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
+  const [noindex, setNoindex] = useState(false);
   const [status, setStatus] = useState<"draft" | "published">("draft");
 
   useEffect(() => {
@@ -69,6 +70,7 @@ function ArticleEditor() {
     setContent(article.content ?? "");
     setMetaTitle(article.meta_title ?? "");
     setMetaDescription(article.meta_description ?? "");
+    setNoindex(Boolean(article.noindex));
     setStatus(article.status === "published" ? "published" : "draft");
   }, [article]);
 
@@ -88,6 +90,7 @@ function ArticleEditor() {
           status: nextStatus,
           meta_title: metaTitle,
           meta_description: metaDescription,
+          noindex,
         },
       }),
     onSuccess: (res, nextStatus) => {
@@ -267,6 +270,20 @@ function ArticleEditor() {
             {metaDescription.length}/160 characters
           </p>
         </div>
+        <label className="flex items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            checked={noindex}
+            onChange={(e) => setNoindex(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-input accent-primary"
+          />
+          <span>
+            Hide from search engines (noindex)
+            <span className="block text-xs text-muted-foreground">
+              Emits a noindex tag and removes the article from sitemap.xml.
+            </span>
+          </span>
+        </label>
       </Card>
     </div>
   );
