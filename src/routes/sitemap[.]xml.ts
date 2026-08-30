@@ -17,8 +17,45 @@ export const Route = createFileRoute("/sitemap.xml")({
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/about", changefreq: "monthly", priority: "0.7" },
+          { path: "/articles", changefreq: "daily", priority: "0.8" },
           { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
         ];
+
+        const { createClient } = await import("@supabase/supabase-js");
+        const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
+        const supabase = createClient(process.env['SUPABASE_URL']!, key, {
+          auth: { persistSession: false, autoRefreshToken: false },
+          global: {
+            fetch: (input, init) => {
+              const headers = new Headers(init?.headers);
+              if (key.startsWith("sb_") && headers.get("Authorization") === "Bearer " + key)
+                headers.delete("Authorization");
+              headers.set("apikey", key);
+              return fetch(input, { ...init, headers });
+            },
+          },
+        });
+
+        const pageSize = 1000;
+        for (let offset = 0; ; offset += pageSize) {
+          const { data, error } = await supabase
+            .from("articles")
+            .select("slug, updated_at")
+            .eq("status", "published")
+            .eq("noindex", false)
+            .order("id")
+            .range(offset, offset + pageSize - 1);
+          if (error) throw error;
+          entries.push(
+            ...(data ?? []).map((a) => ({
+              path: `/articles/${encodeURIComponent(a.slug)}`,
+              lastmod: a.updated_at ?? undefined,
+              changefreq: "monthly" as const,
+              priority: "0.6",
+            })),
+          );
+          if (!data || data.length < pageSize) break;
+        }
 
         const urls = entries.map((e) =>
           [
