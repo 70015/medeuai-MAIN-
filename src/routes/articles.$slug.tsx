@@ -16,7 +16,7 @@ const articleQuery = (slug: string) =>
 export const Route = createFileRoute("/articles/$slug")({
   loader: ({ context, params }) =>
     context.queryClient.ensureQueryData(articleQuery(params.slug)),
-  head: ({ loaderData }) => {
+  head: ({ params, loaderData }) => {
     if (!loaderData) {
       return {
         meta: [
@@ -31,6 +31,8 @@ export const Route = createFileRoute("/articles/$slug")({
       `Read "${loaderData.title}" on MedEu.Ai.`;
     const pageTitle =
       loaderData.meta_title ?? `${loaderData.title} — MedEu.Ai`;
+    const url = `https://medeuai.in/articles/${params.slug}`;
+    const noindex = Boolean(loaderData.noindex);
     return {
       meta: [
         { title: pageTitle },
@@ -38,7 +40,13 @@ export const Route = createFileRoute("/articles/$slug")({
         { property: "og:title", content: pageTitle },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: pageTitle },
+        { name: "twitter:description", content: desc },
+        ...(noindex
+          ? [{ name: "robots", content: "noindex, nofollow" }]
+          : [{ name: "robots", content: "index, follow" }]),
         ...(loaderData.featured_image
           ? [
               { property: "og:image", content: loaderData.featured_image },
@@ -46,6 +54,42 @@ export const Route = createFileRoute("/articles/$slug")({
             ]
           : []),
       ],
+      links: [{ rel: "canonical", href: url }],
+      ...(noindex
+        ? {}
+        : {
+            scripts: [
+              {
+                type: "application/ld+json",
+                children: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "Article",
+                  headline: loaderData.title,
+                  description: desc,
+                  mainEntityOfPage: { "@type": "WebPage", "@id": url },
+                  url,
+                  articleSection: loaderData.category,
+                  ...(loaderData.featured_image
+                    ? { image: loaderData.featured_image }
+                    : {}),
+                  ...(loaderData.published_at
+                    ? { datePublished: loaderData.published_at }
+                    : {}),
+                  ...(loaderData.updated_at
+                    ? { dateModified: loaderData.updated_at }
+                    : {}),
+                  publisher: {
+                    "@type": "Organization",
+                    name: "MedEu.Ai",
+                    logo: {
+                      "@type": "ImageObject",
+                      url: "https://medeuai.in/favicon.png",
+                    },
+                  },
+                }),
+              },
+            ],
+          }),
     };
   },
   component: ArticlePage,
