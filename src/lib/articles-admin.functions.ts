@@ -16,7 +16,7 @@ const CATEGORIES = [
 export const ARTICLE_CATEGORIES = CATEGORIES;
 
 const ADMIN_COLUMNS =
-  "id, title, slug, excerpt, content, featured_image, category, status, published_at, created_at, updated_at, meta_title, meta_description" as const;
+  "id, title, slug, excerpt, content, featured_image, category, status, published_at, created_at, updated_at, meta_title, meta_description, noindex" as const;
 
 async function assertAdmin(supabase: any, userId: string) {
   const { data: isAdmin } = await supabase.rpc("has_role", {
@@ -77,6 +77,7 @@ const SaveInput = z.object({
   status: z.enum(["draft", "published"]),
   meta_title: z.string().optional(),
   meta_description: z.string().optional(),
+  noindex: z.boolean().optional(),
 });
 
 export const saveArticle = createServerFn({ method: "POST" })
@@ -108,6 +109,7 @@ export const saveArticle = createServerFn({ method: "POST" })
       status: data.status,
       meta_title: data.meta_title?.trim() || null,
       meta_description: data.meta_description?.trim() || null,
+      noindex: data.noindex ?? false,
       published_at:
         data.status === "published" ? new Date().toISOString() : null,
     };

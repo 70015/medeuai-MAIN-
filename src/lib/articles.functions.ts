@@ -18,7 +18,7 @@ function publicClient() {
 }
 
 const ARTICLE_COLUMNS =
-  "id, title, slug, excerpt, content, featured_image, category, published_at, updated_at, meta_title, meta_description" as const;
+  "id, title, slug, excerpt, content, featured_image, category, published_at, updated_at, meta_title, meta_description, noindex" as const;
 
 export const listPublishedArticles = createServerFn({ method: "GET" }).handler(
   async () => {

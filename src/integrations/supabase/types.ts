@@ -411,6 +411,7 @@ export type Database = {
           id: string
           meta_description: string | null
           meta_title: string | null
+          noindex: boolean
           published_at: string | null
           slug: string
           status: string
@@ -426,6 +427,7 @@ export type Database = {
           id?: string
           meta_description?: string | null
           meta_title?: string | null
+          noindex?: boolean
           published_at?: string | null
           slug: string
           status?: string
@@ -441,6 +443,7 @@ export type Database = {
           id?: string
           meta_description?: string | null
           meta_title?: string | null
+          noindex?: boolean
           published_at?: string | null
           slug?: string
           status?: string

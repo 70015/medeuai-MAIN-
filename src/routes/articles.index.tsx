@@ -16,8 +16,10 @@ export const Route = createFileRoute("/articles/")({
       { property: "og:title", content: "Articles — MedEu.Ai" },
       { property: "og:description", content: "Exam preparation articles, study guides, and AI learning resources from MedEu.Ai." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://medeuai.in/articles" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://medeuai.in/articles" }],
   }),
   component: ArticlesPage,
 });
