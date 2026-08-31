@@ -28,6 +28,7 @@ import { Route as AuthenticatedAiTeacherRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedTestsIndexRouteImport } from './routes/_authenticated/tests.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as ApiPublicArticleImageRouteImport } from './routes/api/public/article-image'
 import { Route as AuthenticatedTestsSlugRouteImport } from './routes/_authenticated/tests.$slug'
 import { Route as AuthenticatedResultsAttemptIdRouteImport } from './routes/_authenticated/results.$attemptId'
 import { Route as AuthenticatedPayPlanRouteImport } from './routes/_authenticated/pay.$plan'
@@ -141,6 +142,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const ApiPublicArticleImageRoute = ApiPublicArticleImageRouteImport.update({
+  id: '/api/public/article-image',
+  path: '/api/public/article-image',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedTestsSlugRoute = AuthenticatedTestsSlugRouteImport.update({
   id: '/tests/$slug',
@@ -273,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
+  '/api/public/article-image': typeof ApiPublicArticleImageRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/tests/': typeof AuthenticatedTestsIndexRoute
   '/admin/articles/$id': typeof AuthenticatedAdminArticlesIdRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByTo {
   '/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/tests/$slug': typeof AuthenticatedTestsSlugRoute
+  '/api/public/article-image': typeof ApiPublicArticleImageRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/tests': typeof AuthenticatedTestsIndexRoute
   '/admin/articles/$id': typeof AuthenticatedAdminArticlesIdRoute
@@ -350,6 +358,7 @@ export interface FileRoutesById {
   '/_authenticated/pay/$plan': typeof AuthenticatedPayPlanRoute
   '/_authenticated/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/_authenticated/tests/$slug': typeof AuthenticatedTestsSlugRoute
+  '/api/public/article-image': typeof ApiPublicArticleImageRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/tests/': typeof AuthenticatedTestsIndexRoute
   '/_authenticated/admin/articles/$id': typeof AuthenticatedAdminArticlesIdRoute
@@ -390,6 +399,7 @@ export interface FileRouteTypes {
     | '/pay/$plan'
     | '/results/$attemptId'
     | '/tests/$slug'
+    | '/api/public/article-image'
     | '/admin/'
     | '/tests/'
     | '/admin/articles/$id'
@@ -427,6 +437,7 @@ export interface FileRouteTypes {
     | '/pay/$plan'
     | '/results/$attemptId'
     | '/tests/$slug'
+    | '/api/public/article-image'
     | '/admin'
     | '/tests'
     | '/admin/articles/$id'
@@ -466,6 +477,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pay/$plan'
     | '/_authenticated/results/$attemptId'
     | '/_authenticated/tests/$slug'
+    | '/api/public/article-image'
     | '/_authenticated/admin/'
     | '/_authenticated/tests/'
     | '/_authenticated/admin/articles/$id'
@@ -487,6 +499,7 @@ export interface RootRouteChildren {
   ApiAiTeacherRoute: typeof ApiAiTeacherRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
+  ApiPublicArticleImageRoute: typeof ApiPublicArticleImageRoute
   ApiPublicHooksRefillPoolRoute: typeof ApiPublicHooksRefillPoolRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -627,6 +640,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/api/public/article-image': {
+      id: '/api/public/article-image'
+      path: '/api/public/article-image'
+      fullPath: '/api/public/article-image'
+      preLoaderRoute: typeof ApiPublicArticleImageRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/tests/$slug': {
       id: '/_authenticated/tests/$slug'
@@ -832,6 +852,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiTeacherRoute: ApiAiTeacherRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
+  ApiPublicArticleImageRoute: ApiPublicArticleImageRoute,
   ApiPublicHooksRefillPoolRoute: ApiPublicHooksRefillPoolRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,

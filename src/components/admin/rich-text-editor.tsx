@@ -3,7 +3,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { TableKit } from "@tiptap/extension-table";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Bold,
   Italic,
@@ -16,6 +16,7 @@ import {
   Link2,
   Link2Off,
   ImagePlus,
+  Megaphone,
   Table as TableIcon,
   Pilcrow,
   Undo2,
@@ -23,9 +24,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const PLACEHOLDER_IMAGE =
-  "https://placehold.co/1200x630/04211C/ffffff?text=MedEu.Ai";
+import { MediaDialog } from "@/components/admin/media-dialog";
+import { LinkDialog } from "@/components/admin/link-dialog";
+import { CtaBlock } from "@/components/admin/cta-block";
 
 type Props = {
   value: string;
@@ -33,6 +34,9 @@ type Props = {
 };
 
 export function RichTextEditor({ value, onChange }: Props) {
+  const [mediaOpen, setMediaOpen] = useState(false);
+  const [linkOpen, setLinkOpen] = useState(false);
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -40,6 +44,7 @@ export function RichTextEditor({ value, onChange }: Props) {
       Link.configure({ openOnClick: false, autolink: true }),
       Image,
       TableKit.configure({ table: { resizable: false } }),
+      CtaBlock,
     ],
     content: value || "",
     editorProps: {
@@ -50,6 +55,7 @@ export function RichTextEditor({ value, onChange }: Props) {
     },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   });
+
 
   // Load server content once it arrives (e.g. editing an existing article).
   useEffect(() => {
@@ -91,8 +97,9 @@ export function RichTextEditor({ value, onChange }: Props) {
   );
 
   return (
-    <div className="overflow-hidden rounded-md border border-border/60 bg-card/40">
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-border/60 px-2 py-1.5">
+    <div className="rounded-md border border-border/60 bg-card/40">
+      <div className="sticky top-0 z-20 flex flex-wrap items-center gap-0.5 rounded-t-md border-b border-border/60 bg-card/95 px-2 py-1.5 backdrop-blur">
+
         <Tool
           icon={Pilcrow}
           label="Paragraph"
@@ -154,23 +161,7 @@ export function RichTextEditor({ value, onChange }: Props) {
           icon={Link2}
           label="Add link"
           active={editor.isActive("link")}
-          onClick={() => {
-            const previous = editor.getAttributes("link").href as
-              | string
-              | undefined;
-            const url = window.prompt("Link URL", previous ?? "https://");
-            if (url === null) return;
-            if (url.trim() === "") {
-              editor.chain().focus().unsetLink().run();
-              return;
-            }
-            editor
-              .chain()
-              .focus()
-              .extendMarkRange("link")
-              .setLink({ href: url.trim() })
-              .run();
-          }}
+          onClick={() => setLinkOpen(true)}
         />
         <Tool
           icon={Link2Off}
@@ -180,19 +171,16 @@ export function RichTextEditor({ value, onChange }: Props) {
         <Tool
           icon={ImagePlus}
           label="Insert image"
-          onClick={() => {
-            const url = window.prompt(
-              "Image URL (leave empty to insert a placeholder)",
-              "",
-            );
-            if (url === null) return;
-            editor
-              .chain()
-              .focus()
-              .setImage({ src: url.trim() || PLACEHOLDER_IMAGE })
-              .run();
-          }}
+          onClick={() => setMediaOpen(true)}
         />
+        <Tool
+          icon={Megaphone}
+          label="Insert CTA block"
+          onClick={() =>
+            editor.chain().focus().insertContent({ type: "ctaBlock" }).run()
+          }
+        />
+
         <Tool
           icon={TableIcon}
           label="Insert table"
@@ -216,7 +204,47 @@ export function RichTextEditor({ value, onChange }: Props) {
           onClick={() => editor.chain().focus().redo().run()}
         />
       </div>
-      <EditorContent editor={editor} />
+      <div className="max-h-[65vh] overflow-y-auto">
+        <EditorContent editor={editor} />
+      </div>
+
+      <MediaDialog
+        open={mediaOpen}
+        onOpenChange={setMediaOpen}
+        onPick={({ src, alt, caption }) => {
+          const chain = editor.chain().focus();
+          chain.setImage({ src, alt }).run();
+          if (caption) {
+            editor
+              .chain()
+              .focus()
+              .insertContent(`<p><em>${caption}</em></p>`)
+              .run();
+          }
+        }}
+      />
+      <LinkDialog
+        open={linkOpen}
+        onOpenChange={setLinkOpen}
+        initialHref={editor.getAttributes("link").href as string | undefined}
+        onPick={(href) => {
+          if (!href) {
+            editor.chain().focus().unsetLink().run();
+            return;
+          }
+          const external = /^https?:\/\//i.test(href);
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange("link")
+            .setLink({
+              href,
+              ...(external ? { target: "_blank", rel: "noopener noreferrer" } : { target: null }),
+            })
+            .run();
+        }}
+      />
     </div>
   );
+
 }
