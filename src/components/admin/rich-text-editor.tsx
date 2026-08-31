@@ -3,7 +3,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { TableKit } from "@tiptap/extension-table";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Bold,
   Italic,
@@ -16,6 +16,7 @@ import {
   Link2,
   Link2Off,
   ImagePlus,
+  Megaphone,
   Table as TableIcon,
   Pilcrow,
   Undo2,
@@ -23,9 +24,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const PLACEHOLDER_IMAGE =
-  "https://placehold.co/1200x630/04211C/ffffff?text=MedEu.Ai";
+import { MediaDialog } from "@/components/admin/media-dialog";
+import { LinkDialog } from "@/components/admin/link-dialog";
+import { CtaBlock } from "@/components/admin/cta-block";
 
 type Props = {
   value: string;
@@ -33,6 +34,9 @@ type Props = {
 };
 
 export function RichTextEditor({ value, onChange }: Props) {
+  const [mediaOpen, setMediaOpen] = useState(false);
+  const [linkOpen, setLinkOpen] = useState(false);
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -40,6 +44,7 @@ export function RichTextEditor({ value, onChange }: Props) {
       Link.configure({ openOnClick: false, autolink: true }),
       Image,
       TableKit.configure({ table: { resizable: false } }),
+      CtaBlock,
     ],
     content: value || "",
     editorProps: {
@@ -50,6 +55,7 @@ export function RichTextEditor({ value, onChange }: Props) {
     },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   });
+
 
   // Load server content once it arrives (e.g. editing an existing article).
   useEffect(() => {
