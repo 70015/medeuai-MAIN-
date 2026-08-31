@@ -97,8 +97,9 @@ export function RichTextEditor({ value, onChange }: Props) {
   );
 
   return (
-    <div className="overflow-hidden rounded-md border border-border/60 bg-card/40">
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-border/60 px-2 py-1.5">
+    <div className="rounded-md border border-border/60 bg-card/40">
+      <div className="sticky top-0 z-20 flex flex-wrap items-center gap-0.5 rounded-t-md border-b border-border/60 bg-card/95 px-2 py-1.5 backdrop-blur">
+
         <Tool
           icon={Pilcrow}
           label="Paragraph"
