@@ -1,7 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { getPublishedArticle } from "@/lib/articles.functions";
+import { queryOptions, useSuspenseQuery, useQuery } from "@tanstack/react-query";
+import {
+  getPublishedArticle,
+  listPublishedArticles,
+} from "@/lib/articles.functions";
 import { Button } from "@/components/ui/button";
+import { BrandLockup, SocialLinks } from "@/components/brand-logo";
 
 const articleQuery = (slug: string) =>
   queryOptions({
@@ -12,6 +16,7 @@ const articleQuery = (slug: string) =>
       return article;
     },
   });
+
 
 export const Route = createFileRoute("/articles/$slug")({
   loader: ({ context, params }) =>
