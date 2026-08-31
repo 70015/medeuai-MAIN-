@@ -160,23 +160,7 @@ export function RichTextEditor({ value, onChange }: Props) {
           icon={Link2}
           label="Add link"
           active={editor.isActive("link")}
-          onClick={() => {
-            const previous = editor.getAttributes("link").href as
-              | string
-              | undefined;
-            const url = window.prompt("Link URL", previous ?? "https://");
-            if (url === null) return;
-            if (url.trim() === "") {
-              editor.chain().focus().unsetLink().run();
-              return;
-            }
-            editor
-              .chain()
-              .focus()
-              .extendMarkRange("link")
-              .setLink({ href: url.trim() })
-              .run();
-          }}
+          onClick={() => setLinkOpen(true)}
         />
         <Tool
           icon={Link2Off}
@@ -186,19 +170,16 @@ export function RichTextEditor({ value, onChange }: Props) {
         <Tool
           icon={ImagePlus}
           label="Insert image"
-          onClick={() => {
-            const url = window.prompt(
-              "Image URL (leave empty to insert a placeholder)",
-              "",
-            );
-            if (url === null) return;
-            editor
-              .chain()
-              .focus()
-              .setImage({ src: url.trim() || PLACEHOLDER_IMAGE })
-              .run();
-          }}
+          onClick={() => setMediaOpen(true)}
         />
+        <Tool
+          icon={Megaphone}
+          label="Insert CTA block"
+          onClick={() =>
+            editor.chain().focus().insertContent({ type: "ctaBlock" }).run()
+          }
+        />
+
         <Tool
           icon={TableIcon}
           label="Insert table"
