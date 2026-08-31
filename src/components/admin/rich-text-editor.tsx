@@ -203,7 +203,47 @@ export function RichTextEditor({ value, onChange }: Props) {
           onClick={() => editor.chain().focus().redo().run()}
         />
       </div>
-      <EditorContent editor={editor} />
+      <div className="max-h-[65vh] overflow-y-auto">
+        <EditorContent editor={editor} />
+      </div>
+
+      <MediaDialog
+        open={mediaOpen}
+        onOpenChange={setMediaOpen}
+        onPick={({ src, alt, caption }) => {
+          const chain = editor.chain().focus();
+          chain.setImage({ src, alt }).run();
+          if (caption) {
+            editor
+              .chain()
+              .focus()
+              .insertContent(`<p><em>${caption}</em></p>`)
+              .run();
+          }
+        }}
+      />
+      <LinkDialog
+        open={linkOpen}
+        onOpenChange={setLinkOpen}
+        initialHref={editor.getAttributes("link").href as string | undefined}
+        onPick={(href) => {
+          if (!href) {
+            editor.chain().focus().unsetLink().run();
+            return;
+          }
+          const external = /^https?:\/\//i.test(href);
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange("link")
+            .setLink({
+              href,
+              ...(external ? { target: "_blank", rel: "noopener noreferrer" } : { target: null }),
+            })
+            .run();
+        }}
+      />
     </div>
   );
+
 }
