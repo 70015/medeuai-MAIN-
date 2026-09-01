@@ -9,7 +9,7 @@ import { ManualUpiPayments } from "@/components/admin/manual-upi-payments";
 import { getAdminStats } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
-  head: () => ({ meta: [{ title: "Admin Dashboard — MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "Admin Dashboard | MedEuAi" }] }),
   component: AdminDashboard,
 });
 
@@ -73,7 +73,7 @@ function AdminDashboard() {
           </Link>
         </div>
         <p className="text-sm text-muted-foreground">
-          Payment settings &amp; requests — configure your UPI ID, plan prices and QR codes,
+          Payment settings &amp; requests, configure your UPI ID, plan prices and QR codes,
           and verify or reject pending payment requests from students.
         </p>
         <ManualUpiPayments />

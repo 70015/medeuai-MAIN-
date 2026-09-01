@@ -1,8 +1,8 @@
-# MedEu.Ai
+# MedEuAi
 
-> MedEu.Ai is a 24/7 personal AI teacher and educational platform for Indian government exam preparation — SSC, WBCS, WBPSC, Railway, Banking and Police — in Bengali, Hindi and English.
+> MedEuAi is a 24/7 personal AI teacher and educational platform for Indian government exam preparation, SSC, WBCS, WBPSC, Railway, Banking and Police, in Bengali, Hindi and English.
 
-MedEu.Ai combines an always-available AI teacher with AI-generated mock tests, previous-year questions and performance analytics, explaining every wrong answer in the learner's chosen medium.
+MedEuAi combines an always-available AI teacher with AI-generated mock tests, previous-year questions and performance analytics, explaining every wrong answer in the learner's chosen medium.
 
 - Founder: Rahamat Ali
 - Support: hello.medeu.ai@gmail.com
@@ -10,5 +10,5 @@ MedEu.Ai combines an always-available AI teacher with AI-generated mock tests, p
 - Site: https://medeuai.in
 
 ## Pages
-- [Home](/): Overview of MedEu.Ai's AI teacher, exams and pricing.
+- [Home](/): Overview of MedEuAi's AI teacher, exams and pricing.
 - [About](/about): Mission, founder and principles behind the platform.

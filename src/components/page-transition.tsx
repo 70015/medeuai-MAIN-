@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 
 /**
  * Lightweight route-change fade. Kept short (150ms) so navigation feels
- * snappy — a longer transition made the app feel sluggish.
+ * snappy, a longer transition made the app feel sluggish.
  */
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

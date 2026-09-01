@@ -12,13 +12,13 @@ import { useQuery } from "@tanstack/react-query";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About MedEu.Ai — AI Exam Prep for India" },
+      { title: "About MedEuAi, AI Exam Prep for India" },
       {
         name: "description",
         content:
-          "MedEu.Ai is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
+          "MedEuAi is an AI-powered mock-test platform for Indian government exams, built for Bengali, Hindi and English aspirants.",
       },
-      { property: "og:title", content: "About MedEu.Ai" },
+      { property: "og:title", content: "About MedEuAi" },
       {
         property: "og:description",
         content:
@@ -27,11 +27,11 @@ export const Route = createFileRoute("/about")({
       { property: "og:url", content: "https://medeuai.in/about" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "About MedEu.Ai" },
+      { name: "twitter:title", content: "About MedEuAi" },
       {
         name: "twitter:description",
         content:
-          "The mission, founder and principles behind MedEu.Ai — your personal AI teacher, 24/7.",
+          "The mission, founder and principles behind MedEuAi, your personal AI teacher, 24/7.",
       },
     ],
     links: [{ rel: "canonical", href: "https://medeuai.in/about" }],
@@ -41,11 +41,11 @@ export const Route = createFileRoute("/about")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "AboutPage",
-          name: "About MedEu.Ai",
+          name: "About MedEuAi",
           url: "https://medeuai.in/about",
           about: {
             "@type": "EducationalOrganization",
-            name: "MedEu.Ai",
+            name: "MedEuAi",
             url: "https://medeuai.in",
             email: "hello.medeu.ai@gmail.com",
             founder: { "@type": "Person", name: "Rahamat Ali" },
@@ -58,12 +58,12 @@ export const Route = createFileRoute("/about")({
 });
 
 const values = [
-  { icon: Target, title: "Mission", desc: "Make rank-worthy exam preparation accessible, affordable and personalised for every Indian aspirant — regardless of medium or city." },
-  { icon: Brain, title: "Vision", desc: "An AI-powered teacher in every aspirant's pocket — explaining, practising and planning until selection day." },
-  { icon: Languages, title: "Built trilingual", desc: "Every question, explanation and analytic in English, বাংলা and हिन्दी. Bengali-medium first — a gap no big platform fills." },
+  { icon: Target, title: "Mission", desc: "Make rank-worthy exam preparation accessible, affordable and personalised for every Indian aspirant, regardless of medium or city." },
+  { icon: Brain, title: "Vision", desc: "An AI-powered teacher in every aspirant's pocket, explaining, practising and planning until selection day." },
+  { icon: Languages, title: "Built trilingual", desc: "Every question, explanation and analytic in English, বাংলা and हिन्दी. Bengali-medium first, a gap no big platform fills." },
   { icon: ShieldCheck, title: "Private by default", desc: "Your attempts, notes and progress stay yours. Row-level security on every record, encrypted at rest and in transit." },
   { icon: Trophy, title: "Outcomes, not vanity", desc: "We measure success by your rank, not by hours spent. Analytics tell you exactly what to revise next." },
-  { icon: Sparkles, title: "Made in India", desc: "Designed for Indian exam patterns — SSC, WBCS, WBPSC, Railway, Banking, Police and more — by a small, focused team." },
+  { icon: Sparkles, title: "Made in India", desc: "Designed for Indian exam patterns, SSC, WBCS, WBPSC, Railway, Banking, Police and more, by a small, focused team." },
 ];
 
 function useAboutContent() {
@@ -109,7 +109,7 @@ function AboutPage() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
             {about?.hero_subtitle ??
-              "MedEu.Ai is an AI-first exam preparation platform built for SSC, WBCS, WBPSC, Railway, Banking, Police and other Indian government exams."}
+              "MedEuAi is an AI-first exam preparation platform built for SSC, WBCS, WBPSC, Railway, Banking, Police and other Indian government exams."}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">
@@ -130,7 +130,7 @@ function AboutPage() {
               {founderImg ? (
                 <img
                   src={founderImg}
-                  alt={about?.founder_name ? `${about.founder_name}, Founder of MedEu.Ai` : "Founder of MedEu.Ai"}
+                  alt={about?.founder_name ? `${about.founder_name}, Founder of MedEuAi` : "Founder of MedEuAi"}
                   className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
                 />
               ) : (
@@ -157,7 +157,7 @@ function AboutPage() {
         <div className="container mx-auto max-w-6xl px-4">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">What we stand for</h2>
-            <p className="mt-3 text-muted-foreground">Six principles shape every decision we make about MedEu.Ai.</p>
+            <p className="mt-3 text-muted-foreground">Six principles shape every decision we make about MedEuAi.</p>
           </div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((v) => (
@@ -181,7 +181,7 @@ function AboutPage() {
               ? (about!.story_paragraphs as string[]).map((p, i) => <p key={i}>{p}</p>)
               : (
                 <p>
-                  MedEu.Ai started with a simple frustration — the best test-prep platforms in India are
+                  MedEuAi started with a simple frustration, the best test-prep platforms in India are
                   expensive, English-only, and built for metro students. Aspirants from Bengal, Bihar and small
                   towns deserve the same quality of preparation in their language.
                 </p>
@@ -197,7 +197,7 @@ function AboutPage() {
           </div>
           <h2 className="mt-5 text-2xl font-bold tracking-tight">Help &amp; support</h2>
           <p className="mt-2 text-muted-foreground">
-            Have a question, feedback, or need help with anything on MedEu.Ai?
+            Have a question, feedback, or need help with anything on MedEuAi?
           </p>
           <a
             href="mailto:hello.medeu.ai@gmail.com"
@@ -231,10 +231,10 @@ function AboutPage() {
           <div className="mt-4 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 text-xs text-muted-foreground sm:flex-row">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <BrandMark className="h-7 w-7" />
-              <span>MedEu.Ai · Your Personal AI Teacher, 24/7.</span>
+              <span>MedEuAi · Your Personal AI Teacher, 24/7.</span>
             </div>
             <div className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} MedEu.Ai. All rights reserved.
+              © {new Date().getFullYear()} MedEuAi. All rights reserved.
             </div>
           </div>
         </div>

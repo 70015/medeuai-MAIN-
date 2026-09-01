@@ -11,7 +11,7 @@ import { formatSeconds, localize, type Lang } from "@/lib/exam";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/results/$attemptId")({
-  head: () => ({ meta: [{ title: "Test analysis | MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "Test analysis | MedEuAi" }] }),
   component: ResultsPage,
 });
 
@@ -160,7 +160,7 @@ function ResultsPage() {
           </p>
         ) : weakAreas.length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">
-            Nothing weak here — you answered every section correctly. Try a harder paper.
+            Nothing weak here, you answered every section correctly. Try a harder paper.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-border border-y border-border">
@@ -186,7 +186,7 @@ function ResultsPage() {
         <h2 className="text-lg font-semibold tracking-tight">Recommended practice</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           {weakAreas.length
-            ? `Start with ${weakAreas[0].label} — it was your lowest-scoring area in this paper.`
+            ? `Start with ${weakAreas[0].label}, it was your lowest-scoring area in this paper.`
             : "Keep the momentum: attempt another full paper under timed conditions."}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">

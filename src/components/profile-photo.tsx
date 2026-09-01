@@ -15,7 +15,7 @@ import {
 
 /**
  * Per-user profile photo. Files live in the private `avatars` bucket under
- * `<user id>/…`, and `profiles.avatar_url` stores that path — the same field
+ * `<user id>/…`, and `profiles.avatar_url` stores that path, the same field
  * already used everywhere an avatar is shown.
  */
 export function ProfilePhoto({
@@ -154,7 +154,7 @@ export function ProfilePhoto({
           </Button>
         )}
         <p className="mt-2 text-xs text-white/50">
-          {file ? "Preview shown — save to apply." : "JPG, PNG or WebP · up to 5 MB."}
+          {file ? "Preview shown, save to apply." : "JPG, PNG or WebP · up to 5 MB."}
         </p>
         {error && <p className="mt-1 text-xs font-medium text-white">{error}</p>}
       </div>

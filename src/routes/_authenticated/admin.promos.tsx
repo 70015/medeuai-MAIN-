@@ -26,7 +26,7 @@ import {
 } from "@/lib/promo.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/promos")({
-  head: () => ({ meta: [{ title: "Promo Codes — Admin" }] }),
+  head: () => ({ meta: [{ title: "Promo Codes, Admin" }] }),
   component: PromosPage,
 });
 

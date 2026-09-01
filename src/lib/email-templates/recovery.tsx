@@ -49,7 +49,7 @@ export const RecoveryEmail = ({ siteName, token }: RecoveryEmailProps) => (
         ) : null}
         <Text style={footer}>
           This code expires shortly. If you didn't request a password reset,
-          you can safely ignore this email — your password will not be changed.
+          you can safely ignore this email, your password will not be changed.
         </Text>
       </Container>
     </Body>

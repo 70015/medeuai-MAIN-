@@ -15,7 +15,7 @@ export const Route = createFileRoute("/api/public/hooks/refill-pool")({
       POST: async ({ request }) => {
         // Auth: require a server-only shared secret. We accept either a
         // dedicated CRON_SECRET or the service role key (used by pg_cron).
-        // The Supabase publishable/anon key is NOT accepted — it is exposed
+        // The Supabase publishable/anon key is NOT accepted, it is exposed
         // in the client bundle and cannot be treated as a secret.
         const provided =
           request.headers.get("x-cron-secret") ??

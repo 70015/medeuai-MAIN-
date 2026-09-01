@@ -11,7 +11,7 @@ import { formatSeconds, localize, type Lang } from "@/lib/exam";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/attempt/$attemptId")({
-  head: () => ({ meta: [{ title: "Test in progress | MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "Test in progress | MedEuAi" }] }),
   component: AttemptPage,
 });
 
@@ -359,7 +359,7 @@ function AttemptPage() {
             </Button>
           </div>
 
-          {/* Prev / Next — desktop inline, mobile sticky */}
+          {/* Prev / Next, desktop inline, mobile sticky */}
           <div className="mt-6 hidden items-center justify-between gap-3 lg:flex">
             <Button variant="outline" disabled={index === 0} onClick={() => setIndex((i) => i - 1)}>
               <ChevronLeft className="mr-1 h-4 w-4" /> Previous

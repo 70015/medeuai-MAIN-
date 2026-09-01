@@ -30,13 +30,13 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/_authenticated/tests/")({
   head: () => ({
     meta: [
-      { title: "Practice & Mock Tests | MedEu.Ai" },
+      { title: "Practice & Mock Tests | MedEuAi" },
       {
         name: "description",
         content:
-          "Practice full-length mock tests for SSC, WBCS, WBPSC, Railway, Banking and Police exams with instant analysis on MedEu.Ai.",
+          "Practice full-length mock tests for SSC, WBCS, WBPSC, Railway, Banking and Police exams with instant analysis on MedEuAi.",
       },
-      { property: "og:title", content: "Practice & Mock Tests | MedEu.Ai" },
+      { property: "og:title", content: "Practice & Mock Tests | MedEuAi" },
       {
         property: "og:description",
         content: "Exam-serious mock tests with instant scoring, weak-area analysis and AI explanations.",

@@ -32,7 +32,7 @@ export const getPaymentSettings = createServerFn({ method: "GET" })
       .maybeSingle();
     if (error) throw new Error(error.message);
     return {
-      merchantName: data?.merchant_name ?? "MedEu.Ai",
+      merchantName: data?.merchant_name ?? "MedEuAi",
       upiId: data?.upi_id ?? "",
       monthlyPriceInr: data?.monthly_price_inr ?? 0,
       yearlyPriceInr: data?.yearly_price_inr ?? 0,

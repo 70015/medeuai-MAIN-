@@ -29,7 +29,7 @@ type CtaAttrs = {
 
 const DEFAULTS: CtaAttrs = {
   heading: "Ready to prepare smarter?",
-  text: "Learn, practice and improve with MedEu.Ai.",
+  text: "Learn, practice and improve with MedEuAi.",
   buttonText: "Try MedEuAi",
   href: "/auth",
   visible: true,

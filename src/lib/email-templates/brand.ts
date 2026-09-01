@@ -1,4 +1,4 @@
-// Shared MedEu.Ai email brand styles. Body background must stay #ffffff.
+// Shared MedEuAi email brand styles. Body background must stay #ffffff.
 
 export const brand = {
   deepGreen: '#04211C',

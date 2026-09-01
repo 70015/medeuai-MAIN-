@@ -1,7 +1,7 @@
 /**
  * Android APK download config.
  *
- * ▶ OWNER: ONE LINE TO GO LIVE — paste the public HTTPS link of your signed
+ * ▶ OWNER: ONE LINE TO GO LIVE, paste the public HTTPS link of your signed
  *   release APK into APK_URL below (see ANDROID_RELEASE.md), e.g.
  *     export const APK_URL = "https://medeu-ai.lovable.app/downloads/medeu-ai.apk";
  *

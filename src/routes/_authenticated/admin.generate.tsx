@@ -21,7 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { generateAIQuestions } from "@/lib/ai-questions.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/generate")({
-  head: () => ({ meta: [{ title: "AI Generate — MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "AI Generate | MedEuAi" }] }),
   component: GeneratePage,
 });
 
@@ -85,7 +85,7 @@ function GeneratePage() {
       }),
     onSuccess: (r) => {
       toast.success(
-        `Generated ${r.created} questions${r.status === "pending_review" ? " — awaiting review" : ""}`,
+        `Generated ${r.created} questions${r.status === "pending_review" ? ", awaiting review" : ""}`,
       );
       queryClient.invalidateQueries({ queryKey: ["ai-jobs"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });

@@ -71,7 +71,7 @@ export function LinkDialog({
             id="link-search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search MedEu.Ai pages and articles"
+            placeholder="Search MedEuAi pages and articles"
             className="mt-1"
           />
           <div className="mt-2 max-h-52 overflow-y-auto rounded border border-border/60">

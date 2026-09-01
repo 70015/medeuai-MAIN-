@@ -13,7 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Reset password — MedEu.Ai" },
+      { title: "Reset password | MedEuAi" },
       { name: "robots", content: "noindex" },
     ],
   }),

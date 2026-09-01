@@ -2,9 +2,9 @@ import { cn } from "@/lib/utils";
 import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 import logoAsset from "@/assets/medeu-ai-logo.jpg.asset.json";
 
-/** Official MedEu.Ai logo, used unmodified. */
+/** Official MedEuAi logo, used unmodified. */
 export const BRAND_LOGO_URL = logoAsset.url;
-export const BRAND_NAME = "MedEu.Ai";
+export const BRAND_NAME = "MedEuAi";
 export const BRAND_TAGLINE = "Your Personal AI Teacher, 24/7.";
 
 /**
@@ -13,7 +13,7 @@ export const BRAND_TAGLINE = "Your Personal AI Teacher, 24/7.";
  */
 export function BrandMark({
   className,
-  alt = "MedEu.Ai logo",
+  alt = "MedEuAi logo",
 }: {
   className?: string;
   alt?: string;
@@ -64,7 +64,7 @@ export function BrandLogoFull({ className }: { className?: string }) {
   return (
     <img
       src={BRAND_LOGO_URL}
-      alt="MedEu.Ai — Your Personal AI Teacher, 24/7."
+      alt="MedEuAi, Your Personal AI Teacher, 24/7."
       decoding="async"
       className={cn("mx-auto h-40 w-auto max-w-full object-contain sm:h-52", className)}
     />
@@ -81,7 +81,7 @@ export function SocialLinks({ className }: { className?: string }) {
         href="https://www.instagram.com/medeu.ai/"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Follow MedEu.Ai on Instagram"
+        aria-label="Follow MedEuAi on Instagram"
         className="grid h-8 w-8 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
       >
         <Instagram className="h-4 w-4" />
@@ -90,7 +90,7 @@ export function SocialLinks({ className }: { className?: string }) {
         href="https://www.linkedin.com/company/medeuai/"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Follow MedEu.Ai on LinkedIn"
+        aria-label="Follow MedEuAi on LinkedIn"
         className="grid h-8 w-8 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
       >
         <Linkedin className="h-4 w-4" />
@@ -99,7 +99,7 @@ export function SocialLinks({ className }: { className?: string }) {
         href="https://www.youtube.com/@MedEuAI"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Follow MedEu.Ai on YouTube"
+        aria-label="Follow MedEuAi on YouTube"
         className="grid h-8 w-8 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
       >
         <Youtube className="h-4 w-4" />
@@ -108,7 +108,7 @@ export function SocialLinks({ className }: { className?: string }) {
         href="https://www.facebook.com/profile.php?id=61592986388555"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Follow MedEu.Ai on Facebook"
+        aria-label="Follow MedEuAi on Facebook"
         className="grid h-8 w-8 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
       >
         <Facebook className="h-4 w-4" />

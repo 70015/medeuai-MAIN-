@@ -36,7 +36,7 @@ const EXAMS: Exam[] = [
 ];
 
 export const Route = createFileRoute("/_authenticated/admin/syllabi")({
-  head: () => ({ meta: [{ title: "Syllabi — Admin" }] }),
+  head: () => ({ meta: [{ title: "Syllabi, Admin" }] }),
   component: SyllabiPage,
 });
 
@@ -152,7 +152,7 @@ function SyllabiPage() {
             <Input
               value={draft.name}
               onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-              placeholder="e.g. SSC CHSL Tier 1 — 2025"
+              placeholder="e.g. SSC CHSL Tier 1, 2025"
             />
           </div>
         </div>

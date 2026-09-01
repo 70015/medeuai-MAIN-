@@ -5,13 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ===========================================================================
- * MedEu.Ai Design System
+ * MedEuAi Design System
  * "Your Personal AI Teacher, 24/7."
  *
  * Premium educational identity: white + deep green + emerald green.
  * Flat solid colour areas, thin borders, minimal shadows, strong typography.
  * No gradients, no glassmorphism, no glows, no purple/blue/orange.
- * All tokens are semantic — components must use `bg-primary`, `text-foreground`,
+ * All tokens are semantic, components must use `bg-primary`, `text-foreground`,
  * etc. instead of literal colors.
  * ======================================================================== */
 
@@ -140,7 +140,7 @@
   --sidebar-border: rgb(255 255 255 / 12%);
   --sidebar-ring: #03824f;
 
-  /* Kept for backwards compatibility — intentionally flat, no gradients */
+  /* Kept for backwards compatibility, intentionally flat, no gradients */
   --gradient-primary: var(--primary);
   --gradient-hero: var(--surface-elevated);
   --shadow-glow: 0 0 0 1px rgb(4 33 28 / 8%);
@@ -220,7 +220,7 @@
   border-bottom: 1px solid var(--border);
 }
 
-/* Solid brand-colored text — no gradient fills. */
+/* Solid brand-colored text, no gradient fills. */
 @utility gradient-text {
   color: var(--primary);
 }

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-logo";
 
 /**
- * Presentation-only onboarding. Answers are stored in localStorage —
+ * Presentation-only onboarding. Answers are stored in localStorage , 
  * no schema, backend or auth behaviour is touched.
  */
 
@@ -35,7 +35,7 @@ const SUBJECTS = [
 ];
 
 const LEVELS = [
-  { label: "Just starting", desc: "New to this exam — build the basics first." },
+  { label: "Just starting", desc: "New to this exam, build the basics first." },
   { label: "Intermediate", desc: "Know the syllabus, need practice and speed." },
   { label: "Advanced", desc: "Revising and targeting a top rank." },
 ];
@@ -55,7 +55,7 @@ export function OnboardingFlow({ name }: { name?: string }) {
     try {
       if (!localStorage.getItem(STORAGE_KEY)) setOpen(true);
     } catch {
-      /* storage unavailable — skip onboarding */
+      /* storage unavailable, skip onboarding */
     }
   }, []);
 
@@ -123,7 +123,7 @@ export function OnboardingFlow({ name }: { name?: string }) {
             <StepShell
               eyebrow="Step 2 of 4"
               title="What subjects do you want help with?"
-              subtitle="Pick as many as you like — your AI teacher will prioritise these."
+              subtitle="Pick as many as you like, your AI teacher will prioritise these."
             >
               <div className="flex flex-wrap gap-2">
                 {SUBJECTS.map((s) => {
@@ -216,15 +216,15 @@ export function OnboardingFlow({ name }: { name?: string }) {
                 <ul className="mt-2 space-y-1.5 text-muted-foreground">
                   <li>
                     <span className="font-medium text-foreground">Exam:</span>{" "}
-                    {answers.exam ?? "—"}
+                    {answers.exam ?? ", "}
                   </li>
                   <li>
                     <span className="font-medium text-foreground">Focus:</span>{" "}
-                    {answers.subjects.length ? answers.subjects.join(", ") : "—"}
+                    {answers.subjects.length ? answers.subjects.join(", ") : ", "}
                   </li>
                   <li>
                     <span className="font-medium text-foreground">Level:</span>{" "}
-                    {answers.level ?? "—"}
+                    {answers.level ?? ", "}
                   </li>
                 </ul>
               </div>

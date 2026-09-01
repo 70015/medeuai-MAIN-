@@ -13,7 +13,7 @@ import { getPlanStatus } from "@/lib/plan.functions";
 
 
 export const Route = createFileRoute("/_authenticated/tests/$slug")({
-  head: () => ({ meta: [{ title: "Test briefing | MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "Test briefing | MedEuAi" }] }),
   component: TestDetailsPage,
 });
 
@@ -166,7 +166,7 @@ function TestDetailsPage() {
         {t.description && <p className="mt-2 max-w-2xl text-sm text-white/70">{t.description}</p>}
 
         <dl className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
-          <Stat label="Questions" value={`${data.questionCount || "—"}`} />
+          <Stat label="Questions" value={`${data.questionCount || ", "}`} />
           <Stat label="Time" value={`${t.duration_minutes} min`} />
           <Stat label="Marks" value={`${Number(t.total_marks)}`} hint={`-${Number(t.negative_marks)} per wrong`} />
           <Stat label="Difficulty" value={dist ? "Mixed" : "Balanced"} hint={difficulty} />
@@ -191,7 +191,7 @@ function TestDetailsPage() {
               </ul>
             ) : (
               <p className="mt-3 text-sm text-muted-foreground">
-                Mixed syllabus paper — the exact subject split is drawn from the exam pattern at start.
+                Mixed syllabus paper, the exact subject split is drawn from the exam pattern at start.
               </p>
             )}
           </section>
@@ -273,7 +273,7 @@ function TestDetailsPage() {
       <div className="sticky bottom-[env(safe-area-inset-bottom)] z-20 -mx-4 border-t border-border bg-background/95 px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-xl sm:border sm:px-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-xs text-muted-foreground">
-            {data.questionCount || "—"} questions · {t.duration_minutes} minutes · exam conditions
+            {data.questionCount || ", "} questions · {t.duration_minutes} minutes · exam conditions
           </div>
           <Button
             size="lg"

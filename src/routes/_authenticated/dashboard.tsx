@@ -33,13 +33,13 @@ const EXAM_GRID = [
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Your learning home — MedEu.Ai" },
+      { title: "Your learning home | MedEuAi" },
       {
         name: "description",
         content:
-          "Your daily preparation home on MedEu.Ai: today's goal, AI Teacher, practice recommendations and progress.",
+          "Your daily preparation home on MedEuAi: today's goal, AI Teacher, practice recommendations and progress.",
       },
-      { property: "og:title", content: "Your learning home — MedEu.Ai" },
+      { property: "og:title", content: "Your learning home | MedEuAi" },
       {
         property: "og:description",
         content: "Daily goal, AI Teacher and practice recommendations in one place.",
@@ -189,7 +189,7 @@ function DashboardPage() {
         <Progress value={goalPct} className="mt-4" />
       </section>
 
-      {/* AI Teacher — hero of the app */}
+      {/* AI Teacher, hero of the app */}
       <section className="rounded-xl bg-ink p-6 text-ink-foreground sm:p-8">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink-foreground/70">
           <Brain className="h-4 w-4" /> AI Teacher
@@ -198,7 +198,7 @@ function DashboardPage() {
           Ask MedEu anything.
         </h2>
         <p className="mt-2 max-w-lg text-sm text-ink-foreground/80">
-          Explanations at your level, step-by-step solutions and honest feedback — any subject, any
+          Explanations at your level, step-by-step solutions and honest feedback, any subject, any
           time.
         </p>
         <div className="mt-6 flex flex-wrap gap-2">

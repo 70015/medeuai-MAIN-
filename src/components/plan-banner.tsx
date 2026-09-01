@@ -47,7 +47,7 @@ export function PlanBanner() {
           </p>
           <p className="text-xs text-muted-foreground">
             {expiring
-              ? "Renew now — the new period is added on top of your remaining days."
+              ? "Renew now, the new period is added on top of your remaining days."
               : `Free plan allows ${plan.freeAttemptsAllowed} tests every ${plan.windowDays} days. Go Pro for unlimited tests and AI Teacher.`}
           </p>
         </div>
