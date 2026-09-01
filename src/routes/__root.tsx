@@ -84,24 +84,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MedEu.Ai — Your Personal AI Teacher, 24/7" },
+      { title: "MedEuAi | Your Personal AI Teacher, 24/7" },
       {
         name: "description",
         content:
-          "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking — in Bengali, Hindi and English.",
+          "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking, in Bengali, Hindi and English.",
       },
-      { name: "author", content: "MedEu.Ai" },
+      { name: "author", content: "MedEuAi" },
       { name: "theme-color", content: "#04211C" },
-      { property: "og:site_name", content: "MedEu.Ai" },
-      { property: "og:title", content: "MedEu.Ai — Your Personal AI Teacher, 24/7" },
+      { property: "og:site_name", content: "MedEuAi" },
+      { property: "og:title", content: "MedEuAi | Your Personal AI Teacher, 24/7" },
       {
         property: "og:description",
-        content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking — in Bengali, Hindi and English.",
+        content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking, in Bengali, Hindi and English.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "MedEu.Ai — Your Personal AI Teacher, 24/7" },
-      { name: "twitter:description", content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking — in Bengali, Hindi and English." },
+      { name: "twitter:title", content: "MedEuAi | Your Personal AI Teacher, 24/7" },
+      { name: "twitter:description", content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking, in Bengali, Hindi and English." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -120,8 +120,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "EducationalOrganization",
-          name: "MedEu.Ai",
-          alternateName: "MedEu.Ai — Your Personal AI Teacher",
+          name: "MedEuAi",
+          alternateName: "MedEuAi | Your Personal AI Teacher",
           url: "https://medeuai.in",
           logo: "https://medeuai.in/favicon.png",
           email: "hello.medeu.ai@gmail.com",
@@ -132,7 +132,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             email: "hello.medeu.ai@gmail.com",
             availableLanguage: ["English", "Hindi", "Bengali"],
           },
-          description: "Your Personal AI Teacher, 24/7 — AI-powered exam prep for SSC, WBCS, Railway, Banking and more Indian government exams.",
+          description: "Your Personal AI Teacher, 24/7, AI-powered exam prep for SSC, WBCS, Railway, Banking and more Indian government exams.",
         }),
       },
       {
@@ -140,7 +140,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "MedEu.Ai",
+          name: "MedEuAi",
           url: "https://medeuai.in",
         }),
       },

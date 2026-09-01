@@ -17,10 +17,10 @@ import { redeemPromoCode } from "@/lib/promo.functions";
 export const Route = createFileRoute("/_authenticated/billing")({
   head: () => ({
     meta: [
-      { title: "Billing & Plans — MedEu.Ai" },
+      { title: "Billing & Plans | MedEuAi" },
       {
         name: "description",
-        content: "Manage your MedEu.Ai Pro plan, pay by UPI and redeem promo codes.",
+        content: "Manage your MedEuAi Pro plan, pay by UPI and redeem promo codes.",
       },
     ],
   }),
@@ -114,7 +114,7 @@ function BillingPage() {
           {plan.expiringSoon && (
             <p className="mt-2 flex items-start gap-2 text-sm font-medium text-amber-800 dark:text-amber-300">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-              Your Pro access ends soon. Renew now to keep unlimited tests and AI Teacher — your
+              Your Pro access ends soon. Renew now to keep unlimited tests and AI Teacher, your
               new period is added on top of the remaining days.
             </p>
           )}
@@ -165,7 +165,7 @@ function BillingPage() {
               <h3 className="text-lg font-semibold">{p.name}</h3>
               <div className="mt-2 flex items-baseline gap-1">
                 <span className="text-3xl font-bold">
-                  {priceFor(p.lookup_key) ? `₹${priceFor(p.lookup_key)}` : "—"}
+                  {priceFor(p.lookup_key) ? `₹${priceFor(p.lookup_key)}` : "-"}
                 </span>
                 <span className="text-sm text-muted-foreground">{p.cadence}</span>
               </div>

@@ -22,8 +22,8 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Sign in to MedEu.Ai" },
-      { name: "description", content: "Sign in or create your free MedEu.Ai account." },
+      { title: "Sign in to MedEuAi" },
+      { name: "description", content: "Sign in or create your free MedEuAi account." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -145,14 +145,14 @@ function AuthPage() {
       <aside className="ink-section hidden flex-col justify-between p-12 lg:flex">
         <Link to="/" className="flex items-center gap-2 text-base font-bold tracking-tight">
           <BrandMark className="h-10 w-10 rounded-md bg-white p-0.5" />
-          MedEu.Ai
+          MedEuAi
         </Link>
         <div>
           <h2 className="max-w-sm text-balance text-4xl font-extrabold leading-[1.1] tracking-tight">
             Your Personal AI Teacher, 24/7.
           </h2>
           <p className="mt-5 max-w-sm text-base leading-relaxed opacity-80">
-            Learn smarter. Understand better. Prepare with MedEu.Ai.
+            Learn smarter. Understand better. Prepare with MedEuAi.
           </p>
           <ul className="mt-8 space-y-3 text-sm opacity-90">
             {[
@@ -168,7 +168,7 @@ function AuthPage() {
           </ul>
         </div>
         <p className="text-xs opacity-60">
-          © {new Date().getFullYear()} MedEu.Ai · Made in India for Indian exam aspirants.
+          © {new Date().getFullYear()} MedEuAi · Made in India for Indian exam aspirants.
         </p>
       </aside>
 
@@ -338,7 +338,7 @@ function AuthPage() {
 
                 {mode === "signin" && (
                   <p className="mt-6 text-center text-sm text-muted-foreground">
-                    New to MedEu.Ai?{" "}
+                    New to MedEuAi?{" "}
                     <button
                       type="button"
                       onClick={() => setMode("signup")}

@@ -49,7 +49,7 @@ export function ManualUpiPayments() {
   });
 
   const [form, setForm] = useState({
-    merchant_name: "MedEu.Ai",
+    merchant_name: "MedEuAi",
     upi_id: "",
     monthly_price_inr: 99,
     yearly_price_inr: 799,
@@ -97,7 +97,7 @@ export function ManualUpiPayments() {
     onSuccess: (r) => {
       toast.success(
         r.status === "verified"
-          ? `Payment verified — access until ${r.expiresAt ? new Date(r.expiresAt).toLocaleDateString() : "period end"}`
+          ? `Payment verified, access until ${r.expiresAt ? new Date(r.expiresAt).toLocaleDateString() : "period end"}`
           : "Payment request rejected",
       );
       queryClient.invalidateQueries({ queryKey: ["admin-payment-requests"] });
@@ -179,7 +179,7 @@ export function ManualUpiPayments() {
             rows={4}
             value={form.instructions}
             onChange={(e) => setForm({ ...form, instructions: e.target.value })}
-            placeholder="1. Pay the exact amount to the UPI ID above. 2. Copy the UTR from your UPI app. 3. Submit it here — we verify within a few hours."
+            placeholder="1. Pay the exact amount to the UPI ID above. 2. Copy the UTR from your UPI app. 3. Submit it here, we verify within a few hours."
           />
         </div>
 
@@ -363,7 +363,7 @@ function QrUploader({
         .upload(newPath, file, { contentType: file.type, upsert: true });
       if (error) throw error;
       onChange(newPath);
-      toast.success(`${label} uploaded — remember to save settings`);
+      toast.success(`${label} uploaded, remember to save settings`);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -471,7 +471,7 @@ function RequestRow({
           <Input
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Note (optional — shown to the user if rejected)"
+            placeholder="Note (optional, shown to the user if rejected)"
             maxLength={500}
           />
           <div className="flex flex-wrap gap-2">

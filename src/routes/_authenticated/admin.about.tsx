@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/_authenticated/admin/about")({
-  head: () => ({ meta: [{ title: "About editor — Admin" }] }),
+  head: () => ({ meta: [{ title: "About editor, Admin" }] }),
   component: AdminAboutEditor,
 });
 
@@ -91,7 +91,7 @@ function AdminAboutEditor() {
       });
       if (error) throw error;
       set("founder_image_url", path);
-      toast.success("Image uploaded — remember to save.");
+      toast.success("Image uploaded, remember to save.");
     } catch (e) {
       toast.error((e as Error).message);
     } finally {

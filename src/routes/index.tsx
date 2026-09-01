@@ -35,26 +35,26 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MedEu.Ai — Your Personal AI Teacher, 24/7" },
+      { title: "MedEuAi | Your Personal AI Teacher, 24/7" },
       {
         name: "description",
         content:
           "Learn smarter with a personal AI teacher, unlimited mock tests, previous-year papers and performance analysis for SSC, Railway, Banking, WBCS and WBPSC.",
       },
-      { property: "og:title", content: "MedEu.Ai — Your Personal AI Teacher" },
+      { property: "og:title", content: "MedEuAi | Your Personal AI Teacher" },
       {
         property: "og:description",
         content:
-          "Learn smarter. Understand better. Prepare with MedEu.Ai — AI teaching plus exam practice in three languages.",
+          "Learn smarter. Understand better. Prepare with MedEuAi, AI teaching plus exam practice in three languages.",
       },
       { property: "og:url", content: "https://medeuai.in/" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "MedEu.Ai — Your Personal AI Teacher" },
+      { name: "twitter:title", content: "MedEuAi | Your Personal AI Teacher" },
       {
         name: "twitter:description",
         content:
-          "AI teaching, mock tests and previous-year papers for SSC, Railway, Banking, WBCS and WBPSC — in English, Hindi and Bengali.",
+          "AI teaching, mock tests and previous-year papers for SSC, Railway, Banking, WBCS and WBPSC, in English, Hindi and Bengali.",
       },
     ],
     links: [{ rel: "canonical", href: "https://medeuai.in/" }],
@@ -64,7 +64,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "MedEu.Ai",
+          name: "MedEuAi",
           applicationCategory: "EducationalApplication",
           operatingSystem: "Web, Android",
           url: "https://medeuai.in/",
@@ -72,7 +72,7 @@ export const Route = createFileRoute("/")({
             "A 24/7 personal AI teacher and exam preparation platform with mock tests, previous-year papers and performance analysis in English, Hindi and Bengali.",
           inLanguage: ["en", "hi", "bn"],
           author: { "@type": "Person", name: "Rahamat Ali" },
-          publisher: { "@type": "Organization", name: "MedEu.Ai", email: "hello.medeu.ai@gmail.com" },
+          publisher: { "@type": "Organization", name: "MedEuAi", email: "hello.medeu.ai@gmail.com" },
         }),
       },
     ],
@@ -198,7 +198,7 @@ function LandingPage() {
                   <span className="text-primary">AI Teacher.</span>
                 </h1>
                 <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Learn smarter. Understand better. Prepare with MedEu.Ai.
+                  Learn smarter. Understand better. Prepare with MedEuAi.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button asChild size="lg" className="w-full sm:w-auto">
@@ -259,7 +259,7 @@ function LandingPage() {
                 A teacher who never runs out of patience.
               </h2>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                MedEu.Ai teaches the way a good tutor does — it listens to your doubt, explains it in
+                MedEuAi teaches the way a good tutor does, it listens to your doubt, explains it in
                 your language, checks whether you understood, and gives you practice until it sticks.
               </p>
             </div>
@@ -305,7 +305,7 @@ function LandingPage() {
                 Practice until the exam feels easy.
               </h2>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                Every attempt is timed, scored and analysed — so practice actually changes your
+                Every attempt is timed, scored and analysed, so practice actually changes your
                 result instead of just filling time.
               </p>
             </div>
@@ -393,8 +393,8 @@ function LandingPage() {
                   Carry your AI teacher in your pocket.
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-                  The MedEu.Ai Android app gives you the full platform — AI Teacher, mock tests,
-                  previous-year papers and analytics — in a fullscreen, distraction-free app. Same
+                  The MedEuAi Android app gives you the full platform, AI Teacher, mock tests,
+                  previous-year papers and analytics, in a fullscreen, distraction-free app. Same
                   account, same progress, nothing to re-learn.
                 </p>
 
@@ -429,9 +429,9 @@ function LandingPage() {
                 <ol className="mt-5 space-y-4">
                   {[
                     "Tap Download APK above and wait for the file to finish downloading.",
-                    "Chrome may warn that this file type can harm your device — that is the standard warning for every APK downloaded outside the Play Store. Choose Download anyway.",
-                    "Open the file. Android will ask permission to install unknown apps — allow it for your browser or Files app.",
-                    "Tap Install, then Open. Sign in with your existing MedEu.Ai account.",
+                    "Chrome may warn that this file type can harm your device, that is the standard warning for every APK downloaded outside the Play Store. Choose Download anyway.",
+                    "Open the file. Android will ask permission to install unknown apps, allow it for your browser or Files app.",
+                    "Tap Install, then Open. Sign in with your existing MedEuAi account.",
                   ].map((t, i) => (
                     <li key={i} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
                       <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary">
@@ -461,7 +461,7 @@ function LandingPage() {
               You don't have to prepare alone.
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed opacity-80">
-              Your AI teacher is ready whenever you are — day or night, in the language you think in.
+              Your AI teacher is ready whenever you are, day or night, in the language you think in.
             </p>
             <div className="mt-9 flex justify-center">
               <Button
@@ -560,7 +560,7 @@ function LandingPage() {
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
-            <span>© {new Date().getFullYear()} MedEu.Ai. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} MedEuAi. All rights reserved.</span>
             <span>Made in India for Indian exam aspirants.</span>
           </div>
         </div>
@@ -595,7 +595,7 @@ function FooterCol({
 }
 
 /* ---------------------------------------------------------------------------
- * Static, presentational previews of the real MedEu.Ai AI Teacher interface.
+ * Static, presentational previews of the real MedEuAi AI Teacher interface.
  * ------------------------------------------------------------------------ */
 
 function PreviewChrome({ children, label }: { children: React.ReactNode; label: string }) {
@@ -605,7 +605,7 @@ function PreviewChrome({ children, label }: { children: React.ReactNode; label: 
         <div className="flex items-center gap-2.5">
           <BrandMark className="h-8 w-8 rounded-md" />
           <div className="leading-tight">
-            <div className="text-sm font-bold">MedEu.Ai Teacher</div>
+            <div className="text-sm font-bold">MedEuAi Teacher</div>
             <div className="text-[11px] text-muted-foreground">{label}</div>
           </div>
         </div>
@@ -688,11 +688,11 @@ function ChatPreview() {
       <div className="space-y-3 p-4">
         <Bubble role="user">A train covers 240 km in 3 hours. Find its speed.</Bubble>
         <Bubble role="ai">
-          <p className="font-semibold">Step 1 — Write what is given</p>
+          <p className="font-semibold">Step 1: Write what is given</p>
           <p className="mt-1 text-muted-foreground">Distance = 240 km, Time = 3 h</p>
-          <p className="mt-2.5 font-semibold">Step 2 — Apply the formula</p>
+          <p className="mt-2.5 font-semibold">Step 2: Apply the formula</p>
           <p className="mt-1 text-muted-foreground">Speed = Distance ÷ Time = 240 ÷ 3</p>
-          <p className="mt-2.5 font-semibold">Step 3 — Answer</p>
+          <p className="mt-2.5 font-semibold">Step 3: Answer</p>
           <p className="mt-1 text-muted-foreground">
             Speed = <span className="font-semibold text-foreground">80 km/h</span>
           </p>
@@ -703,7 +703,7 @@ function ChatPreview() {
         <Bubble role="user">320 km</Bubble>
         <Bubble role="ai">
           <p className="inline-flex items-center gap-1.5 font-semibold text-primary">
-            <CheckCircle2 className="h-4 w-4" /> Correct — well done.
+            <CheckCircle2 className="h-4 w-4" /> Correct, well done.
           </p>
           <p className="mt-1.5 text-muted-foreground">
             Want 5 practice questions on time, speed and distance?

@@ -35,13 +35,13 @@ import { ProfilePhoto } from "@/components/profile-photo";
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     meta: [
-      { title: "Your profile — MedEu.Ai" },
+      { title: "Your profile | MedEuAi" },
       {
         name: "description",
         content:
-          "Manage your MedEu.Ai profile: target exam, preparation level, language, notifications, subscription and account settings.",
+          "Manage your MedEuAi profile: target exam, preparation level, language, notifications, subscription and account settings.",
       },
-      { property: "og:title", content: "Your profile — MedEu.Ai" },
+      { property: "og:title", content: "Your profile | MedEuAi" },
       {
         property: "og:description",
         content: "Target exam, language, subscription and account settings in one place.",
@@ -83,7 +83,7 @@ function readOnboardingLevel(): string | null {
   }
 }
 
-/** In-app password change — requires the current password, no email link needed. */
+/** In-app password change, requires the current password, no email link needed. */
 function PasswordSection() {
   const [open, setOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -103,7 +103,7 @@ function PasswordSection() {
     newPassword.length === 0
       ? null
       : newPassword.length < 8
-        ? "Too short — use at least 8 characters."
+        ? "Too short, use at least 8 characters."
         : /^(?=.*[a-zA-Z])(?=.*\d).+$/.test(newPassword)
           ? null
           : "Add at least one letter and one number.";
@@ -150,7 +150,7 @@ function PasswordSection() {
         <div className="min-w-0 grow">
           <div className="text-sm font-medium">Password</div>
           <div className="text-xs text-muted-foreground">
-            Change your password here — no email link needed.
+            Change your password here, no email link needed.
           </div>
         </div>
         <Button
@@ -322,7 +322,7 @@ function ProfilePage() {
         </div>
       </header>
 
-      {/* My preparation — education preferences */}
+      {/* My preparation, education preferences */}
       <section>
         <div className="flex items-center gap-2">
           <Target className="h-4 w-4 text-primary" />
@@ -362,7 +362,7 @@ function ProfilePage() {
             <Label>Preparation level</Label>
             <p className="rounded-md border border-border px-3 py-2 text-sm text-muted-foreground">
               {level
-                ? `${level} — set during onboarding and used by the AI Teacher.`
+                ? `${level}, set during onboarding and used by the AI Teacher.`
                 : "Not set yet. The AI Teacher will adapt as you chat with it."}
             </p>
           </div>
@@ -419,7 +419,7 @@ function ProfilePage() {
         </Button>
       </div>
 
-      {/* Account & settings — distinct from education */}
+      {/* Account & settings, distinct from education */}
       <section>
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-muted-foreground" />
@@ -470,7 +470,7 @@ function ProfilePage() {
             <div className="min-w-0 grow">
               <div className="text-sm font-medium">Help &amp; about</div>
               <div className="text-xs text-muted-foreground">
-                What MedEu.Ai does, FAQs and contact.
+                What MedEuAi does, FAQs and contact.
               </div>
             </div>
             <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -484,7 +484,7 @@ function ProfilePage() {
             <div className="min-w-0 grow">
               <div className="text-sm font-medium">Contact support</div>
               <div className="text-xs text-muted-foreground">
-                For any questions, feedback or help — tap to email us.
+                For any questions, feedback or help, tap to email us.
               </div>
             </div>
             <span className="shrink-0 text-sm font-medium text-primary hover:underline">

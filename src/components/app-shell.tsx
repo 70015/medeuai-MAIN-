@@ -41,7 +41,7 @@ export function useProfile() {
   });
 }
 
-/** Desktop sidebar navigation — routes unchanged. */
+/** Desktop sidebar navigation, routes unchanged. */
 const sidebarNav = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/ai-teacher", label: "AI Teacher", icon: Brain },
@@ -52,7 +52,7 @@ const sidebarNav = [
   { to: "/billing", label: "Settings", icon: Settings },
 ] as const;
 
-/** Mobile bottom navigation — AI Teacher is the centred, prominent item. */
+/** Mobile bottom navigation, AI Teacher is the centred, prominent item. */
 const mobileNav = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/tests", label: "Practice", icon: FileText },
@@ -209,7 +209,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="hidden lg:block" />
             <div className="flex items-center gap-2">
               <ThemeToggle />
-              {/* No profile avatar here — Profile lives only in the primary navigation. */}
+              {/* No profile avatar here, Profile lives only in the primary navigation. */}
             </div>
           </div>
         </header>

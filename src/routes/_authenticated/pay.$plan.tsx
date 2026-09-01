@@ -33,11 +33,11 @@ import {
 export const Route = createFileRoute("/_authenticated/pay/$plan")({
   head: () => ({
     meta: [
-      { title: "Complete your payment — MedEu.Ai" },
+      { title: "Complete your payment | MedEuAi" },
       {
         name: "description",
         content:
-          "Pay for MedEu.Ai Pro with any UPI app and submit your transaction ID for verification.",
+          "Pay for MedEuAi Pro with any UPI app and submit your transaction ID for verification.",
       },
     ],
   }),
@@ -135,7 +135,7 @@ function PayPage() {
     settings?.upiIntentEnabled && settings.upiId && amount
       ? `upi://pay?pa=${encodeURIComponent(settings.upiId)}&pn=${encodeURIComponent(
           settings.merchantName,
-        )}&am=${amount}&cu=INR&tn=${encodeURIComponent(`MedEu.Ai ${PLAN_LABEL[plan].name}`)}`
+        )}&am=${amount}&cu=INR&tn=${encodeURIComponent(`MedEuAi ${PLAN_LABEL[plan].name}`)}`
       : null;
 
   function copyUpi() {
@@ -143,7 +143,7 @@ function PayPage() {
     navigator.clipboard
       .writeText(settings.upiId)
       .then(() => toast.success("UPI ID copied"))
-      .catch(() => toast.error("Could not copy — please copy manually"));
+      .catch(() => toast.error("Could not copy, please copy manually"));
   }
 
   function pickFile(selected: File | undefined) {
@@ -246,7 +246,7 @@ function PayPage() {
                 />
               ) : (
                 <p className="mt-2 text-xs text-muted-foreground">
-                  A QR code for this plan hasn't been added yet — use the UPI ID above instead.
+                  A QR code for this plan hasn't been added yet, use the UPI ID above instead.
                 </p>
               )}
             </Card>
@@ -269,7 +269,7 @@ function PayPage() {
               <p className="mt-2 text-sm text-[#33403D]">
                 We received your {PLAN_LABEL[pending.plan as PlanKey]?.name ?? pending.plan}{" "}
                 payment of ₹{pending.amount_inr} (UTR {pending.utr}). An admin will verify it
-                shortly — you'll get Pro access as soon as it's approved.
+                shortly, you'll get Pro access as soon as it's approved.
               </p>
             </Card>
           ) : (

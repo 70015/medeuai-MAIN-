@@ -5,7 +5,7 @@
  * React app runs in both places. When it runs inside the native shell we send
  * users straight to the authenticated app home (/dashboard) instead of the
  * public marketing landing page. The existing `_authenticated` route gate still
- * redirects unauthenticated users to sign in — auth logic is untouched.
+ * redirects unauthenticated users to sign in, auth logic is untouched.
  *
  * SSR-safe: always false on the server.
  */

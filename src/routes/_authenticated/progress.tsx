@@ -12,13 +12,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/progress")({
   head: () => ({
     meta: [
-      { title: "Your preparation — Progress | MedEu.Ai" },
+      { title: "Your preparation, Progress | MedEuAi" },
       {
         name: "description",
         content:
-          "Track your exam preparation on MedEu.Ai: accuracy, questions solved, tests completed, study time, streak, subject performance and weak topics.",
+          "Track your exam preparation on MedEuAi: accuracy, questions solved, tests completed, study time, streak, subject performance and weak topics.",
       },
-      { property: "og:title", content: "Your preparation — Progress | MedEu.Ai" },
+      { property: "og:title", content: "Your preparation, Progress | MedEuAi" },
       {
         property: "og:description",
         content: "Accuracy, subject performance, weak topics and improvement trend in one view.",
@@ -195,7 +195,7 @@ function ProgressPage() {
     : weak.length
       ? {
           focus: `Focus on ${weak[0].label}`,
-          body: `Your recent tests show that this is one of your weaker areas — ${weak[0].pct}% accuracy over ${weak[0].total} questions. A few focused practice sessions could improve your accuracy.`,
+          body: `Your recent tests show that this is one of your weaker areas, ${weak[0].pct}% accuracy over ${weak[0].total} questions. A few focused practice sessions could improve your accuracy.`,
         }
       : accuracy < 60
         ? {
@@ -231,11 +231,11 @@ function ProgressPage() {
       {/* Headline metrics */}
       <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-5">
-          <DarkStat label="Accuracy" value={submitted.length ? `${accuracy}%` : "—"} />
+          <DarkStat label="Accuracy" value={submitted.length ? `${accuracy}%` : "-"} />
           <DarkStat label="Questions solved" value={`${questionsSolved}`} />
           <DarkStat label="Tests completed" value={`${submitted.length}`} />
-          <DarkStat label="Study time" value={submitted.length ? studyLabel : "—"} />
-          <DarkStat label="Current streak" value={streak ? `${streak} day${streak > 1 ? "s" : ""}` : "—"} />
+          <DarkStat label="Study time" value={submitted.length ? studyLabel : "-"} />
+          <DarkStat label="Current streak" value={streak ? `${streak} day${streak > 1 ? "s" : ""}` : "-"} />
         </dl>
         {!submitted.length && (
           <p className="mt-6 border-t border-white/10 pt-5 text-sm text-white/70">
@@ -282,7 +282,7 @@ function ProgressPage() {
           </p>
         ) : weak.length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">
-            Nothing below 70% right now — every measured area is in good shape. Move to harder papers.
+            Nothing below 70% right now, every measured area is in good shape. Move to harder papers.
           </p>
         ) : (
           <ul className="mt-4 space-y-2">
@@ -329,7 +329,7 @@ function ProgressPage() {
                   <div
                     className="w-full rounded-t bg-primary"
                     style={{ height: `${Math.max(4, t.pct * 1.1)}px` }}
-                    title={`${t.title} — ${t.pct}%`}
+                    title={`${t.title}, ${t.pct}%`}
                   />
                 </div>
               ))}
@@ -342,7 +342,7 @@ function ProgressPage() {
         )}
       </section>
 
-      {/* MedEu recommendation — premium AI Teacher guidance */}
+      {/* MedEu recommendation, premium AI Teacher guidance */}
       <section className="overflow-hidden rounded-xl bg-[#04211C] text-white">
         <div className="p-6 sm:p-8">
           <div className="flex items-center gap-2.5">

@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { listUsers, setUserRole } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/users")({
-  head: () => ({ meta: [{ title: "Users — Admin" }] }),
+  head: () => ({ meta: [{ title: "Users, Admin" }] }),
   component: UsersPage,
 });
 
@@ -70,7 +70,7 @@ function UsersPage() {
               <Card key={u.id} className="flex flex-wrap items-center justify-between gap-3 border-border/60 bg-card/40 p-4">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="truncate text-sm font-semibold">{u.full_name ?? "—"}</p>
+                    <p className="truncate text-sm font-semibold">{u.full_name ?? ", "}</p>
                     {isAdmin && <Badge className="bg-primary/15 text-primary">Admin</Badge>}
                     <Badge variant="outline" className="capitalize">{u.plan ?? "free"}</Badge>
                   </div>

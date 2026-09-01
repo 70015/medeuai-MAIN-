@@ -5,26 +5,26 @@ import { SiteHeader } from "@/components/site-header";
 export const Route = createFileRoute("/privacy-policy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — MedEu.Ai" },
+      { title: "Privacy Policy | MedEuAi" },
       {
         name: "description",
         content:
-          "Learn how MedEu.Ai collects, uses, protects, and manages your information.",
+          "Learn how MedEuAi collects, uses, protects, and manages your information.",
       },
-      { property: "og:title", content: "Privacy Policy — MedEu.Ai" },
+      { property: "og:title", content: "Privacy Policy | MedEuAi" },
       {
         property: "og:description",
         content:
-          "Learn how MedEu.Ai collects, uses, protects, and manages your information.",
+          "Learn how MedEuAi collects, uses, protects, and manages your information.",
       },
       { property: "og:url", content: "https://medeuai.in/privacy-policy" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Privacy Policy — MedEu.Ai" },
+      { name: "twitter:title", content: "Privacy Policy | MedEuAi" },
       {
         name: "twitter:description",
         content:
-          "Learn how MedEu.Ai collects, uses, protects, and manages your information.",
+          "Learn how MedEuAi collects, uses, protects, and manages your information.",
       },
       { name: "robots", content: "noindex, follow" },
     ],
@@ -48,7 +48,7 @@ function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            How MedEu.Ai collects, uses, protects, and manages your information.
+            How MedEuAi collects, uses, protects, and manages your information.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             Last updated: {LAST_UPDATED}
@@ -58,16 +58,16 @@ function PrivacyPolicyPage() {
         <article className="prose prose-sm max-w-none text-foreground sm:prose-base">
           <PolicySection title="Operator">
             <p>
-              This Privacy Policy describes how <strong>MedEu.Ai</strong> handles personal
-              information for users of the MedEu.Ai exam-preparation platform and related
-              services. MedEu.Ai is an early-stage platform operated by its founder and
+              This Privacy Policy describes how <strong>MedEuAi</strong> handles personal
+              information for users of the MedEuAi exam-preparation platform and related
+              services. MedEuAi is an early-stage platform operated by its founder and
               team; it is not represented as an incorporated company or registered entity.
             </p>
           </PolicySection>
 
           <PolicySection title="1. Account Information">
             <p>
-              When you create or sign in to a MedEu.Ai account, we collect the information
+              When you create or sign in to a MedEuAi account, we collect the information
               needed to identify and authenticate you. If you use Google sign-in, Google may
               make available your name, email address, account/authentication identifier, and
               basic profile information where applicable. We do not collect or store a phone
@@ -83,7 +83,7 @@ function PrivacyPolicyPage() {
           <PolicySection title="2. Learning & Preparation Information">
             <p>
               To personalise your preparation, we collect learning-related information you
-              provide or generate while using MedEu.Ai. This may include:
+              provide or generate while using MedEuAi. This may include:
             </p>
             <ul className="list-disc pl-5">
               <li>Target examination or category (for example, SSC, Railway, Banking, WBCS, WBPSC, Police, or Other)</li>
@@ -103,17 +103,17 @@ function PrivacyPolicyPage() {
               learning, and improve service functionality.
             </p>
             <p>
-              MedEu.Ai does not train its own AI models. We may use third-party AI providers
+              MedEuAi does not train its own AI models. We may use third-party AI providers
               to generate responses. The specific provider or model can change over time. Only
               the data reasonably necessary to generate a response is transmitted to the
-              relevant provider. MedEu.Ai aims to use appropriate configurations and providers
+              relevant provider. MedEuAi aims to use appropriate configurations and providers
               that are consistent with our privacy commitments.
             </p>
           </PolicySection>
 
           <PolicySection title="4. Payment Information">
             <p>
-              MedEu.Ai uses manual UPI-based payment verification for subscriptions. When you
+              MedEuAi uses manual UPI-based payment verification for subscriptions. When you
               make a payment, we may collect:
             </p>
             <ul className="list-disc pl-5">
@@ -123,7 +123,7 @@ function PrivacyPolicyPage() {
             </ul>
             <p>
               This information is used only for payment verification, subscription activation,
-              customer support, fraud prevention, and related administration. MedEu.Ai does
+              customer support, fraud prevention, and related administration. MedEuAi does
               not store card numbers, CVV, bank passwords, or other financial credentials.
             </p>
           </PolicySection>
@@ -142,14 +142,14 @@ function PrivacyPolicyPage() {
               <li>Comply with legal obligations and protect our rights</li>
             </ul>
             <p>
-              MedEu.Ai does not sell personal information. We do not intentionally use
+              MedEuAi does not sell personal information. We do not intentionally use
               student personal or learning data for targeted advertising.
             </p>
           </PolicySection>
 
           <PolicySection title="6. AI & Other Service Providers">
             <p>
-              We rely on selected service providers to operate MedEu.Ai. These may include
+              We rely on selected service providers to operate MedEuAi. These may include
               providers for hosting, database, authentication, AI processing, payment
               verification and support, and general technical infrastructure. We share
               information with these providers only as reasonably necessary to deliver the
@@ -166,7 +166,7 @@ function PrivacyPolicyPage() {
             <p>
               We apply reasonable technical and organisational measures to protect your
               information from unauthorised access, loss or misuse. However, no online service
-              can guarantee absolute security. You use MedEu.Ai with the understanding that
+              can guarantee absolute security. You use MedEuAi with the understanding that
               security measures have practical limits.
             </p>
           </PolicySection>
@@ -182,7 +182,7 @@ function PrivacyPolicyPage() {
 
           <PolicySection title="9. Your Choices & Deletion">
             <p>
-              MedEu.Ai does not currently offer self-service account deletion. If you wish to
+              MedEuAi does not currently offer self-service account deletion. If you wish to
               request deletion of your account and associated data, please email us at{" "}
               <a href="mailto:hello.medeu.ai@gmail.com" className="text-primary hover:underline">
                 hello.medeu.ai@gmail.com
@@ -194,8 +194,8 @@ function PrivacyPolicyPage() {
 
           <PolicySection title="10. Children & Minors">
             <p>
-              MedEu.Ai is an educational platform designed for government-exam aspirants. If you
-              are a minor, you should use MedEu.Ai only with the involvement and consent of a
+              MedEuAi is an educational platform designed for government-exam aspirants. If you
+              are a minor, you should use MedEuAi only with the involvement and consent of a
               parent or guardian. We do not knowingly collect personal information from children
               without appropriate consent, and we encourage parents and guardians to supervise
               use of the platform.
@@ -206,7 +206,7 @@ function PrivacyPolicyPage() {
             <p>
               This Privacy Policy may be updated from time to time to reflect changes in our
               practices or services. We will update the "Last updated" date at the top of this
-              page when material changes are made. Continued use of MedEu.Ai after any update
+              page when material changes are made. Continued use of MedEuAi after any update
               means you accept the revised policy.
             </p>
           </PolicySection>
@@ -235,7 +235,7 @@ function PrivacyPolicyPage() {
           <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-6 sm:flex-row">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <BrandMark className="h-7 w-7" />
-              <span>MedEu.Ai · Your Personal AI Teacher, 24/7.</span>
+              <span>MedEuAi · Your Personal AI Teacher, 24/7.</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
               <Link to="/" className="hover:text-primary">
@@ -247,7 +247,7 @@ function PrivacyPolicyPage() {
               <Link to="/privacy-policy" className="hover:text-primary">
                 Privacy Policy
               </Link>
-              <span>© {new Date().getFullYear()} MedEu.Ai</span>
+              <span>© {new Date().getFullYear()} MedEuAi</span>
             </div>
           </div>
         </div>

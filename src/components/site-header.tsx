@@ -52,7 +52,7 @@ export function SiteHeader() {
           {!isNativeApp() &&
             (apkAvailable ? (
               <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
-                <a href={APK_URL} download aria-label="Download the MedEu.Ai Android app">
+                <a href={APK_URL} download aria-label="Download the MedEuAi Android app">
                   <Download className="mr-1.5 h-4 w-4" /> Download App
                 </a>
               </Button>

@@ -12,7 +12,7 @@ import { reviewQuestion } from "@/lib/admin.functions";
 import { localize } from "@/lib/exam";
 
 export const Route = createFileRoute("/_authenticated/admin/review")({
-  head: () => ({ meta: [{ title: "Review Queue — MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "Review Queue | MedEuAi" }] }),
   component: ReviewPage,
 });
 
@@ -23,7 +23,7 @@ function ReviewPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["pending-questions"],
     queryFn: async () => {
-      // Uses SECURITY DEFINER RPC — regular users cannot read correct_index
+      // Uses SECURITY DEFINER RPC, regular users cannot read correct_index
       // from the questions table anymore.
       const { data, error } = await supabase.rpc("admin_pending_questions", {
         p_limit: 50,
@@ -74,7 +74,7 @@ function ReviewPage() {
     <div className="space-y-4">
       {data.map((q) => {
         const opts = (q.options as unknown[]) ?? [];
-        const subject = (q.subjects as { name: string } | null)?.name ?? "—";
+        const subject = (q.subjects as { name: string } | null)?.name ?? ", ";
         return (
           <Card key={q.id} className="border-border/60 bg-card/40 p-5">
             <div className="mb-2 flex flex-wrap items-center gap-2">

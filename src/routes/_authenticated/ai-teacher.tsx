@@ -55,13 +55,13 @@ export const Route = createFileRoute("/_authenticated/ai-teacher")({
   validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
-      { title: "AI Teacher — Your personal tutor | MedEu.Ai" },
+      { title: "AI Teacher, Your personal tutor | MedEuAi" },
       {
         name: "description",
         content:
-          "Learn with the MedEu.Ai AI Teacher: structured explanations, step-by-step solutions, exam shortcuts, quizzes and revision help for SSC, WBCS, Railway and Banking exams.",
+          "Learn with the MedEuAi AI Teacher: structured explanations, step-by-step solutions, exam shortcuts, quizzes and revision help for SSC, WBCS, Railway and Banking exams.",
       },
-      { property: "og:title", content: "AI Teacher — Your personal tutor | MedEu.Ai" },
+      { property: "og:title", content: "AI Teacher, Your personal tutor | MedEuAi" },
       {
         property: "og:description",
         content: "Structured explanations, step-by-step solutions and practice, available 24/7.",
@@ -73,7 +73,7 @@ export const Route = createFileRoute("/_authenticated/ai-teacher")({
 
 type Msg = { role: "user" | "assistant"; content: string; kind?: MsgKind };
 
-/** Presentation-only labels. Derived from the mode the student used — never from faked content. */
+/** Presentation-only labels. Derived from the mode the student used, never from faked content. */
 type MsgKind =
   | "explanation"
   | "steps"
@@ -115,7 +115,7 @@ const QUICK_ACTIONS: {
     label: "Solve a question",
     mode: "steps",
     kind: "steps",
-    prompt: () => "Here is my question — solve it step by step: ",
+    prompt: () => "Here is my question, solve it step by step: ",
   },
   {
     label: "Create a quiz",
@@ -133,7 +133,7 @@ const QUICK_ACTIONS: {
     label: "Help me revise",
     mode: "plan",
     kind: "tip",
-    prompt: (e) => `Help me revise ${e} today — what should I focus on first?`,
+    prompt: (e) => `Help me revise ${e} today, what should I focus on first?`,
   },
 ];
 
@@ -253,7 +253,7 @@ function AITeacherPage() {
         JSON.stringify({ messages: messages.slice(-30), mode, level, language }),
       );
     } catch {
-      /* storage full — non-critical */
+      /* storage full, non-critical */
     }
   }, [messages, mode, level, language]);
 
@@ -396,7 +396,7 @@ function AITeacherPage() {
   const exam = examLabel(profile?.target_exam);
   const promptExam = exam || "exam";
 
-  // Personalisation from data already loaded on the client — no new queries.
+  // Personalisation from data already loaded on the client, no new queries.
   const recommendation = useMemo(() => {
     if (exam) {
       return `You're preparing for ${exam}. Ask me to explain a topic from its syllabus, or start a 3-question quiz.`;
@@ -411,7 +411,7 @@ function AITeacherPage() {
         <div className="flex min-w-0 items-center gap-3">
           <img
             src={BRAND_LOGO_URL}
-            alt="MedEu.Ai AI Teacher"
+            alt="MedEuAi AI Teacher"
             className="h-10 w-10 shrink-0 rounded-md object-contain"
           />
           <div className="min-w-0">
@@ -619,7 +619,7 @@ function AITeacherPage() {
                     ? "Which topic should I quiz you on?"
                     : mode === "plan"
                       ? "Tell me your exam and days left…"
-                      : "Ask anything — I'll explain it your way…"
+                      : "Ask anything, I'll explain it your way…"
               }
             />
             <PromptInputFooter className="justify-end">

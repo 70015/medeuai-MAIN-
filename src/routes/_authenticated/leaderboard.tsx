@@ -18,7 +18,7 @@ import { formatSeconds } from "@/lib/exam";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
-  head: () => ({ meta: [{ title: "Leaderboard — MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "Leaderboard | MedEuAi" }] }),
   component: LeaderboardPage,
 });
 

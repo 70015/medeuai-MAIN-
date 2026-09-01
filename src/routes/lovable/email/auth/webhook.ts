@@ -31,7 +31,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "MedEu.Ai"
+const SITE_NAME = "MedEuAi"
 const SENDER_DOMAIN = "notify.hello.medeu.aigmail.com"
 const ROOT_DOMAIN = "hello.medeu.aigmail.com"
 const FROM_DOMAIN = "hello.medeu.aigmail.com"

@@ -26,7 +26,7 @@ import {
 } from "@/lib/articles-admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/articles/$id")({
-  head: () => ({ meta: [{ title: "Edit article — Admin — MedEu.Ai" }] }),
+  head: () => ({ meta: [{ title: "Edit article, Admin | MedEuAi" }] }),
   component: ArticleEditor,
 });
 

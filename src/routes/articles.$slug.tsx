@@ -25,7 +25,7 @@ export const Route = createFileRoute("/articles/$slug")({
     if (!loaderData) {
       return {
         meta: [
-          { title: "Article not found — MedEu.Ai" },
+          { title: "Article not found | MedEuAi" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -33,9 +33,9 @@ export const Route = createFileRoute("/articles/$slug")({
     const desc =
       loaderData.meta_description ??
       loaderData.excerpt ??
-      `Read "${loaderData.title}" on MedEu.Ai.`;
+      `Read "${loaderData.title}" on MedEuAi.`;
     const pageTitle =
-      loaderData.meta_title ?? `${loaderData.title} — MedEu.Ai`;
+      loaderData.meta_title ?? `${loaderData.title} | MedEuAi`;
     const url = `https://medeuai.in/articles/${params.slug}`;
     const noindex = Boolean(loaderData.noindex);
     return {
@@ -85,7 +85,7 @@ export const Route = createFileRoute("/articles/$slug")({
                     : {}),
                   publisher: {
                     "@type": "Organization",
-                    name: "MedEu.Ai",
+                    name: "MedEuAi",
                     logo: {
                       "@type": "ImageObject",
                       url: "https://medeuai.in/favicon.png",
@@ -220,7 +220,7 @@ function ArticlePage() {
 
           <CtaStrip
             heading="Start your preparation today"
-            text="Your personal AI teacher, mock tests and instant doubt solving — free to start."
+            text="Your personal AI teacher, mock tests and instant doubt solving, free to start."
             action="Get Started"
           />
 
@@ -231,7 +231,7 @@ function ArticlePage() {
 
           <CtaStrip
             heading="Ready to prepare smarter?"
-            text="Learn, practice and improve with MedEu.Ai."
+            text="Learn, practice and improve with MedEuAi."
           />
         </article>
 
@@ -256,7 +256,7 @@ function ArticlePage() {
 
         <footer className="mt-10 flex flex-col items-center gap-3 border-t border-border/60 pt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            MedEu.Ai — Your Personal AI Teacher, 24/7.
+            MedEuAi, Your Personal AI Teacher, 24/7.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <Button asChild size="sm">

@@ -36,7 +36,7 @@ export function examLabel(code: string | null | undefined): string {
     case "other":
       return "Other";
     default:
-      return "—";
+      return "-";
   }
 }
 

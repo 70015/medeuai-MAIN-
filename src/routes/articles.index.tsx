@@ -11,10 +11,10 @@ export const Route = createFileRoute("/articles/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(articlesQuery),
   head: () => ({
     meta: [
-      { title: "Articles — MedEu.Ai" },
-      { name: "description", content: "Exam preparation articles, study guides, and AI learning resources from MedEu.Ai." },
-      { property: "og:title", content: "Articles — MedEu.Ai" },
-      { property: "og:description", content: "Exam preparation articles, study guides, and AI learning resources from MedEu.Ai." },
+      { title: "Articles | MedEuAi" },
+      { name: "description", content: "Exam preparation articles, study guides, and AI learning resources from MedEuAi." },
+      { property: "og:title", content: "Articles | MedEuAi" },
+      { property: "og:description", content: "Exam preparation articles, study guides, and AI learning resources from MedEuAi." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://medeuai.in/articles" },
       { name: "twitter:card", content: "summary" },
@@ -39,7 +39,7 @@ function ArticlesPage() {
   return (
     <main className="container mx-auto max-w-6xl px-4 py-10 sm:py-14">
       <div className="mb-8 sm:mb-10">
-        <span className="brand-eyebrow">MedEu.Ai Blog</span>
+        <span className="brand-eyebrow">MedEuAi Blog</span>
         <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
           Articles &amp; Study Resources
         </h1>
