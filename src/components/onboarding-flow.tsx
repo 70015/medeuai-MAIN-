@@ -220,7 +220,7 @@ export function OnboardingFlow({ name }: { name?: string }) {
                   </li>
                   <li>
                     <span className="font-medium text-foreground">Focus:</span>{" "}
-                    {answers.subjects.length ? answers.subjects.join(", ") : ", "}
+                    {answers.subjects.length ? answers.subjects.join(", ") : "-"}
                   </li>
                   <li>
                     <span className="font-medium text-foreground">Level:</span>{" "}

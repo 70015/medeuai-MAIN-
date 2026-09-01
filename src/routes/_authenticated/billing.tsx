@@ -165,7 +165,7 @@ function BillingPage() {
               <h3 className="text-lg font-semibold">{p.name}</h3>
               <div className="mt-2 flex items-baseline gap-1">
                 <span className="text-3xl font-bold">
-                  {priceFor(p.lookup_key) ? `₹${priceFor(p.lookup_key)}` : ", "}
+                  {priceFor(p.lookup_key) ? `₹${priceFor(p.lookup_key)}` : "-"}
                 </span>
                 <span className="text-sm text-muted-foreground">{p.cadence}</span>
               </div>

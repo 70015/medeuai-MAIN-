@@ -231,11 +231,11 @@ function ProgressPage() {
       {/* Headline metrics */}
       <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-5">
-          <DarkStat label="Accuracy" value={submitted.length ? `${accuracy}%` : ", "} />
+          <DarkStat label="Accuracy" value={submitted.length ? `${accuracy}%` : "-"} />
           <DarkStat label="Questions solved" value={`${questionsSolved}`} />
           <DarkStat label="Tests completed" value={`${submitted.length}`} />
-          <DarkStat label="Study time" value={submitted.length ? studyLabel : ", "} />
-          <DarkStat label="Current streak" value={streak ? `${streak} day${streak > 1 ? "s" : ""}` : ", "} />
+          <DarkStat label="Study time" value={submitted.length ? studyLabel : "-"} />
+          <DarkStat label="Current streak" value={streak ? `${streak} day${streak > 1 ? "s" : ""}` : "-"} />
         </dl>
         {!submitted.length && (
           <p className="mt-6 border-t border-white/10 pt-5 text-sm text-white/70">
