@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About MedEuAi, AI Exam Prep for India" },
+      { title: "About MedEuAi | AI Exam Prep for India" },
       {
         name: "description",
         content:

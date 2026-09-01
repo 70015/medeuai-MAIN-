@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MedEuAi, Your Personal AI Teacher, 24/7" },
+      { title: "MedEuAi | Your Personal AI Teacher, 24/7" },
       {
         name: "description",
         content:
@@ -93,14 +93,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "MedEuAi" },
       { name: "theme-color", content: "#04211C" },
       { property: "og:site_name", content: "MedEuAi" },
-      { property: "og:title", content: "MedEuAi, Your Personal AI Teacher, 24/7" },
+      { property: "og:title", content: "MedEuAi | Your Personal AI Teacher, 24/7" },
       {
         property: "og:description",
         content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking, in Bengali, Hindi and English.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "MedEuAi, Your Personal AI Teacher, 24/7" },
+      { name: "twitter:title", content: "MedEuAi | Your Personal AI Teacher, 24/7" },
       { name: "twitter:description", content: "AI mock tests, PYQs and analytics for SSC, WBCS, Railway and Banking, in Bengali, Hindi and English." },
     ],
     links: [
@@ -121,7 +121,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "EducationalOrganization",
           name: "MedEuAi",
-          alternateName: "MedEuAi, Your Personal AI Teacher",
+          alternateName: "MedEuAi | Your Personal AI Teacher",
           url: "https://medeuai.in",
           logo: "https://medeuai.in/favicon.png",
           email: "hello.medeu.ai@gmail.com",

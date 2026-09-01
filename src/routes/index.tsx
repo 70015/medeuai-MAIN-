@@ -35,13 +35,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MedEuAi, Your Personal AI Teacher, 24/7" },
+      { title: "MedEuAi | Your Personal AI Teacher, 24/7" },
       {
         name: "description",
         content:
           "Learn smarter with a personal AI teacher, unlimited mock tests, previous-year papers and performance analysis for SSC, Railway, Banking, WBCS and WBPSC.",
       },
-      { property: "og:title", content: "MedEuAi, Your Personal AI Teacher" },
+      { property: "og:title", content: "MedEuAi | Your Personal AI Teacher" },
       {
         property: "og:description",
         content:
@@ -50,7 +50,7 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: "https://medeuai.in/" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "MedEuAi, Your Personal AI Teacher" },
+      { name: "twitter:title", content: "MedEuAi | Your Personal AI Teacher" },
       {
         name: "twitter:description",
         content:
