@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 /**
- * MedEu.Ai Android wrapper.
+ * MedEuAi Android wrapper.
  *
  * The web app is server-rendered (TanStack Start), so the Android app loads the
  * live hosted site instead of a static bundle. This keeps backend, auth, AI and
@@ -11,7 +11,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
  */
 const config: CapacitorConfig = {
   appId: "ai.medeu.app",
-  appName: "MedEu.Ai",
+  appName: "MedEuAi",
   // Only used as a fallback shell; the app loads server.url at runtime.
   webDir: "public",
   server: {

@@ -1,6 +1,6 @@
-# MedEu.Ai — Android APK release guide
+# MedEuAi — Android APK release guide
 
-The Android app is a Capacitor wrapper that loads the live MedEu.Ai site
+The Android app is a Capacitor wrapper that loads the live MedEuAi site
 (`capacitor.config.ts` → `server.url`). Backend, auth, AI Teacher and payments
 behave exactly as on the web. No product logic is duplicated natively.
 
