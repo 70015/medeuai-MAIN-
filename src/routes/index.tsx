@@ -555,6 +555,14 @@ function LandingPage() {
                     Privacy Policy
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    to="/terms-and-conditions"
+                    className="text-foreground hover:text-primary"
+                  >
+                    Terms &amp; Conditions
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
