@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/password-input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -41,6 +42,7 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [step, setStep] = useState<Step>("form");
+  const [agreed, setAgreed] = useState(false);
 
   // Redirect away if already signed in
   useEffect(() => {
@@ -56,6 +58,10 @@ function AuthPage() {
 
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
+    if (mode === "signup" && !agreed) {
+      toast.error("Please accept the Terms & Conditions and Privacy Policy to continue");
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "signup") {
@@ -118,6 +124,10 @@ function AuthPage() {
   }
 
   async function handleGoogle() {
+    if (mode === "signup" && !agreed) {
+      toast.error("Please accept the Terms & Conditions and Privacy Policy to continue");
+      return;
+    }
     setGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
@@ -316,7 +326,48 @@ function AuthPage() {
                     </div>
                   )}
 
-                  <Button type="submit" size="lg" className="w-full" disabled={loading}>
+                  {mode === "signup" && (
+                    <div className="flex items-start gap-2.5 pt-1">
+                      <Checkbox
+                        id="terms"
+                        checked={agreed}
+                        onCheckedChange={(v) => setAgreed(v === true)}
+                        className="mt-0.5"
+                        required
+                      />
+                      <Label
+                        htmlFor="terms"
+                        className="text-xs font-normal leading-relaxed text-muted-foreground"
+                      >
+                        I agree to the{" "}
+                        <Link
+                          to="/terms-and-conditions"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-primary hover:underline"
+                        >
+                          Terms &amp; Conditions
+                        </Link>{" "}
+                        and the{" "}
+                        <Link
+                          to="/privacy-policy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-primary hover:underline"
+                        >
+                          Privacy Policy
+                        </Link>
+                        .
+                      </Label>
+                    </div>
+                  )}
+
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={loading || (mode === "signup" && !agreed)}
+                  >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {mode === "signup"
                       ? "Create free account"
