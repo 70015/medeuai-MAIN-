@@ -58,6 +58,10 @@ function AuthPage() {
 
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
+    if (mode === "signup" && !agreed) {
+      toast.error("Please accept the Terms & Conditions and Privacy Policy to continue");
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "signup") {
@@ -120,6 +124,10 @@ function AuthPage() {
   }
 
   async function handleGoogle() {
+    if (mode === "signup" && !agreed) {
+      toast.error("Please accept the Terms & Conditions and Privacy Policy to continue");
+      return;
+    }
     setGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
