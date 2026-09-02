@@ -326,7 +326,48 @@ function AuthPage() {
                     </div>
                   )}
 
-                  <Button type="submit" size="lg" className="w-full" disabled={loading}>
+                  {mode === "signup" && (
+                    <div className="flex items-start gap-2.5 pt-1">
+                      <Checkbox
+                        id="terms"
+                        checked={agreed}
+                        onCheckedChange={(v) => setAgreed(v === true)}
+                        className="mt-0.5"
+                        required
+                      />
+                      <Label
+                        htmlFor="terms"
+                        className="text-xs font-normal leading-relaxed text-muted-foreground"
+                      >
+                        I agree to the{" "}
+                        <Link
+                          to="/terms-and-conditions"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-primary hover:underline"
+                        >
+                          Terms &amp; Conditions
+                        </Link>{" "}
+                        and the{" "}
+                        <Link
+                          to="/privacy-policy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-primary hover:underline"
+                        >
+                          Privacy Policy
+                        </Link>
+                        .
+                      </Label>
+                    </div>
+                  )}
+
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={loading || (mode === "signup" && !agreed)}
+                  >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {mode === "signup"
                       ? "Create free account"
