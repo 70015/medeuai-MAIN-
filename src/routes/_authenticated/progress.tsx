@@ -229,7 +229,7 @@ function ProgressPage() {
       </header>
 
       {/* Headline metrics */}
-      <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
+      <section className="rounded-xl bg-[#04211C] dark:bg-card dark:border dark:border-border p-6 text-white sm:p-8">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-5">
           <DarkStat label="Accuracy" value={submitted.length ? `${accuracy}%` : "-"} />
           <DarkStat label="Questions solved" value={`${questionsSolved}`} />
@@ -343,7 +343,7 @@ function ProgressPage() {
       </section>
 
       {/* MedEu recommendation, premium AI Teacher guidance */}
-      <section className="overflow-hidden rounded-xl bg-[#04211C] text-white">
+      <section className="overflow-hidden rounded-xl bg-[#04211C] dark:bg-card dark:border dark:border-border text-white">
         <div className="p-6 sm:p-8">
           <div className="flex items-center gap-2.5">
             <BrandMark className="h-8 w-8 rounded-md bg-white p-0.5" />

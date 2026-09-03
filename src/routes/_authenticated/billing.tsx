@@ -247,7 +247,7 @@ function BillingPage() {
             className="font-mono uppercase tracking-wider"
           />
           <Button
-            className="bg-[#04211C] text-white hover:bg-[#02663E]"
+            className="bg-[#04211C] text-white hover:bg-[#02663E] dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
             disabled={!promoCode.trim() || redeem.isPending}
             onClick={() => redeem.mutate()}
           >

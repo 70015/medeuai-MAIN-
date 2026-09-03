@@ -293,7 +293,7 @@ function PayPage() {
 
               {!showForm ? (
                 <Button
-                  className="mt-4 w-full bg-[#04211C] text-white hover:bg-[#02663E]"
+                  className="mt-4 w-full bg-[#04211C] text-white hover:bg-[#02663E] dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
                   onClick={() => setShowForm(true)}
                 >
                   Submit for verification

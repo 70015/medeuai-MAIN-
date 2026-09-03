@@ -157,7 +157,7 @@ function TestsListPage() {
 
       {/* Recommended test */}
       {recommended && (
-        <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
+        <section className="rounded-xl bg-[#04211C] dark:bg-card dark:border dark:border-border p-6 text-white sm:p-8">
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
             <Target className="h-3.5 w-3.5" /> Recommended for you
           </div>
