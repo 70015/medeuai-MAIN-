@@ -294,7 +294,7 @@ function ProfilePage() {
   return (
     <div className="space-y-10 pb-4">
       {/* Identity */}
-      <header className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
+      <header className="rounded-xl bg-[#04211C] dark:bg-card dark:border dark:border-border p-6 text-white sm:p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
           <ProfilePhoto
             userId={profile.id}

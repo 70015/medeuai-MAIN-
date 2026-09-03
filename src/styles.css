@@ -152,65 +152,66 @@
   color-scheme: light;
 }
 
-/* ---------- Dark theme (deep green ink surfaces) ---------------------- */
+/* ---------- Dark theme (true near-black charcoal) --------------------- */
 .dark {
   color-scheme: dark;
 
-  --background: #04211c;
-  --foreground: #ffffff;
-  --surface: #062b24;
-  --surface-elevated: #0a352c;
+  --background: #0a0a0b;
+  --foreground: #f2f3f2;
+  --surface: #121214;
+  --surface-elevated: #17181a;
 
-  --card: #062b24;
-  --card-foreground: #ffffff;
-  --popover: #0a352c;
-  --popover-foreground: #ffffff;
+  --card: #121214;
+  --card-foreground: #f2f3f2;
+  --popover: #17181a;
+  --popover-foreground: #f2f3f2;
 
-  --primary: #04a163;
+  --primary: #10b981;
   --primary-foreground: #04211c;
-  --primary-glow: #03824f;
+  --primary-glow: #059669;
 
-  --ink: #ffffff;
-  --ink-foreground: #04211c;
+  --ink: #f2f3f2;
+  --ink-foreground: #0a0a0b;
 
-  --secondary: #0a352c;
-  --secondary-foreground: #ffffff;
-  --muted: #0a352c;
-  --muted-foreground: #b6c8c1;
-  --accent: #0d4034;
-  --accent-foreground: #ffffff;
+  --secondary: #1c1d1f;
+  --secondary-foreground: #f2f3f2;
+  --muted: #1c1d1f;
+  --muted-foreground: #a1a1a6;
+  --accent: #232427;
+  --accent-foreground: #f2f3f2;
 
-  --success: #04a163;
+  --success: #10b981;
   --success-foreground: #04211c;
-  --warning: #d8b451;
-  --warning-foreground: #04211c;
-  --destructive: #e05555;
-  --destructive-foreground: #04211c;
+  --warning: #e0b350;
+  --warning-foreground: #0a0a0b;
+  --destructive: #ef5f5f;
+  --destructive-foreground: #0a0a0b;
 
-  --border: rgb(255 255 255 / 12%);
-  --input: rgb(255 255 255 / 16%);
-  --ring: #04a163;
+  --border: rgb(255 255 255 / 10%);
+  --input: rgb(255 255 255 / 14%);
+  --ring: #10b981;
 
-  --chart-1: #04a163;
-  --chart-2: #7fbfa2;
-  --chart-3: #ffffff;
-  --chart-4: #03824f;
-  --chart-5: #b6c8c1;
+  --chart-1: #10b981;
+  --chart-2: #6ee7b7;
+  --chart-3: #f2f3f2;
+  --chart-4: #059669;
+  --chart-5: #a1a1a6;
 
-  --sidebar: #062b24;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #04a163;
+  --sidebar: #101012;
+  --sidebar-foreground: #f2f3f2;
+  --sidebar-primary: #10b981;
   --sidebar-primary-foreground: #04211c;
-  --sidebar-accent: rgb(255 255 255 / 8%);
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgb(255 255 255 / 12%);
-  --sidebar-ring: #04a163;
+  --sidebar-accent: rgb(255 255 255 / 7%);
+  --sidebar-accent-foreground: #f2f3f2;
+  --sidebar-border: rgb(255 255 255 / 10%);
+  --sidebar-ring: #10b981;
 
   --gradient-primary: var(--primary);
   --gradient-hero: var(--surface);
-  --shadow-glow: 0 0 0 1px rgb(255 255 255 / 12%);
-  --shadow-elegant: 0 8px 24px -18px rgb(0 0 0 / 60%);
+  --shadow-glow: 0 0 0 1px rgb(255 255 255 / 10%);
+  --shadow-elegant: 0 8px 24px -18px rgb(0 0 0 / 80%);
 }
+
 
 /* ---------- Reusable brand utilities --------------------------------- */
 

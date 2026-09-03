@@ -115,7 +115,7 @@ function ResultsPage() {
     <div className="space-y-10 pb-4">
       <BackLink to="/tests" label="Back to Practice" />
       {/* Score */}
-      <section className="rounded-xl bg-[#04211C] p-6 text-white sm:p-8">
+      <section className="rounded-xl bg-[#04211C] dark:bg-card dark:border dark:border-border p-6 text-white sm:p-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
           {a.mock_tests.title}
         </p>

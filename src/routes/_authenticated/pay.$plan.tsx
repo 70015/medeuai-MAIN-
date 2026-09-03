@@ -192,7 +192,7 @@ function PayPage() {
             </div>
 
             <div className="mt-4 rounded-lg border border-border/60 bg-[#EAF7F1] p-3">
-              <div className="text-xs font-medium uppercase tracking-wide text-[#02663E]">
+              <div className="text-xs font-medium uppercase tracking-wide text-[#02663E] dark:text-primary">
                 Pay to
               </div>
               <div className="mt-1 text-sm font-semibold text-[#04211C]">
@@ -263,7 +263,7 @@ function PayPage() {
 
           {pending ? (
             <Card className="border-[#03824F]/40 bg-[#EAF7F1] p-5">
-              <h2 className="flex items-center gap-2 text-sm font-semibold text-[#04211C]">
+              <h2 className="flex items-center gap-2 text-sm font-semibold text-[#04211C] dark:text-foreground">
                 <Clock className="h-4 w-4" /> Awaiting verification
               </h2>
               <p className="mt-2 text-sm text-[#33403D]">
@@ -293,7 +293,7 @@ function PayPage() {
 
               {!showForm ? (
                 <Button
-                  className="mt-4 w-full bg-[#04211C] text-white hover:bg-[#02663E]"
+                  className="mt-4 w-full bg-[#04211C] text-white hover:bg-[#02663E] dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
                   onClick={() => setShowForm(true)}
                 >
                   Submit for verification
@@ -432,7 +432,7 @@ export function StatusBadge({ status }: { status: string }) {
     return <Badge className="bg-[#03824F] text-white hover:bg-[#02663E]">Verified</Badge>;
   if (status === "rejected") return <Badge variant="destructive">Rejected</Badge>;
   return (
-    <Badge variant="outline" className="border-[#02663E]/40 text-[#02663E]">
+    <Badge variant="outline" className="border-[#02663E]/40 text-[#02663E] dark:text-primary">
       Pending
     </Badge>
   );

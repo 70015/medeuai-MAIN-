@@ -101,7 +101,7 @@ function BillingPage() {
           }
         >
           <Badge className="mb-2 bg-[#03824F] text-white hover:bg-[#02663E]">Pro active</Badge>
-          <h2 className="text-lg font-semibold text-[#04211C]">
+          <h2 className="text-lg font-semibold text-[#04211C] dark:text-foreground">
             You're on the {plan.priceId === "pro_yearly" ? "Yearly" : "Monthly"} plan
           </h2>
           <p className="mt-1 text-sm text-[#33403D]">
@@ -215,7 +215,7 @@ function BillingPage() {
                   variant="outline"
                   className={
                     r.status === "verified"
-                      ? "border-[#03824F]/40 text-[#02663E]"
+                      ? "border-[#03824F]/40 text-[#02663E] dark:text-primary"
                       : r.status === "rejected"
                         ? "border-destructive/40 text-destructive"
                         : "border-amber-500/40 text-amber-700"
@@ -247,7 +247,7 @@ function BillingPage() {
             className="font-mono uppercase tracking-wider"
           />
           <Button
-            className="bg-[#04211C] text-white hover:bg-[#02663E]"
+            className="bg-[#04211C] text-white hover:bg-[#02663E] dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
             disabled={!promoCode.trim() || redeem.isPending}
             onClick={() => redeem.mutate()}
           >
