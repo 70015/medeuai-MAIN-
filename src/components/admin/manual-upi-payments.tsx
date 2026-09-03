@@ -275,7 +275,7 @@ export function ManualUpiPayments() {
       <Card className="border-border/60 bg-card/40 p-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-base font-semibold">Payment requests</h2>
-          <Badge variant="outline" className="border-[#02663E]/40 text-[#02663E]">
+          <Badge variant="outline" className="border-[#02663E]/40 text-[#02663E] dark:text-primary">
             {pending.length} pending
           </Badge>
         </div>
@@ -508,7 +508,7 @@ function StatusPill({ status }: { status: string }) {
     return <Badge className="bg-[#03824F] text-white hover:bg-[#02663E]">Verified</Badge>;
   if (status === "rejected") return <Badge variant="destructive">Rejected</Badge>;
   return (
-    <Badge variant="outline" className="border-[#02663E]/40 text-[#02663E]">
+    <Badge variant="outline" className="border-[#02663E]/40 text-[#02663E] dark:text-primary">
       Pending
     </Badge>
   );
