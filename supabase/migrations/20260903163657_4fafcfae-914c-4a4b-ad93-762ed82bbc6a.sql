@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public.email_queue_wake() TO service_role;
