@@ -105,15 +105,22 @@ export const setUserRole = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => RoleInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("has_role", {
+    const { data: isSuper } = await supabase.rpc("is_super_admin", {
       _user_id: userId,
-      _role: "admin",
     });
-    if (!isAdmin) throw new Error("Admin role required");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (!isSuper) throw new Error("Only the Super Admin can manage roles");
 
+    const { data: superRow } = await supabase
+      .from("super_admin")
+      .select("user_id")
+      .maybeSingle();
+    if (superRow?.user_id === data.userId) {
+      throw new Error("The Super Admin account cannot be modified");
+    }
+
+    // Uses the caller's own session so the database-side Super Admin rules apply.
     if (data.action === "grant") {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from("user_roles")
         .upsert(
           { user_id: data.userId, role: data.role },
@@ -121,14 +128,7 @@ export const setUserRole = createServerFn({ method: "POST" })
         );
       if (error) throw new Error(error.message);
     } else {
-      if (data.userId === userId && data.role === "admin") {
-        const { count } = await supabaseAdmin
-          .from("user_roles")
-          .select("user_id", { count: "exact", head: true })
-          .eq("role", "admin");
-        if ((count ?? 0) <= 1) throw new Error("Cannot revoke the last admin");
-      }
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from("user_roles")
         .delete()
         .eq("user_id", data.userId)
@@ -160,6 +160,11 @@ export const listUsers = createServerFn({ method: "GET" })
       .from("user_roles")
       .select("user_id, role");
 
+    const { data: superRow } = await supabaseAdmin
+      .from("super_admin")
+      .select("user_id")
+      .maybeSingle();
+
     const byUser = new Map<string, string[]>();
     (roles ?? []).forEach((r) => {
       const arr = byUser.get(r.user_id) ?? [];
@@ -167,9 +172,14 @@ export const listUsers = createServerFn({ method: "GET" })
       byUser.set(r.user_id, arr);
     });
 
-    return (profiles ?? []).map((p) => ({
-      ...p,
-      roles: byUser.get(p.id) ?? [],
-    }));
+    return {
+      superAdminId: superRow?.user_id ?? null,
+      viewerIsSuperAdmin: superRow?.user_id === userId,
+      users: (profiles ?? []).map((p) => ({
+        ...p,
+        roles: byUser.get(p.id) ?? [],
+      })),
+    };
   });
+
 

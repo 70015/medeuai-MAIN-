@@ -1254,6 +1254,24 @@ export type Database = {
         }
         Relationships: []
       }
+      super_admin: {
+        Row: {
+          created_at: string
+          singleton: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          singleton?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          singleton?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -1496,6 +1514,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       move_to_dlq: {
         Args: {
           dlq_name: string
