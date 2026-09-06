@@ -37,7 +37,10 @@ function UsersPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const filtered = (data ?? []).filter((u) => {
+  const superAdminId = data?.superAdminId ?? null;
+  const viewerIsSuperAdmin = data?.viewerIsSuperAdmin ?? false;
+
+  const filtered = (data?.users ?? []).filter((u) => {
     if (!q.trim()) return true;
     const s = q.toLowerCase();
     return (
@@ -58,6 +61,12 @@ function UsersPage() {
         />
       </div>
 
+      {!viewerIsSuperAdmin && (
+        <Card className="border-border/60 bg-card/40 p-4 text-xs text-muted-foreground">
+          Only the Super Admin can change admin access.
+        </Card>
+      )}
+
       {isLoading ? (
         <Card className="grid h-24 place-items-center"><Loader2 className="h-4 w-4 animate-spin" /></Card>
       ) : filtered.length === 0 ? (
@@ -66,12 +75,17 @@ function UsersPage() {
         <div className="space-y-2">
           {filtered.map((u) => {
             const isAdmin = u.roles.includes("admin");
+            const isSuper = u.id === superAdminId;
             return (
               <Card key={u.id} className="flex flex-wrap items-center justify-between gap-3 border-border/60 bg-card/40 p-4">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="truncate text-sm font-semibold">{u.full_name ?? ", "}</p>
-                    {isAdmin && <Badge className="bg-primary/15 text-primary">Admin</Badge>}
+                    {isSuper ? (
+                      <Badge className="bg-primary/15 text-primary">Super Admin</Badge>
+                    ) : (
+                      isAdmin && <Badge className="bg-primary/15 text-primary">Admin</Badge>
+                    )}
                     <Badge variant="outline" className="capitalize">{u.plan ?? "free"}</Badge>
                   </div>
                   <p className="truncate text-xs text-muted-foreground">{u.email}</p>
@@ -79,25 +93,30 @@ function UsersPage() {
                     <p className="text-xs text-muted-foreground">Target: {u.target_exam}</p>
                   )}
                 </div>
-                <Button
-                  size="sm"
-                  variant={isAdmin ? "outline" : "default"}
-                  disabled={mutate.isPending}
-                  onClick={() =>
-                    mutate.mutate({ userId: u.id, action: isAdmin ? "revoke" : "grant" })
-                  }
-                >
-                  {isAdmin ? (
-                    <><ShieldOff className="mr-1 h-4 w-4" /> Revoke admin</>
-                  ) : (
-                    <><Shield className="mr-1 h-4 w-4" /> Make admin</>
-                  )}
-                </Button>
+                {isSuper ? (
+                  <span className="text-xs text-muted-foreground">Protected account</span>
+                ) : viewerIsSuperAdmin ? (
+                  <Button
+                    size="sm"
+                    variant={isAdmin ? "outline" : "default"}
+                    disabled={mutate.isPending}
+                    onClick={() =>
+                      mutate.mutate({ userId: u.id, action: isAdmin ? "revoke" : "grant" })
+                    }
+                  >
+                    {isAdmin ? (
+                      <><ShieldOff className="mr-1 h-4 w-4" /> Revoke admin</>
+                    ) : (
+                      <><Shield className="mr-1 h-4 w-4" /> Make admin</>
+                    )}
+                  </Button>
+                ) : null}
               </Card>
             );
           })}
         </div>
       )}
+
     </div>
   );
 }
