@@ -18,6 +18,17 @@ export type Database = {
         Row: {
           address: string | null
           business_email: string | null
+          cofounder_image_url: string | null
+          cofounder_name: string | null
+          cofounder_position: string | null
+          cofounder_quote: string | null
+          cofounder_social_facebook: string | null
+          cofounder_social_instagram: string | null
+          cofounder_social_linkedin: string | null
+          cofounder_social_telegram: string | null
+          cofounder_social_website: string | null
+          cofounder_social_x: string | null
+          cofounder_social_youtube: string | null
           company_description: string
           cover_image_url: string | null
           created_at: string
@@ -26,6 +37,13 @@ export type Database = {
           founder_name: string
           founder_position: string
           founder_quote: string
+          founder_social_facebook: string | null
+          founder_social_instagram: string | null
+          founder_social_linkedin: string | null
+          founder_social_telegram: string | null
+          founder_social_website: string | null
+          founder_social_x: string | null
+          founder_social_youtube: string | null
           gallery_images: string[]
           hero_subtitle: string
           hero_title: string
@@ -74,6 +92,17 @@ export type Database = {
         Insert: {
           address?: string | null
           business_email?: string | null
+          cofounder_image_url?: string | null
+          cofounder_name?: string | null
+          cofounder_position?: string | null
+          cofounder_quote?: string | null
+          cofounder_social_facebook?: string | null
+          cofounder_social_instagram?: string | null
+          cofounder_social_linkedin?: string | null
+          cofounder_social_telegram?: string | null
+          cofounder_social_website?: string | null
+          cofounder_social_x?: string | null
+          cofounder_social_youtube?: string | null
           company_description?: string
           cover_image_url?: string | null
           created_at?: string
@@ -82,6 +111,13 @@ export type Database = {
           founder_name?: string
           founder_position?: string
           founder_quote?: string
+          founder_social_facebook?: string | null
+          founder_social_instagram?: string | null
+          founder_social_linkedin?: string | null
+          founder_social_telegram?: string | null
+          founder_social_website?: string | null
+          founder_social_x?: string | null
+          founder_social_youtube?: string | null
           gallery_images?: string[]
           hero_subtitle?: string
           hero_title?: string
@@ -130,6 +166,17 @@ export type Database = {
         Update: {
           address?: string | null
           business_email?: string | null
+          cofounder_image_url?: string | null
+          cofounder_name?: string | null
+          cofounder_position?: string | null
+          cofounder_quote?: string | null
+          cofounder_social_facebook?: string | null
+          cofounder_social_instagram?: string | null
+          cofounder_social_linkedin?: string | null
+          cofounder_social_telegram?: string | null
+          cofounder_social_website?: string | null
+          cofounder_social_x?: string | null
+          cofounder_social_youtube?: string | null
           company_description?: string
           cover_image_url?: string | null
           created_at?: string
@@ -138,6 +185,13 @@ export type Database = {
           founder_name?: string
           founder_position?: string
           founder_quote?: string
+          founder_social_facebook?: string | null
+          founder_social_instagram?: string | null
+          founder_social_linkedin?: string | null
+          founder_social_telegram?: string | null
+          founder_social_website?: string | null
+          founder_social_x?: string | null
+          founder_social_youtube?: string | null
           gallery_images?: string[]
           hero_subtitle?: string
           hero_title?: string
