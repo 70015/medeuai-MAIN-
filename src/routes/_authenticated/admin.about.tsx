@@ -16,28 +16,34 @@ export const Route = createFileRoute("/_authenticated/admin/about")({
   component: AdminAboutEditor,
 });
 
-type AboutRow = {
-  id?: string;
-  hero_title: string | null;
-  hero_subtitle: string | null;
-  story_title: string | null;
-  story_paragraphs: string[] | null;
-  founder_name: string | null;
-  founder_position: string | null;
-  founder_quote: string | null;
-  founder_image_url: string | null;
-};
+const SOCIAL_FIELDS = [
+  { key: "instagram", label: "Instagram" },
+  { key: "facebook", label: "Facebook" },
+  { key: "linkedin", label: "LinkedIn" },
+  { key: "x", label: "X (Twitter)" },
+  { key: "youtube", label: "YouTube" },
+  { key: "telegram", label: "Telegram" },
+  { key: "website", label: "Website" },
+] as const;
 
-const EMPTY: AboutRow = {
-  hero_title: "",
-  hero_subtitle: "",
-  story_title: "",
-  story_paragraphs: [],
-  founder_name: "",
-  founder_position: "",
-  founder_quote: "",
-  founder_image_url: "",
-};
+const TEXT_KEYS = [
+  "hero_title",
+  "hero_subtitle",
+  "story_title",
+  "founder_name",
+  "founder_position",
+  "founder_quote",
+  "founder_image_url",
+  "cofounder_name",
+  "cofounder_position",
+  "cofounder_quote",
+  "cofounder_image_url",
+  ...SOCIAL_FIELDS.flatMap((s) => [`founder_social_${s.key}`, `cofounder_social_${s.key}`]),
+] as const;
+
+type Form = Record<string, string> & { id?: string };
+
+const EMPTY: Form = Object.fromEntries(TEXT_KEYS.map((k) => [k, ""])) as Form;
 
 function AdminAboutEditor() {
   const { data, isLoading, refetch } = useQuery({
@@ -49,54 +55,28 @@ function AdminAboutEditor() {
         .limit(1)
         .maybeSingle();
       if (error) throw error;
-      return data as AboutRow | null;
+      return data as Record<string, unknown> | null;
     },
   });
 
-  const [form, setForm] = useState<AboutRow>(EMPTY);
+  const [form, setForm] = useState<Form>(EMPTY);
   const [paragraphsText, setParagraphsText] = useState("");
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [signedFounder, setSignedFounder] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (data) {
-      setForm({ ...EMPTY, ...data });
-      setParagraphsText((data.story_paragraphs ?? []).join("\n\n"));
+    if (!data) return;
+    const next: Form = { ...EMPTY };
+    for (const k of TEXT_KEYS) {
+      const v = data[k];
+      next[k] = typeof v === "string" ? v : "";
     }
+    if (typeof data["id"] === "string") next.id = data["id"];
+    setForm(next);
+    setParagraphsText(((data["story_paragraphs"] as string[] | null) ?? []).join("\n\n"));
   }, [data]);
 
-  useEffect(() => {
-    const raw = form.founder_image_url;
-    if (!raw) { setSignedFounder(null); return; }
-    const match = raw.match(/about-media\/(.+)$/);
-    const path = match ? match[1] : raw;
-    supabase.storage.from("about-media").createSignedUrl(path, 3600)
-      .then(({ data }) => setSignedFounder(data?.signedUrl ?? null));
-  }, [form.founder_image_url]);
-
-  function set<K extends keyof AboutRow>(k: K, v: AboutRow[K]) {
+  function set(k: string, v: string) {
     setForm((f) => ({ ...f, [k]: v }));
-  }
-
-  async function handleUpload(file: File) {
-    setUploading(true);
-    try {
-      const ext = file.name.split(".").pop() ?? "jpg";
-      const path = `founder/${Date.now()}.${ext}`;
-      const { error } = await supabase.storage.from("about-media").upload(path, file, {
-        upsert: true,
-        contentType: file.type,
-      });
-      if (error) throw error;
-      set("founder_image_url", path);
-      toast.success("Image uploaded, remember to save.");
-    } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setUploading(false);
-    }
   }
 
   async function handleSave() {
@@ -107,21 +87,13 @@ function AdminAboutEditor() {
         .map((p) => p.trim())
         .filter(Boolean);
 
-      const payload = {
-        hero_title: form.hero_title ?? undefined,
-        hero_subtitle: form.hero_subtitle ?? undefined,
-        story_title: form.story_title ?? undefined,
-        story_paragraphs: paragraphs,
-        founder_name: form.founder_name ?? undefined,
-        founder_position: form.founder_position ?? undefined,
-        founder_quote: form.founder_quote ?? undefined,
-        founder_image_url: form.founder_image_url ?? undefined,
-        singleton: true,
-      };
+      const payload: Record<string, unknown> = { singleton: true, story_paragraphs: paragraphs };
+      for (const k of TEXT_KEYS) payload[k] = form[k]?.trim() ?? "";
 
+      const table = supabase.from("about_content");
       const { error } = form.id
-        ? await supabase.from("about_content").update(payload).eq("id", form.id)
-        : await supabase.from("about_content").insert(payload);
+        ? await table.update(payload as never).eq("id", form.id)
+        : await table.insert(payload as never);
 
       if (error) throw error;
       toast.success("About page saved");
@@ -143,7 +115,7 @@ function AdminAboutEditor() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">About page</h2>
           <p className="text-sm text-muted-foreground">
@@ -160,11 +132,11 @@ function AdminAboutEditor() {
         <h3 className="text-sm font-semibold text-muted-foreground">Hero</h3>
         <div className="grid gap-2">
           <Label>Hero title</Label>
-          <Input value={form.hero_title ?? ""} onChange={(e) => set("hero_title", e.target.value)} />
+          <Input value={form.hero_title} onChange={(e) => set("hero_title", e.target.value)} />
         </div>
         <div className="grid gap-2">
           <Label>Hero subtitle</Label>
-          <Textarea rows={3} value={form.hero_subtitle ?? ""} onChange={(e) => set("hero_subtitle", e.target.value)} />
+          <Textarea rows={3} value={form.hero_subtitle} onChange={(e) => set("hero_subtitle", e.target.value)} />
         </div>
       </Card>
 
@@ -172,7 +144,7 @@ function AdminAboutEditor() {
         <h3 className="text-sm font-semibold text-muted-foreground">Story</h3>
         <div className="grid gap-2">
           <Label>Story title</Label>
-          <Input value={form.story_title ?? ""} onChange={(e) => set("story_title", e.target.value)} />
+          <Input value={form.story_title} onChange={(e) => set("story_title", e.target.value)} />
         </div>
         <div className="grid gap-2">
           <Label>Story paragraphs (separate with a blank line)</Label>
@@ -185,63 +157,177 @@ function AdminAboutEditor() {
         </div>
       </Card>
 
-      <Card className="space-y-4 border-border/60 bg-card/40 p-6">
-        <h3 className="text-sm font-semibold text-muted-foreground">Founder</h3>
-        <div className="grid gap-4 md:grid-cols-[160px_1fr]">
-          <div className="space-y-2">
-            <div className="grid h-40 w-40 place-items-center overflow-hidden rounded-xl bg-muted ring-1 ring-border/60">
-              {signedFounder ? (
-                <img src={signedFounder} alt="Founder" className="h-full w-full object-cover" />
-              ) : (
-                <ImageIcon className="h-8 w-8 text-muted-foreground" />
-              )}
-            </div>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleUpload(f);
-              }}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="w-40"
-              onClick={() => fileRef.current?.click()}
-              disabled={uploading}
-            >
-              {uploading ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Upload className="mr-1 h-4 w-4" />}
-              Upload photo
-            </Button>
+      <PersonEditor
+        title="Founder"
+        prefix="founder"
+        form={form}
+        set={set}
+        namePlaceholder="Full name"
+        positionPlaceholder="Founder & CEO"
+      />
+
+      <PersonEditor
+        title="Co-founder"
+        prefix="cofounder"
+        form={form}
+        set={set}
+        namePlaceholder="Full name"
+        positionPlaceholder="Co-founder"
+        note="The co-founder card stays hidden on the public About page until a name is saved here."
+      />
+    </div>
+  );
+}
+
+function PersonEditor({
+  title,
+  prefix,
+  form,
+  set,
+  namePlaceholder,
+  positionPlaceholder,
+  note,
+}: {
+  title: string;
+  prefix: string;
+  form: Form;
+  set: (k: string, v: string) => void;
+  namePlaceholder: string;
+  positionPlaceholder: string;
+  note?: string;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [signed, setSigned] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const imageKey = `${prefix}_image_url`;
+  const raw = form[imageKey] ?? "";
+
+  useEffect(() => {
+    if (!raw) {
+      setSigned(null);
+      return;
+    }
+    if (/^https?:\/\//.test(raw)) {
+      setSigned(raw);
+      return;
+    }
+    const match = raw.match(/about-media\/(.+)$/);
+    const path = match ? match[1] : raw;
+    supabase.storage
+      .from("about-media")
+      .createSignedUrl(path, 3600)
+      .then(({ data }) => setSigned(data?.signedUrl ?? null));
+  }, [raw]);
+
+  async function handleUpload(file: File) {
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() ?? "jpg";
+      const path = `${prefix}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from("about-media").upload(path, file, {
+        upsert: true,
+        contentType: file.type,
+      });
+      if (error) throw error;
+      set(imageKey, path);
+      toast.success("Image uploaded, remember to save.");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <Card className="space-y-4 border-border/60 bg-card/40 p-6">
+      <div>
+        <h3 className="text-sm font-semibold text-muted-foreground">{title}</h3>
+        {note && <p className="mt-1 text-xs text-muted-foreground">{note}</p>}
+      </div>
+      <div className="grid gap-4 md:grid-cols-[160px_1fr]">
+        <div className="space-y-2">
+          <div className="mx-auto grid h-40 w-40 place-items-center overflow-hidden rounded-xl bg-muted ring-1 ring-border/60 md:mx-0">
+            {signed ? (
+              <img src={signed} alt={title} className="h-full w-full object-cover" />
+            ) : (
+              <ImageIcon className="h-8 w-8 text-muted-foreground" />
+            )}
           </div>
-          <div className="space-y-3">
-            <div className="grid gap-2">
-              <Label>Founder name</Label>
-              <Input value={form.founder_name ?? ""} onChange={(e) => set("founder_name", e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-              <Label>Position</Label>
-              <Input value={form.founder_position ?? ""} onChange={(e) => set("founder_position", e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-              <Label>Quote</Label>
-              <Textarea rows={3} value={form.founder_quote ?? ""} onChange={(e) => set("founder_quote", e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-              <Label>Image path / URL</Label>
-              <Input
-                value={form.founder_image_url ?? ""}
-                onChange={(e) => set("founder_image_url", e.target.value)}
-                placeholder="founder/photo.jpg"
-              />
-            </div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleUpload(f);
+            }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mx-auto w-40 md:mx-0"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+          >
+            {uploading ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Upload className="mr-1 h-4 w-4" />}
+            {signed ? "Change photo" : "Upload photo"}
+          </Button>
+        </div>
+        <div className="space-y-3">
+          <div className="grid gap-2">
+            <Label>Name</Label>
+            <Input
+              value={form[`${prefix}_name`] ?? ""}
+              placeholder={namePlaceholder}
+              onChange={(e) => set(`${prefix}_name`, e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Designation / title</Label>
+            <Input
+              value={form[`${prefix}_position`] ?? ""}
+              placeholder={positionPlaceholder}
+              onChange={(e) => set(`${prefix}_position`, e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Quote</Label>
+            <Textarea
+              rows={3}
+              value={form[`${prefix}_quote`] ?? ""}
+              onChange={(e) => set(`${prefix}_quote`, e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Image path / URL</Label>
+            <Input
+              value={raw}
+              onChange={(e) => set(imageKey, e.target.value)}
+              placeholder={`${prefix}/photo.jpg`}
+            />
           </div>
         </div>
-      </Card>
-    </div>
+      </div>
+
+      <div className="space-y-3 border-t border-border/60 pt-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Social links (leave blank to hide)
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {SOCIAL_FIELDS.map((s) => (
+            <div key={s.key} className="grid gap-2">
+              <Label>{s.label}</Label>
+              <Input
+                value={form[`${prefix}_social_${s.key}`] ?? ""}
+                onChange={(e) => set(`${prefix}_social_${s.key}`, e.target.value)}
+                placeholder="Full link or @handle"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </Card>
   );
 }
