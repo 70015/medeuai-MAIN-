@@ -1,6 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Brain, Languages, Mail, ShieldCheck, Sparkles, Target, Trophy } from "lucide-react";
+import {
+  Brain,
+  Facebook,
+  Globe,
+  Instagram,
+  Languages,
+  Linkedin,
+  Mail,
+  Send,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Trophy,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { BrandLogoFull, BrandMark, SocialLinks } from "@/components/brand-logo";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -89,9 +105,111 @@ function useSignedImage(rawUrl: string | null | undefined) {
   return url;
 }
 
+const SOCIAL_ICONS = [
+  { key: "instagram", label: "Instagram", Icon: Instagram },
+  { key: "facebook", label: "Facebook", Icon: Facebook },
+  { key: "linkedin", label: "LinkedIn", Icon: Linkedin },
+  { key: "x", label: "X", Icon: Twitter },
+  { key: "youtube", label: "YouTube", Icon: Youtube },
+  { key: "telegram", label: "Telegram", Icon: Send },
+  { key: "website", label: "Website", Icon: Globe },
+] as const;
+
+function normalizeLink(value: string, key: string) {
+  const v = value.trim();
+  if (/^https?:\/\//i.test(v)) return v;
+  const handle = v.replace(/^@/, "");
+  switch (key) {
+    case "instagram": return `https://instagram.com/${handle}`;
+    case "facebook": return `https://facebook.com/${handle}`;
+    case "linkedin": return `https://linkedin.com/in/${handle}`;
+    case "x": return `https://x.com/${handle}`;
+    case "youtube": return `https://youtube.com/@${handle}`;
+    case "telegram": return `https://t.me/${handle}`;
+    default: return `https://${handle}`;
+  }
+}
+
+function PersonSocials({ row, prefix }: { row: Record<string, unknown> | null | undefined; prefix: string }) {
+  const links = SOCIAL_ICONS.map(({ key, label, Icon }) => {
+    const raw = row?.[`${prefix}_social_${key}`];
+    return typeof raw === "string" && raw.trim() ? { key, label, Icon, href: normalizeLink(raw, key) } : null;
+  }).filter(Boolean) as { key: string; label: string; Icon: typeof Globe; href: string }[];
+
+  if (!links.length) return null;
+
+  return (
+    <div className="mt-5 flex flex-wrap gap-2">
+      {links.map(({ key, label, Icon, href }) => (
+        <a
+          key={key}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={label}
+          title={label}
+          className="grid h-9 w-9 place-items-center rounded-full bg-primary/10 text-primary ring-1 ring-border/60 transition-colors hover:bg-primary/20"
+        >
+          <Icon className="h-4 w-4" />
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function PersonCard({
+  row,
+  prefix,
+  badge,
+  name,
+  position,
+  quote,
+  image,
+}: {
+  row: Record<string, unknown> | null | undefined;
+  prefix: string;
+  badge: string;
+  name: string;
+  position: string;
+  quote?: string | null;
+  image: string | null;
+}) {
+  return (
+    <Card className="grid items-center gap-8 border-border/60 bg-card/40 p-6 sm:p-10 md:grid-cols-[200px_1fr]">
+      {image ? (
+        <img
+          src={image}
+          alt={`${name}, ${position} of MedEuAi`}
+          className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
+        />
+      ) : (
+        <div className="mx-auto grid h-48 w-48 place-items-center rounded-2xl bg-muted">
+          <Sparkles className="h-10 w-10 text-muted-foreground" />
+        </div>
+      )}
+      <div>
+        <Badge variant="secondary" className="mb-3">{badge}</Badge>
+        <h2 className="text-2xl font-bold tracking-tight">{name}</h2>
+        <p className="mt-1 text-sm text-primary">{position}</p>
+        {quote && (
+          <blockquote className="mt-4 border-l-2 border-primary/60 pl-4 text-pretty text-muted-foreground">
+            "{quote}"
+          </blockquote>
+        )}
+        <PersonSocials row={row} prefix={prefix} />
+      </div>
+    </Card>
+  );
+}
+
 function AboutPage() {
   const { data: about } = useAboutContent();
+  const row = about as Record<string, unknown> | null | undefined;
   const founderImg = useSignedImage(about?.founder_image_url);
+  const cofounderName = typeof row?.["cofounder_name"] === "string" ? (row["cofounder_name"] as string).trim() : "";
+  const cofounderImg = useSignedImage(
+    typeof row?.["cofounder_image_url"] === "string" ? (row["cofounder_image_url"] as string) : null,
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -122,36 +240,38 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* Founder */}
-      {(founderImg || about?.founder_name) && (
+      {/* Founder & Co-founder */}
+      {(founderImg || about?.founder_name || cofounderName) && (
         <section className="border-t border-border/60 py-16">
-          <div className="container mx-auto max-w-4xl px-4">
-            <Card className="grid items-center gap-8 border-border/60 bg-card/40 p-6 sm:p-10 md:grid-cols-[200px_1fr]">
-              {founderImg ? (
-                <img
-                  src={founderImg}
-                  alt={about?.founder_name ? `${about.founder_name}, Founder of MedEuAi` : "Founder of MedEuAi"}
-                  className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
-                />
-              ) : (
-                <div className="mx-auto grid h-48 w-48 place-items-center rounded-2xl bg-muted">
-                  <Sparkles className="h-10 w-10 text-muted-foreground" />
-                </div>
-              )}
-              <div>
-                <Badge variant="secondary" className="mb-3">Meet the founder</Badge>
-                <h2 className="text-2xl font-bold tracking-tight">{about?.founder_name ?? "Rahamat Ali"}</h2>
-                <p className="mt-1 text-sm text-primary">{about?.founder_position ?? "Founder & CEO"}</p>
-                {about?.founder_quote && (
-                  <blockquote className="mt-4 border-l-2 border-primary/60 pl-4 text-pretty text-muted-foreground">
-                    "{about.founder_quote}"
-                  </blockquote>
-                )}
-              </div>
-            </Card>
+          <div className="container mx-auto max-w-4xl space-y-6 px-4">
+            <PersonCard
+              row={row}
+              prefix="founder"
+              badge="Meet the founder"
+              name={about?.founder_name ?? "Rahamat Ali"}
+              position={about?.founder_position ?? "Founder & CEO"}
+              quote={about?.founder_quote}
+              image={founderImg}
+            />
+            {cofounderName && (
+              <PersonCard
+                row={row}
+                prefix="cofounder"
+                badge="Meet the co-founder"
+                name={cofounderName}
+                position={
+                  typeof row?.["cofounder_position"] === "string" && (row["cofounder_position"] as string).trim()
+                    ? (row["cofounder_position"] as string)
+                    : "Co-founder"
+                }
+                quote={typeof row?.["cofounder_quote"] === "string" ? (row["cofounder_quote"] as string) : null}
+                image={cofounderImg}
+              />
+            )}
           </div>
         </section>
       )}
+
 
       <section className="border-t border-border/60 py-16">
         <div className="container mx-auto max-w-6xl px-4">
