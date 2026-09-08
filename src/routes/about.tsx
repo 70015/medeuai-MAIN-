@@ -1,6 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Brain, Languages, Mail, ShieldCheck, Sparkles, Target, Trophy } from "lucide-react";
+import {
+  Brain,
+  Facebook,
+  Globe,
+  Instagram,
+  Languages,
+  Linkedin,
+  Mail,
+  Send,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Trophy,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { BrandLogoFull, BrandMark, SocialLinks } from "@/components/brand-logo";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+
 
 export const Route = createFileRoute("/about")({
   head: () => ({
