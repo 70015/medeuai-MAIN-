@@ -96,10 +96,10 @@ function useSignedImage(rawUrl: string | null | undefined) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (!rawUrl) { setUrl(null); return; }
-    // Extract path after /about-media/
     const match = rawUrl.match(/about-media\/(.+)$/);
-    if (!match) { setUrl(rawUrl); return; }
-    supabase.storage.from("about-media").createSignedUrl(match[1], 60 * 60 * 24)
+    const path = match?.[1] ?? (/^https?:\/\//i.test(rawUrl) ? null : rawUrl);
+    if (!path) { setUrl(rawUrl); return; }
+    supabase.storage.from("about-media").createSignedUrl(path, 60 * 60 * 24)
       .then(({ data }) => setUrl(data?.signedUrl ?? null));
   }, [rawUrl]);
   return url;
@@ -174,13 +174,22 @@ function PersonCard({
   quote?: string | null;
   image: string | null;
 }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [image]);
+
   return (
     <Card className="grid items-center gap-8 border-border/60 bg-card/40 p-6 sm:p-10 md:grid-cols-[200px_1fr]">
       {image ? (
         <img
           src={image}
           alt={`${name}, ${position} of MedEuAi`}
-          className="mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60"
+          onLoad={() => setImageLoaded(true)}
+          className={`mx-auto h-48 w-48 rounded-2xl object-cover shadow-[var(--shadow-elegant)] ring-1 ring-border/60 motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-out ${
+            imageLoaded ? "scale-100 opacity-100" : "scale-[0.97] opacity-0"
+          }`}
         />
       ) : (
         <div className="mx-auto grid h-48 w-48 place-items-center rounded-2xl bg-muted">

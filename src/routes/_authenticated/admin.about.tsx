@@ -198,11 +198,13 @@ function PersonEditor({
 }) {
   const [uploading, setUploading] = useState(false);
   const [signed, setSigned] = useState<string | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const imageKey = `${prefix}_image_url`;
   const raw = form[imageKey] ?? "";
 
   useEffect(() => {
+    setImageLoaded(false);
     if (!raw) {
       setSigned(null);
       return;
@@ -248,7 +250,14 @@ function PersonEditor({
         <div className="space-y-2">
           <div className="mx-auto grid h-40 w-40 place-items-center overflow-hidden rounded-xl bg-muted ring-1 ring-border/60 md:mx-0">
             {signed ? (
-              <img src={signed} alt={title} className="h-full w-full object-cover" />
+              <img
+                src={signed}
+                alt={title}
+                onLoad={() => setImageLoaded(true)}
+                className={`h-full w-full object-cover motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-out ${
+                  imageLoaded ? "scale-100 opacity-100" : "scale-[0.97] opacity-0"
+                }`}
+              />
             ) : (
               <ImageIcon className="h-8 w-8 text-muted-foreground" />
             )}
