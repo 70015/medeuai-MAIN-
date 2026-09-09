@@ -96,10 +96,10 @@ function useSignedImage(rawUrl: string | null | undefined) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (!rawUrl) { setUrl(null); return; }
-    // Extract path after /about-media/
     const match = rawUrl.match(/about-media\/(.+)$/);
-    if (!match) { setUrl(rawUrl); return; }
-    supabase.storage.from("about-media").createSignedUrl(match[1], 60 * 60 * 24)
+    const path = match?.[1] ?? (/^https?:\/\//i.test(rawUrl) ? null : rawUrl);
+    if (!path) { setUrl(rawUrl); return; }
+    supabase.storage.from("about-media").createSignedUrl(path, 60 * 60 * 24)
       .then(({ data }) => setUrl(data?.signedUrl ?? null));
   }, [rawUrl]);
   return url;
