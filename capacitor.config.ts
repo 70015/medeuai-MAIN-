@@ -3,28 +3,43 @@ import type { CapacitorConfig } from "@capacitor/cli";
 /**
  * MedEuAi Android wrapper.
  *
- * The web app is server-rendered (TanStack Start), so the Android app loads the
- * live hosted site instead of a static bundle. This keeps backend, auth, AI and
- * payment behaviour identical to the website — nothing is duplicated natively.
- *
- * Change `server.url` to your production domain before building a release APK.
+ * The Android app loads the live MedEuAi production website.
+ * This keeps authentication, AI, backend and payments consistent
+ * with the web application.
  */
 const config: CapacitorConfig = {
   appId: "ai.medeu.app",
   appName: "MedEuAi",
-  // Only used as a fallback shell; the app loads server.url at runtime.
+
+  // Fallback web directory
   webDir: "public",
+
   server: {
-    // Launch straight into the authenticated app home. Unauthenticated users
-    // are redirected to sign in by the existing /_authenticated route gate.
-    url: "https://medeu-ai.lovable.app/dashboard",
+    // Production MedEuAi website
+    url: "https://medeuai.in/dashboard",
+
+    // HTTPS only
     cleartext: false,
+
+    // Use HTTPS inside Android WebView
     androidScheme: "https",
-    allowNavigation: ["medeu-ai.lovable.app", "*.lovable.app", "*.supabase.co"],
+
+    // Domains the Android app is allowed to navigate to
+    allowNavigation: [
+      "medeuai.in",
+      "*.medeuai.in",
+      "*.supabase.co",
+    ],
   },
+
+  // Identifies the Android app to the website
   appendUserAgent: "MedEuAiAndroid",
+
   android: {
+    // Do not allow insecure mixed content
     allowMixedContent: false,
+
+    // Keep WebView debugging disabled in release
     webContentsDebuggingEnabled: false,
   },
 };
