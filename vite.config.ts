@@ -14,8 +14,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // routes/functions need non-VITE_ secrets). Never expose these via define.
 const serverEnv = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 Object.assign(process.env, serverEnv);
- { entry: "server" },
-  },
+export default defineConfig({
   vite: {
     resolve: {
       // Array form + exact regex: only bare "entities" and the v4 deep imports are
