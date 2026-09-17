@@ -1,9 +1,8 @@
 import { cn } from "@/lib/utils";
 import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
-import logoAsset from "@/assets/medeu-ai-logo.jpg.asset.json";
 
 /** Official MedEuAi logo, used unmodified. */
-export const BRAND_LOGO_URL = logoAsset.url;
+export const BRAND_LOGO_URL = "/medeu-ai-logo.jpg";
 export const BRAND_NAME = "MedEuAi";
 export const BRAND_TAGLINE = "Your Personal AI Teacher, 24/7.";
 
@@ -66,7 +65,10 @@ export function BrandLogoFull({ className }: { className?: string }) {
       src={BRAND_LOGO_URL}
       alt="MedEuAi, Your Personal AI Teacher, 24/7."
       decoding="async"
-      className={cn("mx-auto h-40 w-auto max-w-full object-contain sm:h-52", className)}
+      className={cn(
+        "mx-auto h-40 w-auto max-w-full object-contain sm:h-52",
+        className,
+      )}
     />
   );
 }
@@ -86,6 +88,7 @@ export function SocialLinks({ className }: { className?: string }) {
       >
         <Instagram className="h-4 w-4" />
       </a>
+
       <a
         href="https://www.linkedin.com/company/medeuai/"
         target="_blank"
@@ -95,6 +98,7 @@ export function SocialLinks({ className }: { className?: string }) {
       >
         <Linkedin className="h-4 w-4" />
       </a>
+
       <a
         href="https://www.youtube.com/@MedEuAI"
         target="_blank"
@@ -104,6 +108,7 @@ export function SocialLinks({ className }: { className?: string }) {
       >
         <Youtube className="h-4 w-4" />
       </a>
+
       <a
         href="https://www.facebook.com/profile.php?id=61592986388555"
         target="_blank"
