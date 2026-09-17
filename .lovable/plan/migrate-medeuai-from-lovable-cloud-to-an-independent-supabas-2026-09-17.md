@@ -1,4 +1,4 @@
-# Migrate MedEuAi from Lovable Cloud to an independent Supabase project
+## Migrate MedEuAi from Lovable Cloud to an independent Supabase project
 
 ## What Lovable officially provides
 
