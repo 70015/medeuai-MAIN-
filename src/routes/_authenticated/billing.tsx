@@ -2,7 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { AlertTriangle, Check, Clock, Crown, Loader2, Receipt, Sparkles, Tag } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeftRight,
+  Check,
+  CreditCard,
+  Crown,
+  Loader2,
+  Receipt,
+  Sparkles,
+  Tag,
+  XCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
@@ -12,6 +23,13 @@ import { Input } from "@/components/ui/input";
 import { BackLink } from "@/components/back-link";
 import { getPlanStatus } from "@/lib/plan.functions";
 import { getMyPaymentRequests, getPaymentSettings } from "@/lib/payments.functions";
+import {
+  cancelMySubscription,
+  createPortalSession,
+  getMyPaddleSubscription,
+  switchMyPlan,
+} from "@/lib/payments-paddle.functions";
+import { getPaddleEnvironment } from "@/lib/paddle";
 import { redeemPromoCode } from "@/lib/promo.functions";
 
 export const Route = createFileRoute("/_authenticated/billing")({
@@ -20,7 +38,7 @@ export const Route = createFileRoute("/_authenticated/billing")({
       { title: "Billing & Plans | MedEuAi" },
       {
         name: "description",
-        content: "Manage your MedEuAi Pro plan, pay by UPI and redeem promo codes.",
+        content: "Manage your MedEuAi Pro subscription and redeem promo codes.",
       },
     ],
   }),
@@ -45,9 +63,14 @@ const PLANS = [
 
 function BillingPage() {
   const queryClient = useQueryClient();
+  const environment = getPaddleEnvironment();
   const planFn = useServerFn(getPlanStatus);
   const settingsFn = useServerFn(getPaymentSettings);
   const requestsFn = useServerFn(getMyPaymentRequests);
+  const paddleSubFn = useServerFn(getMyPaddleSubscription);
+  const cancelFn = useServerFn(cancelMySubscription);
+  const switchFn = useServerFn(switchMyPlan);
+  const portalFn = useServerFn(createPortalSession);
   const redeemFn = useServerFn(redeemPromoCode);
   const [promoCode, setPromoCode] = useState("");
 
@@ -66,20 +89,60 @@ function BillingPage() {
     queryFn: () => requestsFn(),
   });
 
-  const pending = myRequests?.find((r) => r.status === "pending");
+  const { data: paddleSub } = useQuery({
+    queryKey: ["paddle-subscription", environment],
+    queryFn: () => paddleSubFn({ data: { environment } }),
+  });
+
+  const isPaddleActive =
+    !!paddleSub && ["active", "trialing", "past_due"].includes(paddleSub.status);
+
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ["plan-status"] });
+    queryClient.invalidateQueries({ queryKey: ["paddle-subscription"] });
+  };
 
   const redeem = useMutation({
     mutationFn: () => redeemFn({ data: { code: promoCode } }),
     onSuccess: (r) => {
       toast.success(r.message);
       setPromoCode("");
-      queryClient.invalidateQueries({ queryKey: ["plan-status"] });
+      invalidate();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const cancel = useMutation({
+    mutationFn: () => cancelFn({ data: { environment } }),
+    onSuccess: () => {
+      toast.success("Subscription canceled. Your Pro access has ended.");
+      invalidate();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const switchPlan = useMutation({
+    mutationFn: (target: "pro_monthly" | "pro_yearly") =>
+      switchFn({ data: { environment, plan: target } }),
+    onSuccess: () => {
+      toast.success("Plan switched. The difference was charged pro-rata.");
+      invalidate();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const portal = useMutation({
+    mutationFn: async () => {
+      const { url } = await portalFn({ data: { environment } });
+      window.open(url, "_blank", "noopener");
     },
     onError: (e: Error) => toast.error(e.message),
   });
 
   const priceFor = (key: "pro_monthly" | "pro_yearly") =>
     key === "pro_yearly" ? settings?.yearlyPriceInr : settings?.monthlyPriceInr;
+
+  const otherPlan = paddleSub?.price_id === "pro_yearly" ? "pro_monthly" : "pro_yearly";
 
   return (
     <div className="space-y-6">
@@ -97,25 +160,26 @@ function BillingPage() {
           className={
             plan.expiringSoon
               ? "border-amber-500/50 bg-amber-50/60 p-6 dark:bg-amber-950/20"
-              : "border-[#03824F]/40 bg-[#EAF7F1] p-6"
+              : "border-[#03824F]/40 bg-[#EAF7F1] p-6 dark:border-primary/40 dark:bg-primary/10"
           }
         >
           <Badge className="mb-2 bg-[#03824F] text-white hover:bg-[#02663E]">Pro active</Badge>
           <h2 className="text-lg font-semibold text-[#04211C] dark:text-foreground">
             You're on the {plan.priceId === "pro_yearly" ? "Yearly" : "Monthly"} plan
           </h2>
-          <p className="mt-1 text-sm text-[#33403D]">
+          <p className="mt-1 text-sm text-[#33403D] dark:text-muted-foreground">
             {plan.currentPeriodEnd
-              ? `Access until ${new Date(plan.currentPeriodEnd).toLocaleDateString()}${
+              ? `${isPaddleActive ? "Renews on" : "Access until"} ${new Date(
+                  plan.currentPeriodEnd,
+                ).toLocaleDateString()}${
                   plan.daysLeft !== null ? ` · ${plan.daysLeft} day(s) left` : ""
                 }`
               : `Status: ${plan.status}`}
           </p>
-          {plan.expiringSoon && (
+          {plan.expiringSoon && !isPaddleActive && (
             <p className="mt-2 flex items-start gap-2 text-sm font-medium text-amber-800 dark:text-amber-300">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-              Your Pro access ends soon. Renew now to keep unlimited tests and AI Teacher, your
-              new period is added on top of the remaining days.
+              Your Pro access ends soon. Renew now to keep unlimited tests and AI Teacher.
             </p>
           )}
         </Card>
@@ -130,24 +194,66 @@ function BillingPage() {
         </Card>
       )}
 
-      {pending && (
-        <Card className="border-[#02663E]/40 bg-card/40 p-5">
+      {isPaddleActive && paddleSub && (
+        <Card className="border-border/60 bg-card/40 p-5">
           <h3 className="flex items-center gap-2 text-sm font-semibold">
-            <Clock className="h-4 w-4 text-[#03824F]" /> Payment awaiting verification
+            <CreditCard className="h-4 w-4 text-[#03824F]" /> Manage subscription
           </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Your ₹{pending.amount_inr} payment (UTR {pending.utr}) is being reviewed. Pro unlocks
-            as soon as it's verified.
+          <p className="mt-1 text-xs text-muted-foreground">
+            Your subscription renews automatically. Switching plans takes effect immediately and
+            the difference is charged pro-rata. Canceling ends your Pro access right away.
           </p>
-          <Link to="/pay/$plan" params={{ plan: pending.plan }}>
-            <Button variant="outline" className="mt-3">
-              View payment status
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              disabled={switchPlan.isPending}
+              onClick={() => switchPlan.mutate(otherPlan)}
+            >
+              {switchPlan.isPending ? (
+                <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowLeftRight className="mr-1.5 h-4 w-4" />
+              )}
+              Switch to {otherPlan === "pro_yearly" ? "Yearly" : "Monthly"}
             </Button>
-          </Link>
+            <Button
+              variant="outline"
+              disabled={portal.isPending}
+              onClick={() => portal.mutate()}
+            >
+              {portal.isPending ? (
+                <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+              ) : (
+                <CreditCard className="mr-1.5 h-4 w-4" />
+              )}
+              Payment method & invoices
+            </Button>
+            <Button
+              variant="ghost"
+              className="text-destructive hover:text-destructive"
+              disabled={cancel.isPending}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Cancel your subscription? Your Pro access ends immediately and this cannot be undone.",
+                  )
+                ) {
+                  cancel.mutate();
+                }
+              }}
+            >
+              {cancel.isPending ? (
+                <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+              ) : (
+                <XCircle className="mr-1.5 h-4 w-4" />
+              )}
+              Cancel subscription
+            </Button>
+          </div>
         </Card>
       )}
 
-      {!pending && (
+      {!isPaddleActive && (
         <div className="grid gap-4 md:grid-cols-2">
           {PLANS.map((p) => (
             <Card
@@ -177,17 +283,11 @@ function BillingPage() {
                   </li>
                 ))}
               </ul>
-              {settings?.upiId ? (
-                <Link to="/pay/$plan" params={{ plan: p.lookup_key }} className="mt-6 block">
-                  <Button className="w-full bg-[#03824F] text-white hover:bg-[#02663E]">
-                    {plan?.isPro ? "Extend with UPI" : "Subscribe with UPI"}
-                  </Button>
-                </Link>
-              ) : (
-                <Button className="mt-6 w-full" disabled>
-                  Payments not configured
+              <Link to="/pay/$plan" params={{ plan: p.lookup_key }} className="mt-6 block">
+                <Button className="w-full bg-[#03824F] text-white hover:bg-[#02663E]">
+                  {plan?.isPro ? "Renew Pro" : "Subscribe"}
                 </Button>
-              )}
+              </Link>
             </Card>
           ))}
         </div>
@@ -197,7 +297,7 @@ function BillingPage() {
         <Card className="border-border/60 bg-card/40 p-5">
           <div className="flex items-center gap-2">
             <Receipt className="h-4 w-4 text-[#03824F]" />
-            <h3 className="text-sm font-semibold">Payment history</h3>
+            <h3 className="text-sm font-semibold">Past payments</h3>
           </div>
           <div className="mt-3 divide-y divide-border/60">
             {myRequests.map((r) => (
@@ -207,7 +307,7 @@ function BillingPage() {
                     ₹{r.amount_inr} · {r.plan === "pro_yearly" ? "Pro Yearly" : "Pro Monthly"}
                   </p>
                   <p className="truncate text-xs text-muted-foreground">
-                    UTR {r.utr} · {new Date(r.created_at).toLocaleDateString()}
+                    {new Date(r.created_at).toLocaleDateString()}
                     {r.admin_note ? ` · ${r.admin_note}` : ""}
                   </p>
                 </div>
@@ -218,7 +318,7 @@ function BillingPage() {
                       ? "border-[#03824F]/40 text-[#02663E] dark:text-primary"
                       : r.status === "rejected"
                         ? "border-destructive/40 text-destructive"
-                        : "border-amber-500/40 text-amber-700"
+                        : "border-amber-500/40 text-amber-700 dark:text-amber-400"
                   }
                 >
                   {r.status}
@@ -228,7 +328,6 @@ function BillingPage() {
           </div>
         </Card>
       )}
-
 
       <Card className="border-border/60 bg-card/40 p-5">
         <div className="flex items-center gap-2">
