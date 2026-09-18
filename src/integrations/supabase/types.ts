@@ -1253,6 +1253,8 @@ export type Database = {
           current_period_start: string | null
           environment: string
           id: string
+          paddle_customer_id: string | null
+          paddle_subscription_id: string | null
           price_id: string
           product_id: string | null
           provider: string
@@ -1273,6 +1275,8 @@ export type Database = {
           current_period_start?: string | null
           environment?: string
           id?: string
+          paddle_customer_id?: string | null
+          paddle_subscription_id?: string | null
           price_id: string
           product_id?: string | null
           provider?: string
@@ -1293,6 +1297,8 @@ export type Database = {
           current_period_start?: string | null
           environment?: string
           id?: string
+          paddle_customer_id?: string | null
+          paddle_subscription_id?: string | null
           price_id?: string
           product_id?: string | null
           provider?: string
