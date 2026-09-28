@@ -53,13 +53,15 @@ export const Route = createFileRoute("/api/ai-teacher")({
         if (claimsError || !userId) return err("Unauthorized", 401);
 
         // Daily quota for free users
-        const { resolveEntitlement, getFreeLimits } = await import("@/lib/entitlement.server");
+        const { resolveEntitlement, getFreeLimits, resolveAiTier, aiLimitMessage } = await import(
+      "@/lib/entitlement.server"
+    );
         const [ent, limits] = await Promise.all([
           resolveEntitlement(supabaseAdmin, userId),
           getFreeLimits(supabaseAdmin),
         ]);
-        const isPro = ent.isPro;
-        if (!isPro) {
+        const { tier, limit } = resolveAiTier(ent, limits);
+        {
           const today = new Date().toISOString().slice(0, 10);
           const { data: usage } = await supabaseAdmin
             .from("ai_teacher_usage")
@@ -68,9 +70,9 @@ export const Route = createFileRoute("/api/ai-teacher")({
             .eq("day", today)
             .maybeSingle();
           const used = usage?.count ?? 0;
-          if (used >= limits.freeAiDailyLimit) {
+          if (used >= limit) {
             return err(
-              `Free plan limit reached (${limits.freeAiDailyLimit} questions/day). Upgrade to Pro for unlimited AI Teacher.`,
+              aiLimitMessage(tier, limit),
               429,
             );
           }

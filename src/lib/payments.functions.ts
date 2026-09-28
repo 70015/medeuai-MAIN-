@@ -17,6 +17,8 @@ export type PaymentSettings = {
   freeAttemptsAllowed: number;
   freeWindowDays: number;
   freeAiDailyLimit: number;
+  promoProAiDailyLimit: number;
+  paidProAiDailyLimit: number;
 };
 
 const PlanEnum = z.enum(["pro_monthly", "pro_yearly"]);
@@ -43,7 +45,9 @@ export const getPaymentSettings = createServerFn({ method: "GET" })
       instructions: data?.instructions ?? "",
       freeAttemptsAllowed: data?.free_attempts_allowed ?? 3,
       freeWindowDays: data?.free_window_days ?? 30,
-      freeAiDailyLimit: data?.free_ai_daily_limit ?? 10,
+      freeAiDailyLimit: data?.free_ai_daily_limit ?? 4,
+      promoProAiDailyLimit: data?.promo_pro_ai_daily_limit ?? 6,
+      paidProAiDailyLimit: data?.paid_pro_ai_daily_limit ?? 20,
     };
   });
 
@@ -61,6 +65,8 @@ const SettingsInput = z.object({
   free_attempts_allowed: z.number().int().min(0).max(1000),
   free_window_days: z.number().int().min(1).max(365),
   free_ai_daily_limit: z.number().int().min(0).max(1000),
+  promo_pro_ai_daily_limit: z.number().int().min(0).max(1000),
+  paid_pro_ai_daily_limit: z.number().int().min(0).max(1000),
 });
 
 

@@ -21,7 +21,9 @@ export const getPlanStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<PlanStatus> => {
     const { supabase, userId } = context;
-    const { resolveEntitlement, getFreeLimits } = await import("@/lib/entitlement.server");
+    const { resolveEntitlement, getFreeLimits, resolveAiTier } = await import(
+      "@/lib/entitlement.server"
+    );
 
     const [ent, limits] = await Promise.all([
       resolveEntitlement(supabase, userId),
@@ -56,7 +58,7 @@ export const getPlanStatus = createServerFn({ method: "POST" })
       attemptsInWindow,
       freeAttemptsAllowed: limits.freeAttemptsAllowed,
       windowDays: limits.freeWindowDays,
-      aiDailyLimit: limits.freeAiDailyLimit,
+      aiDailyLimit: resolveAiTier(ent, limits).limit,
       aiUsedToday: usage?.count ?? 0,
       canStartTest: ent.isPro || attemptsInWindow < limits.freeAttemptsAllowed,
       expiringSoon: ent.isPro && ent.daysLeft !== null && ent.daysLeft <= 7,

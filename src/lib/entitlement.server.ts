@@ -5,25 +5,55 @@ export type FreeLimits = {
   freeAttemptsAllowed: number;
   freeWindowDays: number;
   freeAiDailyLimit: number;
+  promoProAiDailyLimit: number;
+  paidProAiDailyLimit: number;
 };
 
 export const DEFAULT_FREE_LIMITS: FreeLimits = {
   freeAttemptsAllowed: 3,
   freeWindowDays: 30,
-  freeAiDailyLimit: 10,
+  freeAiDailyLimit: 4,
+  promoProAiDailyLimit: 6,
+  paidProAiDailyLimit: 20,
 };
 
 export async function getFreeLimits(client: any): Promise<FreeLimits> {
   const { data } = await client
     .from("payment_settings")
-    .select("free_attempts_allowed, free_window_days, free_ai_daily_limit")
+    .select("free_attempts_allowed, free_window_days, free_ai_daily_limit, promo_pro_ai_daily_limit, paid_pro_ai_daily_limit")
     .eq("singleton", true)
     .maybeSingle();
   return {
     freeAttemptsAllowed: data?.free_attempts_allowed ?? DEFAULT_FREE_LIMITS.freeAttemptsAllowed,
     freeWindowDays: data?.free_window_days ?? DEFAULT_FREE_LIMITS.freeWindowDays,
     freeAiDailyLimit: data?.free_ai_daily_limit ?? DEFAULT_FREE_LIMITS.freeAiDailyLimit,
+    promoProAiDailyLimit:
+      data?.promo_pro_ai_daily_limit ?? DEFAULT_FREE_LIMITS.promoProAiDailyLimit,
+    paidProAiDailyLimit: data?.paid_pro_ai_daily_limit ?? DEFAULT_FREE_LIMITS.paidProAiDailyLimit,
   };
+}
+
+export type AiTier = "free" | "promo_pro" | "paid_pro";
+
+const PAID_PROVIDERS = ["paddle", "upi_manual", "upi", "manual", "stripe", "razorpay"];
+
+/** Resolves the AI Teacher daily limit tier for an entitlement. */
+export function resolveAiTier(
+  ent: Entitlement,
+  limits: FreeLimits,
+): { tier: AiTier; limit: number } {
+  if (!ent.isPro) return { tier: "free", limit: limits.freeAiDailyLimit };
+  if (ent.provider && PAID_PROVIDERS.includes(ent.provider))
+    return { tier: "paid_pro", limit: limits.paidProAiDailyLimit };
+  return { tier: "promo_pro", limit: limits.promoProAiDailyLimit };
+}
+
+export function aiLimitMessage(tier: AiTier, limit: number): string {
+  if (tier === "free")
+    return `Free plan limit reached (${limit} questions/day). Upgrade to Pro for more AI Teacher questions.`;
+  if (tier === "promo_pro")
+    return `Daily limit reached (${limit} messages/day on promotional Pro). Subscribe to paid Pro for more AI Teacher messages.`;
+  return `Daily limit reached (${limit} messages/day on Pro). Your limit resets tomorrow.`;
 }
 
 export type Entitlement = {
