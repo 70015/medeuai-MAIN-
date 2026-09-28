@@ -60,7 +60,9 @@ export function ManualUpiPayments() {
     instructions: "",
     free_attempts_allowed: 3,
     free_window_days: 30,
-    free_ai_daily_limit: 10,
+    free_ai_daily_limit: 4,
+    promo_pro_ai_daily_limit: 6,
+    paid_pro_ai_daily_limit: 20,
   });
 
   useEffect(() => {
@@ -78,6 +80,8 @@ export function ManualUpiPayments() {
       free_attempts_allowed: settings.freeAttemptsAllowed,
       free_window_days: settings.freeWindowDays,
       free_ai_daily_limit: settings.freeAiDailyLimit,
+      promo_pro_ai_daily_limit: settings.promoProAiDailyLimit,
+      paid_pro_ai_daily_limit: settings.paidProAiDailyLimit,
     });
   }, [settings]);
 
@@ -250,6 +254,30 @@ export function ManualUpiPayments() {
                 value={form.free_ai_daily_limit}
                 onChange={(e) =>
                   setForm({ ...form, free_ai_daily_limit: Number(e.target.value) || 0 })
+                }
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="promo_ai">Promo Pro AI messages / day</Label>
+              <Input
+                id="promo_ai"
+                type="number"
+                min={0}
+                value={form.promo_pro_ai_daily_limit}
+                onChange={(e) =>
+                  setForm({ ...form, promo_pro_ai_daily_limit: Number(e.target.value) || 0 })
+                }
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="paid_ai">Paid Pro AI messages / day</Label>
+              <Input
+                id="paid_ai"
+                type="number"
+                min={0}
+                value={form.paid_pro_ai_daily_limit}
+                onChange={(e) =>
+                  setForm({ ...form, paid_pro_ai_daily_limit: Number(e.target.value) || 0 })
                 }
               />
             </div>

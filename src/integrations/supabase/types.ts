@@ -936,6 +936,8 @@ export type Database = {
           merchant_name: string
           monthly_price_inr: number
           monthly_qr_path: string | null
+          paid_pro_ai_daily_limit: number
+          promo_pro_ai_daily_limit: number
           qr_enabled: boolean
           singleton: boolean
           updated_at: string
@@ -954,6 +956,8 @@ export type Database = {
           merchant_name?: string
           monthly_price_inr?: number
           monthly_qr_path?: string | null
+          paid_pro_ai_daily_limit?: number
+          promo_pro_ai_daily_limit?: number
           qr_enabled?: boolean
           singleton?: boolean
           updated_at?: string
@@ -972,6 +976,8 @@ export type Database = {
           merchant_name?: string
           monthly_price_inr?: number
           monthly_qr_path?: string | null
+          paid_pro_ai_daily_limit?: number
+          promo_pro_ai_daily_limit?: number
           qr_enabled?: boolean
           singleton?: boolean
           updated_at?: string
