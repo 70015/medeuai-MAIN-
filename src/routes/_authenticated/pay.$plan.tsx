@@ -13,6 +13,7 @@ import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { supabase } from "@/integrations/supabase/client";
 import { getPaymentSettings, type PlanKey } from "@/lib/payments.functions";
 import { getPaddlePriceId, initializePaddle } from "@/lib/paddle";
+import { createRazorpayOrder, verifyRazorpayPayment } from "@/lib/razorpay.functions";
 
 export const Route = createFileRoute("/_authenticated/pay/$plan")({
   head: () => ({
@@ -102,6 +103,70 @@ function PayPage() {
     }
   }
 
+  const createOrderFn = useServerFn(createRazorpayOrder);
+  const verifyFn = useServerFn(verifyRazorpayPayment);
+  const [rzpBusy, setRzpBusy] = useState(false);
+
+  async function loadRazorpay() {
+    if ((window as any).Razorpay) return;
+    await new Promise<void>((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = "https://checkout.razorpay.com/v1/checkout.js";
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error("Could not load Razorpay"));
+      document.body.appendChild(s);
+    });
+  }
+
+  async function openRazorpay() {
+    setRzpBusy(true);
+    try {
+      await loadRazorpay();
+      const { data: u } = await supabase.auth.getUser();
+      const order = await createOrderFn({ data: { plan } });
+      const rzp = new (window as any).Razorpay({
+        key: order.key_id,
+        order_id: order.order_id,
+        amount: order.amount,
+        currency: order.currency,
+        name: "MedEuAi",
+        description: PLAN_LABEL[plan].name,
+        prefill: { email: u.user?.email ?? "" },
+        theme: { color: "#03824F" },
+        handler: async (resp: any) => {
+          try {
+            await verifyFn({
+              data: {
+                razorpay_order_id: resp.razorpay_order_id,
+                razorpay_payment_id: resp.razorpay_payment_id,
+                razorpay_signature: resp.razorpay_signature,
+              },
+            });
+            toast.success("Payment successful! Pro is now active.");
+            queryClient.invalidateQueries({ queryKey: ["plan-status"] });
+            navigate({ to: "/billing" });
+          } catch (e: any) {
+            toast.error(e?.message ?? "Payment verification failed");
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            toast("Payment cancelled.");
+            setRzpBusy(false);
+          },
+        },
+      });
+      rzp.on("payment.failed", (r: any) =>
+        toast.error(r?.error?.description ?? "Payment failed. Please try again."),
+      );
+      rzp.open();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Could not start payment");
+    } finally {
+      setRzpBusy(false);
+    }
+  }
+
   const meta = PLAN_LABEL[plan];
 
   return (
@@ -150,6 +215,16 @@ function PayPage() {
               <Crown className="mr-1.5 h-4 w-4" />
             )}
             Pay securely
+          </Button>
+
+          <Button
+            variant="outline"
+            className="mt-3 w-full"
+            disabled={rzpBusy}
+            onClick={openRazorpay}
+          >
+            {rzpBusy ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : null}
+            Pay with Razorpay (UPI, cards, netbanking)
           </Button>
 
           <p className="mt-3 flex gap-2 text-xs text-muted-foreground">
