@@ -19,6 +19,10 @@ export const Route = createFileRoute("/privacy-policy")({
       },
       { property: "og:url", content: "https://medeuai.in/privacy-policy" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://medeuai.in/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:image", content: "https://medeuai.in/og-image.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Privacy Policy | MedEuAi" },
       {
